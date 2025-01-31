@@ -11,17 +11,23 @@ import React from 'react';
 import HomeScreen from './screens/HomeScreen';
 import ImageScreen from './screens/ImageScreen';
 import LikesScreen from './screens/LikesScreen';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 const Stack = createNativeStackNavigator();
+const queryClient = new QueryClient();
+
 function RootStack() {
   return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Image" component={ImageScreen} />
-      <Stack.Screen name="Likes" component={LikesScreen} />
-    </Stack.Navigator>
+    <QueryClientProvider client={queryClient}>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Image" component={ImageScreen} />
+        <Stack.Screen name="Likes" component={LikesScreen} />
+      </Stack.Navigator>
+    </QueryClientProvider>
   );
 }
+
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
@@ -29,4 +35,5 @@ function App(): React.JSX.Element {
     </NavigationContainer>
   );
 }
+
 export default App;
