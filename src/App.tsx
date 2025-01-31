@@ -5,36 +5,14 @@
  * @format
  */
 
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
+import HomeScreen from './screens/HomeScreen';
+import ImageScreen from './screens/ImageScreen';
+import LikesScreen from './screens/LikesScreen';
 
-function HomeScreen() {
-  return (
-    <View style={styles.homeScreen}>
-      <Text>Home Screen</Text>
-    </View>
-  );
-}
-
-function ImageScreen() {
-  return (
-    <View>
-      <Text>some text</Text>
-    </View>
-  );
-}
-
-function LikesScreen() {
-  return (
-    <View>
-      <Text>some text</Text>
-    </View>
-  );
-}
-const Stack = createNativeStackNavigator<RootStackParamList>();
-
+const Stack = createNativeStackNavigator();
 function RootStack() {
   return (
     <Stack.Navigator initialRouteName="Home">
@@ -44,7 +22,6 @@ function RootStack() {
     </Stack.Navigator>
   );
 }
-
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
@@ -52,9 +29,4 @@ function App(): React.JSX.Element {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  homeScreen: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-});
-
 export default App;
