@@ -6,18 +6,32 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {createStaticNavigation} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-function App(): React.JSX.Element {
+function HomeScreen() {
   return (
-    <SafeAreaView>
-      <Text>Hello World</Text>
-    </SafeAreaView>
+    <View style={styles.homeScreen}>
+      <Text>Home Screen</Text>
+    </View>
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const styles = StyleSheet.create({});
+const RootStack = createNativeStackNavigator({
+  screens: {
+    Home: HomeScreen,
+  },
+});
+
+const Navigation = createStaticNavigation(RootStack);
+
+function App(): React.JSX.Element {
+  return <Navigation />;
+}
+
+const styles = StyleSheet.create({
+  homeScreen: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+});
 
 export default App;
