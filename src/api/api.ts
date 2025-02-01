@@ -1,4 +1,5 @@
 import {PEXELS_API_KEY} from '@env';
+import {APIResponse} from '../types/types';
 
 const PEXELS_URL = 'https://api.pexels.com/v1';
 
@@ -22,7 +23,7 @@ export const getCollections = async (
       );
     }
 
-    const data = await response.json();
+    const data: APIResponse = await response.json();
 
     if (!data.collections || !Array.isArray(data.collections)) {
       console.error('Invalid API response structure:', data);

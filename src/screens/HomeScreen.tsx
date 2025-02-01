@@ -2,6 +2,7 @@ import {useInfiniteQuery} from '@tanstack/react-query';
 import {ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {getCollections} from '../api/api';
 import {useCallback} from 'react';
+import {Collection} from '../types/types';
 
 function HomeScreen() {
   const {
@@ -18,7 +19,8 @@ function HomeScreen() {
     getNextPageParam: lastPage => lastPage?.nextPage ?? null,
   });
 
-  const collections = data?.pages.flatMap(page => page.collections) ?? [];
+  const collections: Collection[] =
+    data?.pages.flatMap(page => page.collections) ?? [];
 
   const loadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
