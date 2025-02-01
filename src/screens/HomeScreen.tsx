@@ -1,26 +1,62 @@
-import {useQuery} from '@tanstack/react-query';
-import {StyleSheet, Text, View} from 'react-native';
+import {useInfiniteQuery} from '@tanstack/react-query';
+import {ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {getCollections} from '../api/api';
 
 function HomeScreen() {
-  const query = useQuery({queryKey: ['collections'], queryFn: getCollections});
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+  } = useInfiniteQuery({
+    queryKey: ['collections'],
+    queryFn: ({pageParam = 1}) => getCollections(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: lastPage => lastPage?.nextPage ?? null,
+  });
 
-  if (query.isLoading) return <Text>Loading...</Text>;
-  if (query.isError) return <Text>Error loading collections</Text>;
-  if (query.data.length === 0) return <Text>No collections found</Text>;
+  const collections = data?.pages.flatMap(page => page.collections) ?? [];
 
-  // TODO - Use FlatList to render the collections
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Error loading collections</Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.homeStyle}>
-      {query.data?.map((collection: {title: string}) => (
-        <Text>{collection.title}</Text>
-      ))}
-    </View>
+    <FlatList
+      data={collections}
+      keyExtractor={item => item.id.toString()}
+      renderItem={({item}) => (
+        <View style={{padding: 10, borderBottomWidth: 1, borderColor: '#ddd'}}>
+          <Text>{item.title}</Text>
+        </View>
+      )}
+      onEndReached={() => {
+        if (hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      }}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={
+        isFetchingNextPage ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : null
+      }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  homeStyle: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-});
 
 export default HomeScreen;
