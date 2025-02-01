@@ -1,8 +1,32 @@
 import {useInfiniteQuery} from '@tanstack/react-query';
-import {ActivityIndicator, FlatList, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  ListRenderItem,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {getCollections} from '../api/api';
 import {useCallback} from 'react';
-import {Collection} from '../types/types';
+import {
+  Collection,
+  CollectionWithNavigation,
+  NavigationProp,
+} from '../types/types';
+import {useNavigation} from '@react-navigation/native';
+
+const CollectionItem = ({item, navigation}: CollectionWithNavigation) => {
+  const onPress = () => navigation.navigate('Image', {item});
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
+      <Text>
+        {item.title} - {item.media_count}
+      </Text>
+    </TouchableOpacity>
+  );
+};
 
 function HomeScreen() {
   const {
@@ -19,6 +43,8 @@ function HomeScreen() {
     getNextPageParam: lastPage => lastPage?.nextPage ?? null,
   });
 
+  console.warn('HomeScreen');
+  const navigation = useNavigation<NavigationProp>();
   const collections: Collection[] =
     data?.pages.flatMap(page => page.collections) ?? [];
 
@@ -44,15 +70,15 @@ function HomeScreen() {
     );
   }
 
+  const renderItem: ListRenderItem<Collection> = ({item}) => (
+    <CollectionItem item={item} navigation={navigation} />
+  );
+
   return (
     <FlatList
       data={collections}
       keyExtractor={item => item.id.toString()}
-      renderItem={({item}) => (
-        <View style={{padding: 10, borderBottomWidth: 1, borderColor: '#ddd'}}>
-          <Text>{item.title}</Text>
-        </View>
-      )}
+      renderItem={renderItem}
       onEndReached={loadMore}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
@@ -63,5 +89,13 @@ function HomeScreen() {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  collectionItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+});
 
 export default HomeScreen;
