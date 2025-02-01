@@ -17,12 +17,9 @@ export const getCollections = async (
     );
 
     if (!response.ok) {
-      console.error(
-        'API request failed: ',
-        response.status,
-        response.statusText,
+      throw new Error(
+        `API request failed: ${response.status} ${response.statusText}`,
       );
-      return {collections: [], nextPage: null};
     }
 
     const data = await response.json();
@@ -38,6 +35,6 @@ export const getCollections = async (
     };
   } catch (error) {
     console.error('Error fetching collections:', error);
-    return {collections: [], nextPage: null};
+    throw error;
   }
 };

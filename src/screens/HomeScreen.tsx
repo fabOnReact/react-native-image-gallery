@@ -1,6 +1,7 @@
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {getCollections} from '../api/api';
+import {useCallback} from 'react';
 
 function HomeScreen() {
   const {
@@ -18,6 +19,12 @@ function HomeScreen() {
   });
 
   const collections = data?.pages.flatMap(page => page.collections) ?? [];
+
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (isLoading) {
     return (
@@ -44,11 +51,7 @@ function HomeScreen() {
           <Text>{item.title}</Text>
         </View>
       )}
-      onEndReached={() => {
-        if (hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      }}
+      onEndReached={loadMore}
       onEndReachedThreshold={0.5}
       ListFooterComponent={
         isFetchingNextPage ? (
