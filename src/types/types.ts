@@ -24,19 +24,21 @@ export interface MediaAPIResponse {
 
 export type Media = {
   id: number;
-  url: string;
+  src: {
+    portrait: string;
+  };
 };
 
 export type RootStackParamList = {
   Home: undefined;
-  Image: {item: Collection};
+  Gallery: {item: Collection};
   Likes: undefined;
 };
 
-export type ImageScreenProps = {
+export type GalleryScreenProps = {
   route: CollectionItemProps;
 };
 
-export type Props = NativeStackScreenProps<RootStackParamList, 'Image'>;
+export type Props = NativeStackScreenProps<RootStackParamList, 'Gallery'>;
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;

@@ -9,7 +9,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import HomeScreen from './screens/HomeScreen';
-import ImageScreen from './screens/ImageScreen';
+import GalleryScreen from './screens/GalleryScreen';
 import LikesScreen from './screens/LikesScreen';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {RootStackParamList} from './types/types';
@@ -22,7 +22,7 @@ function RootStack() {
     <QueryClientProvider client={queryClient}>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Image" component={ImageScreen} />
+        <Stack.Screen name="Gallery" component={GalleryScreen} />
         <Stack.Screen name="Likes" component={LikesScreen} />
       </Stack.Navigator>
     </QueryClientProvider>

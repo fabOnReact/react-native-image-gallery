@@ -12,7 +12,7 @@ import {Media, Props} from '../types/types';
 import {getCollectionsMedia} from '../api/api';
 const {width} = Dimensions.get('window');
 
-const ImageScreen = ({route}: Props) => {
+const GalleryScreen = ({route}: Props) => {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');
@@ -55,7 +55,7 @@ const ImageScreen = ({route}: Props) => {
             alignItems: 'center',
           }}>
           <Image
-            source={{uri: item.src.large}}
+            source={{uri: item.src.portrait}}
             style={{width: '100%', height: '100%', resizeMode: 'cover'}}
           />
         </View>
@@ -64,4 +64,4 @@ const ImageScreen = ({route}: Props) => {
   );
 };
 
-export default ImageScreen;
+export default GalleryScreen;
