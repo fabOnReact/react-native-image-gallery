@@ -45,7 +45,7 @@ const GalleryScreen = ({route}: Props) => {
     <GestureHandlerRootView style={{flex: 1, backgroundColor: 'black'}}>
       <ScrollView>
         {media.map(item => (
-          <PinchableImage item={item} />
+          <PinchableImage key={item.id} item={item} />
         ))}
       </ScrollView>
     </GestureHandlerRootView>
@@ -54,6 +54,8 @@ const GalleryScreen = ({route}: Props) => {
 
 function PinchableImage({item}) {
   const scale = useSharedValue(1);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
 
   // Pinch Gesture (Zoom)
   const pinchGesture = Gesture.Pinch()
@@ -63,21 +65,44 @@ function PinchableImage({item}) {
     .onEnd(() => {
       if (scale.value < 1) {
         scale.value = withTiming(1);
+        translateX.value = withTiming(0);
+        translateY.value = withTiming(0);
       }
     });
 
   // Pan Gesture (Move)
+  const panGesture = Gesture.Pan()
+    .onUpdate(event => {
+      if (scale.value > 1) {
+        translateX.value = event.translationX;
+        translateY.value = event.translationY;
+      }
+    })
+    .onEnd(() => {
+      if (scale.value <= 1) {
+        translateX.value = withTiming(0);
+        translateY.value = withTiming(0);
+      }
+    });
+
+  // Combined Gesture (Pinch + Pan)
+  const combinedGesture = Gesture.Simultaneous(pinchGesture, panGesture);
 
   // Animated Styles
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
+    transform: [
+      {scale: scale.value},
+      {translateX: translateX.value},
+      {translateY: translateY.value},
+    ],
   }));
 
   return (
-    <GestureDetector gesture={pinchGesture}>
+    <GestureDetector gesture={combinedGesture}>
       <Animated.Image
         source={{uri: item.src.portrait}}
         style={[{width, height}, animatedStyle]}
+        resizeMode="contain"
       />
     </GestureDetector>
   );
