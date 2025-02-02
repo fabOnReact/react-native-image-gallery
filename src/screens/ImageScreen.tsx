@@ -1,11 +1,13 @@
 import {Text, View} from 'react-native';
+import {Props} from '../types/types';
 
-function ImageScreen() {
+const ImageScreen = ({route}: Props) => {
+  const {item} = route.params;
   return (
     <View>
-      <Text>some text</Text>
+      <Text>{item.title}</Text>
     </View>
   );
-}
+};
 
 export default ImageScreen;
