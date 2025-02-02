@@ -1,14 +1,6 @@
-import React, {useRef} from 'react';
-import {
-  FlatList,
-  Dimensions,
-  ActivityIndicator,
-  View,
-  Text,
-} from 'react-native';
-import {useQuery} from '@tanstack/react-query';
+import React from 'react';
+import {Dimensions} from 'react-native';
 import {Media, Props} from '../types/types';
-import {getCollectionsMedia} from '../api/api';
 import {
   GestureHandlerRootView,
   GestureDetector,
@@ -18,23 +10,12 @@ import {
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  withSpring,
   withTiming,
-  runOnJS,
 } from 'react-native-reanimated';
 
 const {width, height} = Dimensions.get('window');
 
 const GalleryScreen = ({route}: Props) => {
-  const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
-  const {item} = route.params;
-
-  const scale = useSharedValue(1);
-  const translateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
-  const flatListRef = useRef<FlatList>(null);
-  const currentIndex = useSharedValue(0);
-
   // Dummy media list for testing
   const media: Media[] = [
     {
@@ -60,6 +41,20 @@ const GalleryScreen = ({route}: Props) => {
     },
   ];
 
+  return (
+    <GestureHandlerRootView style={{flex: 1, backgroundColor: 'black'}}>
+      <ScrollView>
+        {media.map(item => (
+          <PinchableImage item={item} />
+        ))}
+      </ScrollView>
+    </GestureHandlerRootView>
+  );
+};
+
+function PinchableImage({item}) {
+  const scale = useSharedValue(1);
+
   // Pinch Gesture (Zoom)
   const pinchGesture = Gesture.Pinch()
     .onUpdate(event => {
@@ -71,25 +66,21 @@ const GalleryScreen = ({route}: Props) => {
       }
     });
 
+  // Pan Gesture (Move)
+
   // Animated Styles
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.value}],
   }));
 
   return (
-    <GestureHandlerRootView style={{flex: 1, backgroundColor: 'black'}}>
-      <ScrollView>
-        {media.map(item => (
-          <GestureDetector gesture={pinchGesture}>
-            <Animated.Image
-              source={{uri: item.src.portrait}}
-              style={[{width, height}, animatedStyle]}
-            />
-          </GestureDetector>
-        ))}
-      </ScrollView>
-    </GestureHandlerRootView>
+    <GestureDetector gesture={pinchGesture}>
+      <Animated.Image
+        source={{uri: item.src.portrait}}
+        style={[{width, height}, animatedStyle]}
+      />
+    </GestureDetector>
   );
-};
+}
 
 export default GalleryScreen;
