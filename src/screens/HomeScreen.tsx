@@ -10,14 +10,11 @@ import {
 } from 'react-native';
 import {getCollections} from '../api/api';
 import {useCallback} from 'react';
-import {
-  Collection,
-  CollectionWithNavigation,
-  NavigationProp,
-} from '../types/types';
+import {Collection, CollectionItemProps, NavigationProp} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
 
-const CollectionItem = ({item, navigation}: CollectionWithNavigation) => {
+const CollectionItem: React.FC<CollectionItemProps> = ({item}) => {
+  const navigation = useNavigation<NavigationProp>();
   const onPress = () => navigation.navigate('Image', {item});
   return (
     <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
@@ -43,8 +40,6 @@ function HomeScreen() {
     getNextPageParam: lastPage => lastPage?.nextPage ?? null,
   });
 
-  console.warn('HomeScreen');
-  const navigation = useNavigation<NavigationProp>();
   const collections: Collection[] =
     data?.pages.flatMap(page => page.collections) ?? [];
 
@@ -71,7 +66,7 @@ function HomeScreen() {
   }
 
   const renderItem: ListRenderItem<Collection> = ({item}) => (
-    <CollectionItem item={item} navigation={navigation} />
+    <CollectionItem item={item} />
   );
 
   return (

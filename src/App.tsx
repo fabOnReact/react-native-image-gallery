@@ -12,8 +12,9 @@ import HomeScreen from './screens/HomeScreen';
 import ImageScreen from './screens/ImageScreen';
 import LikesScreen from './screens/LikesScreen';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {RootStackParamList} from './types/types';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
 
 function RootStack() {

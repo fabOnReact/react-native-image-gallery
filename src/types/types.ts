@@ -1,4 +1,11 @@
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
+
+export interface CollectionItemProps {
+  item: Collection;
+}
 
 export interface Collection {
   id: number;
@@ -11,23 +18,16 @@ export interface APIResponse {
   nextPage: number | null;
 }
 
-export type CollectionWithNavigation = {
-  item: Collection;
-  navigation: NavigationProp;
-};
-
-type RootStackParamList = {
+export type RootStackParamList = {
   Home: undefined;
   Image: {item: Collection};
   Likes: undefined;
 };
 
 export type ImageScreenProps = {
-  route: {
-    params: {
-      item: Collection;
-    };
-  };
+  route: CollectionItemProps;
 };
+
+export type Props = NativeStackScreenProps<RootStackParamList, 'Image'>;
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
