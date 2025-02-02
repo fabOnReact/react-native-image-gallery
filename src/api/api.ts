@@ -1,21 +1,14 @@
-import {APIResponse} from '../types/types';
+import {CollectionAPIResponse, MediaAPIResponse} from '../types/types';
 const PEXELS_URL = 'https://api.pexels.com/v1';
 
-export const getCollections = async (
-  apiKey: string,
-  pageParam: number = 1,
-  perPage: number = 30,
-) => {
+export const getCollectionsMedia = async (apiKey: string, id: number) => {
+  const GET_MEDIA_URL = `${PEXELS_URL}/collections/${id}?type=photos`;
   try {
-    const response = await fetch(
-      `${PEXELS_URL}/collections/featured?per_page=${perPage}&page=${pageParam}`,
-      {
-        // why I get this error? I'm already checking that the api key defined
-        headers: {
-          Authorization: apiKey,
-        },
+    const response = await fetch(GET_MEDIA_URL, {
+      headers: {
+        Authorization: apiKey,
       },
-    );
+    });
 
     if (!response.ok) {
       throw new Error(
@@ -23,16 +16,55 @@ export const getCollections = async (
       );
     }
 
-    const data: APIResponse = await response.json();
+    const data: MediaAPIResponse = await response.json();
+
+    if (!data.media || !Array.isArray(data.media)) {
+      console.error('Invalid API response structure:', data);
+      return {media: []};
+    }
+
+    return data.media;
+  } catch (error) {
+    console.error(
+      `Error fetching media from ${GET_MEDIA_URL} with error: `,
+      error,
+    );
+    throw error;
+  }
+};
+
+export const getCollections = async (
+  apiKey: string,
+  pageParam: number = 1,
+  perPage: number = 30,
+) => {
+  const GET_COLLECTIONS_URL = `${PEXELS_URL}/collections/featured?per_page=${perPage}&page=${pageParam}`;
+  try {
+    const response = await fetch(GET_COLLECTIONS_URL, {
+      headers: {
+        Authorization: apiKey,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `API request failed: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const data: CollectionAPIResponse = await response.json();
 
     if (!data.collections || !Array.isArray(data.collections)) {
-      console.error('Invalid API response structure:', data);
+      console.error(
+        'Invalid API response structure from ${PEXELS_URL}/collections/featured with data: ',
+        data,
+      );
       return {collections: [], nextPage: null};
     }
 
     if (data.collections.length < perPage && data.collections.length > 0) {
       console.warn(
-        `Unexpected API response: requested ${perPage} items, but received ${data.collections.length}.`,
+        `Unexpected API response. Requested ${perPage} items, but received ${data.collections.length}.`,
       );
     }
 
@@ -41,7 +73,10 @@ export const getCollections = async (
       nextPage: data.collections.length === perPage ? pageParam + 1 : null,
     };
   } catch (error) {
-    console.error('Error fetching collections:', error);
+    console.error(
+      `Error fetching collections from ${GET_COLLECTIONS_URL} with error: `,
+      error,
+    );
     throw error;
   }
 };

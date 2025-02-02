@@ -13,10 +13,19 @@ export interface Collection {
   media_count: number;
 }
 
-export interface APIResponse {
+export interface CollectionAPIResponse {
   collections: Collection[];
   nextPage: number | null;
 }
+
+export interface MediaAPIResponse {
+  media: Media[];
+}
+
+export type Media = {
+  id: number;
+  url: string;
+};
 
 export type RootStackParamList = {
   Home: undefined;
