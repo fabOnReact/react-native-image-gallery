@@ -28,6 +28,7 @@ const CollectionItem: React.FC<CollectionItemProps> = ({item}) => {
 
 const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
   <View
+    testID="error-message"
     style={{
       flex: 1,
       justifyContent: 'center',
@@ -76,7 +77,11 @@ function HomeScreen() {
   if (isLoading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator
+          size="large"
+          color="#0000ff"
+          testID="loading-indicator"
+        />
       </View>
     );
   }
@@ -91,6 +96,7 @@ function HomeScreen() {
 
   return (
     <FlatList
+      testID="collection-list"
       data={collections}
       keyExtractor={item => item.id.toString()}
       renderItem={renderItem}
