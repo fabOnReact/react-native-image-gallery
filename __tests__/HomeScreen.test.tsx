@@ -6,18 +6,12 @@ import {useNavigation} from '@react-navigation/native';
 
 // Mock navigation
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({
-    navigate: jest.fn(),
-  }),
+  useNavigation: jest.fn(),
 }));
 
 // Mock API call
 jest.mock('../src/api/api.ts', () => ({
   getCollections: jest.fn(),
-}));
-
-jest.mock('@react-navigation/native', () => ({
-  useNavigation: jest.fn(),
 }));
 
 // Mock react-query
