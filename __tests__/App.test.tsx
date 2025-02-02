@@ -3,11 +3,22 @@
  */
 
 import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
-import App from '../App';
+import {render, cleanup} from '@testing-library/react-native';
+import App from '../src/App';
 
-test('renders correctly', async () => {
-  await ReactTestRenderer.act(() => {
-    ReactTestRenderer.create(<App />);
-  });
+jest.mock('../src/api/api', () => ({
+  fetchCollections: jest.fn(() =>
+    Promise.resolve({collections: [], nextPage: null}),
+  ),
+}));
+
+jest.useFakeTimers();
+
+afterEach(() => {
+  jest.clearAllMocks();
+  cleanup();
+});
+
+test('renders correctly', () => {
+  render(<App />);
 });

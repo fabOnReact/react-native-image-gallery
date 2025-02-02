@@ -1,6 +1,7 @@
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {
   ActivityIndicator,
+  Button,
   FlatList,
   ListRenderItem,
   StyleSheet,
@@ -25,7 +26,30 @@ const CollectionItem: React.FC<CollectionItemProps> = ({item}) => {
   );
 };
 
+const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
+  <View
+    testID="error-message"
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 16,
+    }}>
+    <Text style={{color: 'red', fontSize: 16, fontWeight: 'bold'}}>
+      Oops! Something went wrong.
+    </Text>
+    <Text style={{color: 'gray', fontSize: 14, marginTop: 8}}>
+      Please try again later.
+    </Text>
+    <Button title="Retry" onPress={onRetry} />
+  </View>
+);
+
 function HomeScreen() {
+  const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
+  if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
+    console.warn('PEXELS_API_KEY environment variable is not defined');
+  }
   const {
     data,
     fetchNextPage,
@@ -33,9 +57,10 @@ function HomeScreen() {
     isFetchingNextPage,
     isLoading,
     isError,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ['collections'],
-    queryFn: ({pageParam = 1}) => getCollections(pageParam),
+    queryFn: ({pageParam = 1}) => getCollections(PEXELS_API_KEY, pageParam),
     initialPageParam: 1,
     getNextPageParam: lastPage => lastPage?.nextPage ?? null,
   });
@@ -52,17 +77,17 @@ function HomeScreen() {
   if (isLoading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator
+          size="large"
+          color="#0000ff"
+          testID="loading-indicator"
+        />
       </View>
     );
   }
 
   if (isError) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Error loading collections</Text>
-      </View>
-    );
+    return <ErrorMessage onRetry={refetch} />;
   }
 
   const renderItem: ListRenderItem<Collection> = ({item}) => (
@@ -71,6 +96,7 @@ function HomeScreen() {
 
   return (
     <FlatList
+      testID="collection-list"
       data={collections}
       keyExtractor={item => item.id.toString()}
       renderItem={renderItem}
