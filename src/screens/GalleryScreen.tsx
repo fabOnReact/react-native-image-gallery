@@ -13,6 +13,7 @@ import {
   GestureHandlerRootView,
   GestureDetector,
   Gesture,
+  ScrollView,
 } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -59,13 +60,6 @@ const GalleryScreen = ({route}: Props) => {
     },
   ];
 
-  // Function to safely scroll FlatList
-  const scrollToImage = (index: number) => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToIndex({index, animated: true});
-    }
-  };
-
   // Pinch Gesture (Zoom)
   const pinchGesture = Gesture.Pinch()
     .onUpdate(event => {
@@ -77,92 +71,23 @@ const GalleryScreen = ({route}: Props) => {
       }
     });
 
-  // Pan Gesture (Dragging) - Only works when zoomed in
-  const panGesture = Gesture.Pan()
-    .onUpdate(event => {
-      if (scale.value > 1) {
-        translateX.value = event.translationX;
-        translateY.value = event.translationY;
-      }
-    })
-    .onEnd(() => {
-      if (scale.value > 1) {
-        translateX.value = withSpring(0);
-        translateY.value = withSpring(0);
-      }
-    });
-
-  // Swipe Gesture (Only when not zoomed in)
-  const swipeGesture = Gesture.Pan()
-    .enabled(scale.value === 1) // Only trigger if not zoomed
-    .onEnd(event => {
-      if (scale.value > 1) return; // Prevent swipe when zoomed
-
-      const velocityThreshold = 800; // Minimum velocity to trigger a swipe
-      const directionThreshold = width * 0.3; // Minimum distance swiped
-
-      if (
-        event.velocityX > velocityThreshold ||
-        event.translationX > directionThreshold
-      ) {
-        // Swipe right (previous image)
-        if (currentIndex.value > 0) {
-          currentIndex.value -= 1;
-          runOnJS(scrollToImage)(currentIndex.value);
-        }
-      } else if (
-        event.velocityX < -velocityThreshold ||
-        event.translationX < -directionThreshold
-      ) {
-        // Swipe left (next image)
-        if (currentIndex.value < media.length - 1) {
-          currentIndex.value += 1;
-          runOnJS(scrollToImage)(currentIndex.value);
-        }
-      }
-    });
-
-  // Combine gestures
-  const composedGesture = Gesture.Simultaneous(
-    pinchGesture,
-    panGesture,
-    swipeGesture,
-  );
-
   // Animated Styles
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {scale: scale.value},
-      {translateX: translateX.value},
-      {translateY: translateY.value},
-    ],
+    transform: [{scale: scale.value}],
   }));
 
   return (
     <GestureHandlerRootView style={{flex: 1, backgroundColor: 'black'}}>
-      <FlatList
-        ref={flatListRef}
-        data={media}
-        keyExtractor={item => item.id.toString()}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item, index}) => (
-          <View style={{width, height, overflow: 'hidden'}}>
-            <GestureDetector gesture={composedGesture}>
-              <Animated.View style={{flex: 1, width, height}}>
-                <Animated.Image
-                  source={{uri: item.src.portrait}}
-                  style={[
-                    {width, height, resizeMode: 'contain'},
-                    animatedStyle,
-                  ]}
-                />
-              </Animated.View>
-            </GestureDetector>
-          </View>
-        )}
-      />
+      <ScrollView>
+        {media.map(item => (
+          <GestureDetector gesture={pinchGesture}>
+            <Animated.Image
+              source={{uri: item.src.portrait}}
+              style={[{width, height}, animatedStyle]}
+            />
+          </GestureDetector>
+        ))}
+      </ScrollView>
     </GestureHandlerRootView>
   );
 };
