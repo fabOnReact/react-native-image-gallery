@@ -1,11 +1,10 @@
 import React from 'react';
-import {Dimensions} from 'react-native';
+import {Dimensions, ScrollView} from 'react-native';
 import {Media, Props} from '../types/types';
 import {
   GestureHandlerRootView,
   GestureDetector,
   Gesture,
-  ScrollView,
 } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
