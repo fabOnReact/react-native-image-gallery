@@ -146,7 +146,6 @@ const GalleryScreen = ({route}: Props) => {
         keyExtractor={item => item.id.toString()}
         horizontal
         pagingEnabled
-        scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => (
           <View style={{width, height, overflow: 'hidden'}}>
