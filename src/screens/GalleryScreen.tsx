@@ -1,7 +1,12 @@
-import {View, Dimensions, StyleSheet} from 'react-native';
+import {
+  FlatList,
+  View,
+  Dimensions,
+  StyleSheet,
+  ListRenderItem,
+} from 'react-native';
 import {
   GestureHandlerRootView,
-  FlatList,
   Gesture,
   GestureDetector,
 } from 'react-native-gesture-handler';
@@ -10,7 +15,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import {Media, Props} from '../types/types';
+import {Media, PinchableImageProps, Props} from '../types/types';
 
 const {width, height} = Dimensions.get('window');
 
@@ -40,6 +45,12 @@ const media: Media[] = [
 ];
 
 export default function GalleryScreen({route}: Props) {
+  const renderItem: ListRenderItem<Media> = ({item}) => (
+    <View style={{width, height}}>
+      <PinchableImage item={item} />
+    </View>
+  );
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <FlatList
@@ -48,19 +59,14 @@ export default function GalleryScreen({route}: Props) {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        renderItem={({item}: {item: Media}) => {
-          return (
-            <View style={{width, height}}>
-              <PinchableImage item={item} />
-            </View>
-          );
-        }}
+        renderItem={renderItem}
       />
     </GestureHandlerRootView>
   );
 }
 
-function PinchableImage({item}) {
+function PinchableImage({item}: PinchableImageProps) {
+  const {portrait} = item.src;
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -127,7 +133,7 @@ function PinchableImage({item}) {
   return (
     <GestureDetector gesture={combinedGesture}>
       <Animated.Image
-        source={{uri: item.src.portrait}}
+        source={{uri: portrait}}
         style={[styles.image, animatedStyle]}
         resizeMode="contain"
       />

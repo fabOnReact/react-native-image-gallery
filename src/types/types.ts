@@ -29,6 +29,10 @@ export type Media = {
   };
 };
 
+export type PinchableImageProps = {
+  item: Media;
+};
+
 export type RootStackParamList = {
   Home: undefined;
   Gallery: {item: Collection};
