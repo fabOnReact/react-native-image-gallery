@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Text,
   ViewToken,
+  SafeAreaView,
 } from 'react-native';
 import {
   GestureHandlerRootView,
@@ -82,25 +83,27 @@ export default function GalleryScreen({route}: Props) {
   };
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <FlatList
-        data={media}
-        keyExtractor={item => item.id.toString()}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        renderItem={renderItem}
-        onScroll={event => {
-          scrollX.value = event.nativeEvent.contentOffset.x;
-        }}
-      />
-      <PositionIndicator
-        currentIndex={currentIndex}
-        numberOfImages={numberOfImages}
-      />
-    </GestureHandlerRootView>
+    <SafeAreaView style={{flex: 1}}>
+      <GestureHandlerRootView style={styles.container}>
+        <FlatList
+          data={media}
+          keyExtractor={item => item.id.toString()}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
+          renderItem={renderItem}
+          onScroll={event => {
+            scrollX.value = event.nativeEvent.contentOffset.x;
+          }}
+        />
+        <PositionIndicator
+          currentIndex={currentIndex}
+          numberOfImages={numberOfImages}
+        />
+      </GestureHandlerRootView>
+    </SafeAreaView>
   );
 }
 
