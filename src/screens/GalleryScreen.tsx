@@ -23,31 +23,6 @@ import {getCollectionsMedia} from '../api/api';
 
 const {width, height} = Dimensions.get('window');
 
-// Dummy media list
-const media: Media[] = [
-  {
-    id: 1,
-    src: {
-      portrait:
-        'https://images.pexels.com/photos/2061057/pexels-photo-2061057.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
-    },
-  },
-  {
-    id: 2,
-    src: {
-      portrait:
-        'https://images.pexels.com/photos/1034678/pexels-photo-1034678.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
-    },
-  },
-  {
-    id: 3,
-    src: {
-      portrait:
-        'https://images.pexels.com/photos/1231265/pexels-photo-1231265.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
-    },
-  },
-];
-
 export default function GalleryScreen({route}: Props) {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
