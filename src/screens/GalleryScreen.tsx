@@ -1,7 +1,7 @@
-import React, {useRef} from 'react';
-import {View, Dimensions, StyleSheet, Text} from 'react-native';
+import {View, Dimensions, StyleSheet} from 'react-native';
 import {
   GestureHandlerRootView,
+  FlatList,
   Gesture,
   GestureDetector,
 } from 'react-native-gesture-handler';
@@ -10,12 +10,12 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import {FlatList} from 'react-native-gesture-handler';
+import {Media, Props} from '../types/types';
 
 const {width, height} = Dimensions.get('window');
 
 // Dummy media list
-const media = [
+const media: Media[] = [
   {
     id: 1,
     src: {
@@ -39,17 +39,16 @@ const media = [
   },
 ];
 
-export default function GalleryScreen() {
+export default function GalleryScreen({route}: Props) {
   return (
     <GestureHandlerRootView style={styles.container}>
-      {/* Horizontal paging using FlatList */}
       <FlatList
         data={media}
         keyExtractor={item => item.id.toString()}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => {
+        renderItem={({item}: {item: Media}) => {
           return (
             <View style={{width, height}}>
               <PinchableImage item={item} />
@@ -61,7 +60,7 @@ export default function GalleryScreen() {
   );
 }
 
-function PinchableImage({item}: {item: any}) {
+function PinchableImage({item}) {
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);

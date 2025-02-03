@@ -36,7 +36,9 @@ export type RootStackParamList = {
 };
 
 export type GalleryScreenProps = {
-  route: CollectionItemProps;
+  route: {
+    item: Media;
+  };
 };
 
 export type Props = NativeStackScreenProps<RootStackParamList, 'Gallery'>;
