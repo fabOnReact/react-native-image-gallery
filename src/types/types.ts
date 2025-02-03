@@ -29,6 +29,10 @@ export type Media = {
   };
 };
 
+export type PinchableImageProps = {
+  item: Media;
+};
+
 export type RootStackParamList = {
   Home: undefined;
   Gallery: {item: Collection};
@@ -36,7 +40,9 @@ export type RootStackParamList = {
 };
 
 export type GalleryScreenProps = {
-  route: CollectionItemProps;
+  route: {
+    item: Media;
+  };
 };
 
 export type Props = NativeStackScreenProps<RootStackParamList, 'Gallery'>;
