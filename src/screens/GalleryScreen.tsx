@@ -1,112 +1,148 @@
-import React from 'react';
-import {Dimensions, ScrollView} from 'react-native';
-import {Media, Props} from '../types/types';
+import React, {useRef} from 'react';
+import {View, Dimensions, StyleSheet, Text} from 'react-native';
 import {
   GestureHandlerRootView,
-  GestureDetector,
   Gesture,
+  GestureDetector,
 } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
+import {FlatList} from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('window');
 
-const GalleryScreen = ({route}: Props) => {
-  // Dummy media list for testing
-  const media: Media[] = [
-    {
-      id: 1,
-      src: {
-        portrait:
-          'https://images.pexels.com/photos/2061057/pexels-photo-2061057.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
-      },
+// Dummy media list
+const media = [
+  {
+    id: 1,
+    src: {
+      portrait:
+        'https://images.pexels.com/photos/2061057/pexels-photo-2061057.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
     },
-    {
-      id: 2,
-      src: {
-        portrait:
-          'https://images.pexels.com/photos/2061057/pexels-photo-2061057.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
-      },
+  },
+  {
+    id: 2,
+    src: {
+      portrait:
+        'https://images.pexels.com/photos/1034678/pexels-photo-1034678.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
     },
-    {
-      id: 3,
-      src: {
-        portrait:
-          'https://images.pexels.com/photos/2061057/pexels-photo-2061057.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
-      },
+  },
+  {
+    id: 3,
+    src: {
+      portrait:
+        'https://images.pexels.com/photos/1231265/pexels-photo-1231265.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800',
     },
-  ];
+  },
+];
 
+export default function GalleryScreen() {
   return (
-    <GestureHandlerRootView style={{flex: 1, backgroundColor: 'black'}}>
-      <ScrollView>
-        {media.map(item => (
-          <PinchableImage key={item.id} item={item} />
-        ))}
-      </ScrollView>
+    <GestureHandlerRootView style={styles.container}>
+      {/* Horizontal paging using FlatList */}
+      <FlatList
+        data={media}
+        keyExtractor={item => item.id.toString()}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        renderItem={({item}) => {
+          return (
+            <View style={{width, height}}>
+              <PinchableImage item={item} />
+            </View>
+          );
+        }}
+      />
     </GestureHandlerRootView>
   );
-};
+}
 
-function PinchableImage({item}) {
+function PinchableImage({item}: {item: any}) {
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
   // Pinch Gesture (Zoom)
-  /*
   const pinchGesture = Gesture.Pinch()
     .onUpdate(event => {
       scale.value = event.scale;
     })
     .onEnd(() => {
+      // Snap back if zoom < 1
       if (scale.value < 1) {
         scale.value = withTiming(1);
         translateX.value = withTiming(0);
         translateY.value = withTiming(0);
       }
     });
-    */
 
   // Pan Gesture (Move)
   const panGesture = Gesture.Pan()
+    // Use manual activation so we can decide when to activate/fail
+    .manualActivation(true)
+    .onTouchesMove((event, stateManager) => {
+      /*
+        If only one finger is touching AND scale is 1 (i.e., not zoomed),
+        we fail the pan gesture so the FlatList can handle horizontal paging.
+        If scale > 1 or multiple fingers, we activate the pan gesture.
+      */
+      if (event.allTouches.length === 1 && scale.value === 1) {
+        stateManager.fail();
+      } else {
+        stateManager.activate();
+      }
+    })
     .onUpdate(event => {
+      // Only update translations if we're zoomed in
       if (scale.value > 1) {
         translateX.value = event.translationX;
         translateY.value = event.translationY;
       }
     })
     .onEnd(() => {
+      // Reset if not zoomed in
       if (scale.value <= 1) {
         translateX.value = withTiming(0);
         translateY.value = withTiming(0);
       }
     });
 
-  // Combined Gesture (Pinch + Pan)
-  // const combinedGesture = Gesture.Simultaneous(pinchGesture, panGesture);
+  // Combine pinch and pan
+  const combinedGesture = Gesture.Simultaneous(pinchGesture, panGesture);
 
-  // Animated Styles
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      // {scale: scale.value},
-      {translateX: translateX.value},
-      {translateY: translateY.value},
-    ],
-  }));
+  // Animated styling
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {translateX: translateX.value},
+        {translateY: translateY.value},
+        {scale: scale.value},
+      ],
+    };
+  });
 
   return (
-    <GestureDetector gesture={panGesture}>
+    <GestureDetector gesture={combinedGesture}>
       <Animated.Image
         source={{uri: item.src.portrait}}
-        style={[{width, height}, animatedStyle]}
+        style={[styles.image, animatedStyle]}
         resizeMode="contain"
       />
     </GestureDetector>
   );
 }
 
-export default GalleryScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  image: {
+    width, // fill the entire screen width
+    height, // fill the entire screen height
+  },
+});
