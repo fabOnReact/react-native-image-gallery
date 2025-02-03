@@ -20,10 +20,10 @@ export const getCollectionsMedia = async (apiKey: string, id: number) => {
 
     if (!data.media || !Array.isArray(data.media)) {
       console.error('Invalid API response structure:', data);
-      return {media: []};
+      return {media: [], total_results: 0};
     }
 
-    return data.media;
+    return data;
   } catch (error) {
     console.error(
       `Error fetching media from ${GET_MEDIA_URL} with error: `,

@@ -6,6 +6,7 @@ import {
   ListRenderItem,
   ActivityIndicator,
   Text,
+  ViewToken,
 } from 'react-native';
 import {
   GestureHandlerRootView,
@@ -20,15 +21,24 @@ import Animated, {
 import {Media, PinchableImageProps, Props} from '../types/types';
 import {useQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
+import PositionIndicator from '../components/PositionIndicator';
 
 // Replace this with the useWindowDimensions() hook
 const {width, height} = Dimensions.get('window');
+
+type ViewableItemsType = {
+  viewableItems: Array<ViewToken<Media>>;
+};
 
 export default function GalleryScreen({route}: Props) {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');
   }
+
+  const scrollX = useSharedValue(0);
+  const currentIndex = useSharedValue(0);
+
   const {item} = route.params;
 
   const {data, isLoading, error} = useQuery({
@@ -55,15 +65,33 @@ export default function GalleryScreen({route}: Props) {
     </View>
   );
 
+  const numberOfImages = data?.total_results ?? 0;
+  const media: Media[] = data?.media || [];
+
+  const onViewableItemsChanged = (props: ViewableItemsType) => {
+    const {viewableItems} = props;
+    if (viewableItems.length > 0) {
+      currentIndex.value = viewableItems[0].index ?? 0;
+    }
+  };
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <FlatList
-        data={data as Media[]}
+        data={media}
         keyExtractor={item => item.id.toString()}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
+        onViewableItemsChanged={onViewableItemsChanged}
         renderItem={renderItem}
+        onScroll={event => {
+          scrollX.value = event.nativeEvent.contentOffset.x;
+        }}
+      />
+      <PositionIndicator
+        currentIndex={currentIndex}
+        numberOfImages={numberOfImages}
       />
     </GestureHandlerRootView>
   );

@@ -20,6 +20,7 @@ export interface CollectionAPIResponse {
 
 export interface MediaAPIResponse {
   media: Media[];
+  total_results: number;
 }
 
 export type Media = {
