@@ -20,6 +20,7 @@ import Animated, {
 import {Media, PinchableImageProps, Props} from '../types/types';
 import {useQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
+import PositionIndicator from '../components/PositionIndicator';
 
 // Replace this with the useWindowDimensions() hook
 const {width, height} = Dimensions.get('window');
@@ -29,6 +30,10 @@ export default function GalleryScreen({route}: Props) {
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');
   }
+
+  const scrollY = useSharedValue(0);
+  const contentHeight = height * 3;
+
   const {item} = route.params;
 
   const {data, isLoading, error} = useQuery({
@@ -65,6 +70,7 @@ export default function GalleryScreen({route}: Props) {
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
       />
+      <PositionIndicator scrollY={scrollY} contentHeight={contentHeight} />
     </GestureHandlerRootView>
   );
 }
