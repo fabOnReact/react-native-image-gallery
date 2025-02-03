@@ -6,6 +6,7 @@ import {
   ListRenderItem,
   ActivityIndicator,
   Text,
+  ViewToken,
 } from 'react-native';
 import {
   GestureHandlerRootView,
@@ -24,6 +25,10 @@ import PositionIndicator from '../components/PositionIndicator';
 
 // Replace this with the useWindowDimensions() hook
 const {width, height} = Dimensions.get('window');
+
+type ViewableItemsType = {
+  viewableItems: Array<ViewToken<Media>>;
+};
 
 export default function GalleryScreen({route}: Props) {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
@@ -60,10 +65,11 @@ export default function GalleryScreen({route}: Props) {
     </View>
   );
 
-  const numberOfImages = data?.total_results;
+  const numberOfImages = data?.total_results ?? 0;
   const media: Media[] = data?.media || [];
 
-  const onViewableItemsChanged = ({viewableItems}) => {
+  const onViewableItemsChanged = (props: ViewableItemsType) => {
+    const {viewableItems} = props;
     if (viewableItems.length > 0) {
       currentIndex.value = viewableItems[0].index ?? 0;
     }
