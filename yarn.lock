@@ -2493,6 +2493,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@shopify/react-native-skia@npm:^1.11.3":
+  version: 1.11.3
+  resolution: "@shopify/react-native-skia@npm:1.11.3"
+  dependencies:
+    canvaskit-wasm: "npm:0.39.1"
+    react-reconciler: "npm:0.27.0"
+  peerDependencies:
+    react: ">=18.0"
+    react-native: ">=0.64"
+    react-native-reanimated: ">=2.0.0"
+  peerDependenciesMeta:
+    react-native:
+      optional: true
+    react-native-reanimated:
+      optional: true
+  bin:
+    setup-skia-web: ./scripts/setup-canvaskit.js
+  checksum: 191f1b5b00ff4ba123d62f567d65569cddd4ee0d94a4fcdd6f1c2f8c023ab43d83d077efc0cea955864eee84848a417f85c24d40c8716a56431c56f973d365c7
+  languageName: node
+  linkType: hard
+
 "@sideway/address@npm:^4.1.5":
   version: 4.1.5
   resolution: "@sideway/address@npm:4.1.5"
@@ -2964,6 +2985,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@webgpu/types@npm:0.1.21":
+  version: 0.1.21
+  resolution: "@webgpu/types@npm:0.1.21"
+  checksum: 74de9683b70064aeadcdd31381747650b323e7e2183fb38f90a35f1a79f80ad267c0a2ee5010c264befb3d31ad213dbdffa04897e2808f6b04feff8d66bc53e0
+  languageName: node
+  linkType: hard
+
 "ReactNativeImageGallery@workspace:.":
   version: 0.0.0-use.local
   resolution: "ReactNativeImageGallery@workspace:."
@@ -2981,6 +3009,7 @@ __metadata:
     "@react-navigation/elements": "npm:^2.2.5"
     "@react-navigation/native": "npm:^7.0.14"
     "@react-navigation/native-stack": "npm:^7.2.0"
+    "@shopify/react-native-skia": "npm:^1.11.3"
     "@tanstack/react-query": "npm:^5.65.1"
     "@testing-library/react-native": "npm:^13.0.1"
     "@tsconfig/react-native": "npm:^3.0.5"
@@ -3682,6 +3711,15 @@ __metadata:
   version: 1.0.30001696
   resolution: "caniuse-lite@npm:1.0.30001696"
   checksum: 8060584c612b2bc232995a6e31153432de7946b5417d3b3505a3ab76e632e5568ccc7bae38f1a977f21d4fc214f9e64be829213f810694172c9109e258cb5be8
+  languageName: node
+  linkType: hard
+
+"canvaskit-wasm@npm:0.39.1":
+  version: 0.39.1
+  resolution: "canvaskit-wasm@npm:0.39.1"
+  dependencies:
+    "@webgpu/types": "npm:0.1.21"
+  checksum: 0ae60ae5c430aaa88152f3a20f40fc9a6debb15714a2ce1bdebef93005ec6d5e72e0316b91ab637f50aab220dd8694101abac497209bcf16788d00db78f5a898
   languageName: node
   linkType: hard
 
@@ -8316,6 +8354,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-reconciler@npm:0.27.0":
+  version: 0.27.0
+  resolution: "react-reconciler@npm:0.27.0"
+  dependencies:
+    loose-envify: "npm:^1.1.0"
+    scheduler: "npm:^0.21.0"
+  peerDependencies:
+    react: ^18.0.0
+  checksum: 55daff215ff9544dc5b2ba6ecda20520df0f1b2ca145c00fd0905ced1b025f3779664715c36b511a8906aa24b8b433270b0032cd499c55c4e4c878cddc8fc986
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.14.0":
   version: 0.14.2
   resolution: "react-refresh@npm:0.14.2"
@@ -8711,6 +8761,15 @@ __metadata:
   dependencies:
     loose-envify: "npm:^1.1.0"
   checksum: 4fb594d64c692199117160bbd1a5261f03287f8ec59d9ca079a772e5fbb3139495ebda843324d7c8957c07390a0825acb6f72bd29827fb9e155d793db6c2e2bc
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.21.0":
+  version: 0.21.0
+  resolution: "scheduler@npm:0.21.0"
+  dependencies:
+    loose-envify: "npm:^1.1.0"
+  checksum: 083a9a0c83f4923f7f5bb28d8bcf13cff42c90f4303bc187166520fcfc576c97e946d426c707d5a9c0aa0a655819605dd0c741467c626824bbf191251c126f1b
   languageName: node
   linkType: hard
 
