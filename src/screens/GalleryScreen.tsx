@@ -4,6 +4,8 @@ import {
   Dimensions,
   StyleSheet,
   ListRenderItem,
+  ActivityIndicator,
+  Text,
 } from 'react-native';
 import {
   GestureHandlerRootView,
@@ -16,6 +18,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {Media, PinchableImageProps, Props} from '../types/types';
+import {useQuery} from '@tanstack/react-query';
+import {getCollectionsMedia} from '../api/api';
 
 const {width, height} = Dimensions.get('window');
 
@@ -45,6 +49,30 @@ const media: Media[] = [
 ];
 
 export default function GalleryScreen({route}: Props) {
+  const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
+  if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
+    console.warn('PEXELS_API_KEY environment variable is not defined');
+  }
+  const {item} = route.params;
+
+  const {data, isLoading, error} = useQuery({
+    queryKey: ['collectionMedia', item.id],
+    queryFn: () => getCollectionsMedia(PEXELS_API_KEY, item.id),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (error) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{color: 'red'}}>Failed to load images</Text>
+      </View>
+    );
+  }
+
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={{width, height}}>
       <PinchableImage item={item} />
@@ -54,7 +82,7 @@ export default function GalleryScreen({route}: Props) {
   return (
     <GestureHandlerRootView style={styles.container}>
       <FlatList
-        data={media}
+        data={data as Media[]}
         keyExtractor={item => item.id.toString()}
         horizontal
         pagingEnabled
