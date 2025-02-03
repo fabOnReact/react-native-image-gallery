@@ -13,7 +13,7 @@ import GalleryScreen from './screens/GalleryScreen';
 import LikesScreen from './screens/LikesScreen';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {RootStackParamList} from './types/types';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
@@ -40,9 +40,11 @@ function RootStack() {
 function App(): React.JSX.Element {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <RootStack />
-      </NavigationContainer>
+      <SafeAreaView style={{flex: 1}}>
+        <NavigationContainer>
+          <RootStack />
+        </NavigationContainer>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
