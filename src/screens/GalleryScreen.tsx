@@ -21,6 +21,7 @@ import {Media, PinchableImageProps, Props} from '../types/types';
 import {useQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 
+// Replace this with the useWindowDimensions() hook
 const {width, height} = Dimensions.get('window');
 
 export default function GalleryScreen({route}: Props) {
