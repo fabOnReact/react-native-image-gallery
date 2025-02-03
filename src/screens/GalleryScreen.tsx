@@ -32,7 +32,7 @@ export default function GalleryScreen({route}: Props) {
   }
 
   const scrollX = useSharedValue(0);
-  const contentWidth = width * 3;
+  const currentIndex = useSharedValue(0);
 
   const {item} = route.params;
 
@@ -60,20 +60,33 @@ export default function GalleryScreen({route}: Props) {
     </View>
   );
 
+  const numberOfImages = data?.total_results;
+  const media: Media[] = data?.media || [];
+
+  const onViewableItemsChanged = ({viewableItems}) => {
+    if (viewableItems.length > 0) {
+      currentIndex.value = viewableItems[0].index ?? 0;
+    }
+  };
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <FlatList
-        data={data as Media[]}
+        data={media}
         keyExtractor={item => item.id.toString()}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
+        onViewableItemsChanged={onViewableItemsChanged}
         renderItem={renderItem}
         onScroll={event => {
           scrollX.value = event.nativeEvent.contentOffset.x;
         }}
       />
-      <PositionIndicator scrollX={scrollX} contentWidth={contentWidth} />
+      <PositionIndicator
+        currentIndex={currentIndex}
+        numberOfImages={numberOfImages}
+      />
     </GestureHandlerRootView>
   );
 }

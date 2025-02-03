@@ -1,27 +1,25 @@
 import React from 'react';
 import {View, Dimensions} from 'react-native';
-import {Canvas, Circle} from '@shopify/react-native-skia';
+import {Canvas, RoundedRect} from '@shopify/react-native-skia';
 import {useDerivedValue} from 'react-native-reanimated';
 
 const {width} = Dimensions.get('window');
 
+type PositionIndicatorProps = {
+  currentIndex: any;
+  numberOfImages: number;
+};
+
 const PositionIndicator = ({
-  scrollX,
-  contentWidth,
-}: {
-  scrollX: any;
-  contentWidth: number;
-}) => {
-  const indicatorSize = 10; // Adjust size if needed
+  currentIndex,
+  numberOfImages,
+}: PositionIndicatorProps) => {
+  const barHeight = 5; // Adjust thickness of progress bar
 
-  // Derive the indicator position from scroll position
-  const animatedIndicatorX = useDerivedValue(() => {
-    return (
-      (scrollX.value / (contentWidth - width)) * (width - indicatorSize) + 10
-    );
+  // Derived value for progress width
+  const animatedWidth = useDerivedValue(() => {
+    return (currentIndex.value / (numberOfImages - 1)) * width;
   });
-
-  console.log('TESTING ' + 'animatedIndicatorY: ', animatedIndicatorX);
 
   return (
     <View
@@ -29,13 +27,29 @@ const PositionIndicator = ({
         position: 'absolute',
         left: 0,
         right: 0,
-        bottom: 50,
-        height: 30,
-        alignItems: 'center',
-        backgroundColor: 'yellow',
+        bottom: 0,
+        height: barHeight,
       }}>
-      <Canvas style={{width, height: 30}}>
-        <Circle cx={animatedIndicatorX} cy={15} r={indicatorSize} color="red" />
+      <Canvas style={{width, height: barHeight}}>
+        {/* Background Bar */}
+        <RoundedRect
+          x={0}
+          y={0}
+          width={width}
+          height={barHeight}
+          color="#333"
+          r={barHeight / 2}
+        />
+
+        {/* Animated Progress Bar */}
+        <RoundedRect
+          x={0}
+          y={0}
+          width={animatedWidth}
+          height={barHeight}
+          color="red"
+          r={barHeight / 2}
+        />
       </Canvas>
     </View>
   );

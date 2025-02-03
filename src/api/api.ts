@@ -23,7 +23,7 @@ export const getCollectionsMedia = async (apiKey: string, id: number) => {
       return {media: []};
     }
 
-    return data.media;
+    return data;
   } catch (error) {
     console.error(
       `Error fetching media from ${GET_MEDIA_URL} with error: `,
