@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   Text,
   ViewToken,
-  SafeAreaView,
 } from 'react-native';
 import {
   GestureHandlerRootView,
