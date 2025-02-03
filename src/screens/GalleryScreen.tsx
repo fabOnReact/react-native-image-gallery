@@ -57,6 +57,7 @@ function PinchableImage({item}) {
   const translateY = useSharedValue(0);
 
   // Pinch Gesture (Zoom)
+  /*
   const pinchGesture = Gesture.Pinch()
     .onUpdate(event => {
       scale.value = event.scale;
@@ -68,6 +69,7 @@ function PinchableImage({item}) {
         translateY.value = withTiming(0);
       }
     });
+    */
 
   // Pan Gesture (Move)
   const panGesture = Gesture.Pan()
@@ -85,19 +87,19 @@ function PinchableImage({item}) {
     });
 
   // Combined Gesture (Pinch + Pan)
-  const combinedGesture = Gesture.Simultaneous(pinchGesture, panGesture);
+  // const combinedGesture = Gesture.Simultaneous(pinchGesture, panGesture);
 
   // Animated Styles
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
-      {scale: scale.value},
+      // {scale: scale.value},
       {translateX: translateX.value},
       {translateY: translateY.value},
     ],
   }));
 
   return (
-    <GestureDetector gesture={combinedGesture}>
+    <GestureDetector gesture={panGesture}>
       <Animated.Image
         source={{uri: item.src.portrait}}
         style={[{width, height}, animatedStyle]}

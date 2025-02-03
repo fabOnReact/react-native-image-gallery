@@ -20,7 +20,9 @@ const queryClient = new QueryClient();
 function RootStack() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{gestureEnabled: true}}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Gallery" component={GalleryScreen} />
         <Stack.Screen name="Likes" component={LikesScreen} />
