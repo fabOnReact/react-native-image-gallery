@@ -101,7 +101,7 @@ describe('HomeScreen', () => {
     });
   });
 
-  test('navigates to Image screen when a collection is tapped', () => {
+  test('navigates to Gallery screen when a collection is tapped', () => {
     const mockNavigate = jest.fn();
     (useNavigation as jest.Mock).mockReturnValue({navigate: mockNavigate});
 
@@ -121,7 +121,7 @@ describe('HomeScreen', () => {
     const {getByText} = render(<HomeScreen />);
 
     fireEvent.press(getByText('Nature - 10'));
-    expect(mockNavigate).toHaveBeenCalledWith('Image', {
+    expect(mockNavigate).toHaveBeenCalledWith('Gallery', {
       item: {id: '1', title: 'Nature', media_count: 10},
     });
   });

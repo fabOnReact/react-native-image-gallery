@@ -13,21 +13,38 @@ export interface Collection {
   media_count: number;
 }
 
-export interface APIResponse {
+export interface CollectionAPIResponse {
   collections: Collection[];
   nextPage: number | null;
 }
 
+export interface MediaAPIResponse {
+  media: Media[];
+}
+
+export type Media = {
+  id: number;
+  src: {
+    portrait: string;
+  };
+};
+
+export type PinchableImageProps = {
+  item: Media;
+};
+
 export type RootStackParamList = {
   Home: undefined;
-  Image: {item: Collection};
+  Gallery: {item: Collection};
   Likes: undefined;
 };
 
-export type ImageScreenProps = {
-  route: CollectionItemProps;
+export type GalleryScreenProps = {
+  route: {
+    item: Media;
+  };
 };
 
-export type Props = NativeStackScreenProps<RootStackParamList, 'Image'>;
+export type Props = NativeStackScreenProps<RootStackParamList, 'Gallery'>;
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;

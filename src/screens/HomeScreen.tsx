@@ -16,7 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const CollectionItem: React.FC<CollectionItemProps> = ({item}) => {
   const navigation = useNavigation<NavigationProp>();
-  const onPress = () => navigation.navigate('Image', {item});
+  const onPress = () => navigation.navigate('Gallery', {item});
   return (
     <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
       <Text>
