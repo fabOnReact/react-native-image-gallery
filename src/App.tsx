@@ -13,6 +13,7 @@ import GalleryScreen from './screens/GalleryScreen';
 import LikesScreen from './screens/LikesScreen';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {RootStackParamList} from './types/types';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
@@ -24,7 +25,12 @@ function RootStack() {
         initialRouteName="Home"
         screenOptions={{gestureEnabled: true}}>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Gallery" component={GalleryScreen} />
+        <Stack.Screen
+          name="Gallery"
+          component={GalleryScreen}
+          // Requires swipe down gesture to navigate back like in Snapchat.
+          // options={{headerShown: false}}
+        />
         <Stack.Screen name="Likes" component={LikesScreen} />
       </Stack.Navigator>
     </QueryClientProvider>
@@ -33,9 +39,13 @@ function RootStack() {
 
 function App(): React.JSX.Element {
   return (
-    <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <SafeAreaView style={{flex: 1}}>
+        <NavigationContainer>
+          <RootStack />
+        </NavigationContainer>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

@@ -39,6 +39,8 @@ export default function GalleryScreen({route}: Props) {
   const scrollX = useSharedValue(0);
   const currentIndex = useSharedValue(0);
 
+  // Give a default to prevent crashes
+  // const { item = { id: '', name: '' } } = route.params || {};
   const {item} = route.params;
 
   const {data, isLoading, error} = useQuery({
@@ -75,6 +77,10 @@ export default function GalleryScreen({route}: Props) {
     }
   };
 
+  const viewabilityConfig = {
+    viewAreaCoveragePercentThreshold: 50, // 50% of an image should be visible
+  };
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <FlatList
@@ -84,6 +90,7 @@ export default function GalleryScreen({route}: Props) {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         renderItem={renderItem}
         onScroll={event => {
           scrollX.value = event.nativeEvent.contentOffset.x;
@@ -102,18 +109,36 @@ function PinchableImage({item}: PinchableImageProps) {
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
+  const lastScale = useSharedValue(1); // To track previous zoom state
 
-  // Pinch Gesture (Zoom)
+  // **Double-Tap Gesture for Zoom**
+  const doubleTapGesture = Gesture.Tap()
+    .numberOfTaps(2) // Detect double-tap
+    .onEnd(() => {
+      if (scale.value === 1) {
+        // Zoom in
+        scale.value = withTiming(2, {duration: 300});
+        lastScale.value = 2;
+      } else {
+        // Zoom out
+        scale.value = withTiming(1, {duration: 300});
+        translateX.value = withTiming(0, {duration: 300});
+        translateY.value = withTiming(0, {duration: 300});
+        lastScale.value = 1;
+      }
+    });
+
+  // **Pinch Gesture for Manual Zooming**
   const pinchGesture = Gesture.Pinch()
     .onUpdate(event => {
-      scale.value = event.scale;
+      scale.value = Math.max(1, Math.min(event.scale, 3)); // Min 1x, Max 3x zoom
     })
     .onEnd(() => {
       // Snap back if zoom < 1
       if (scale.value < 1) {
-        scale.value = withTiming(1);
-        translateX.value = withTiming(0);
-        translateY.value = withTiming(0);
+        scale.value = withTiming(1, {duration: 300});
+        translateX.value = withTiming(0, {duration: 300});
+        translateY.value = withTiming(0, {duration: 300});
       }
     });
 
@@ -148,8 +173,12 @@ function PinchableImage({item}: PinchableImageProps) {
       }
     });
 
-  // Combine pinch and pan
-  const combinedGesture = Gesture.Simultaneous(pinchGesture, panGesture);
+  // **Combine Gestures (Pinch, Pan, and Double Tap)**
+  const combinedGesture = Gesture.Simultaneous(
+    pinchGesture,
+    panGesture,
+    doubleTapGesture,
+  );
 
   // Animated styling
   const animatedStyle = useAnimatedStyle(() => {
@@ -167,7 +196,8 @@ function PinchableImage({item}: PinchableImageProps) {
       <Animated.Image
         source={{uri: portrait}}
         style={[styles.image, animatedStyle]}
-        resizeMode="contain"
+        resizeMode="cover"
+        onError={() => console.log(`Failed to load image: ${portrait}`)}
       />
     </GestureDetector>
   );
