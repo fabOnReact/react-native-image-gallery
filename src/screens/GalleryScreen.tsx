@@ -39,6 +39,8 @@ export default function GalleryScreen({route}: Props) {
   const scrollX = useSharedValue(0);
   const currentIndex = useSharedValue(0);
 
+  // Give a default to prevent crashes
+  // const { item = { id: '', name: '' } } = route.params || {};
   const {item} = route.params;
 
   const {data, isLoading, error} = useQuery({
@@ -75,6 +77,10 @@ export default function GalleryScreen({route}: Props) {
     }
   };
 
+  const viewabilityConfig = {
+    viewAreaCoveragePercentThreshold: 50, // 50% of an image should be visible
+  };
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <FlatList
@@ -84,6 +90,7 @@ export default function GalleryScreen({route}: Props) {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         renderItem={renderItem}
         onScroll={event => {
           scrollX.value = event.nativeEvent.contentOffset.x;
@@ -106,14 +113,14 @@ function PinchableImage({item}: PinchableImageProps) {
   // Pinch Gesture (Zoom)
   const pinchGesture = Gesture.Pinch()
     .onUpdate(event => {
-      scale.value = event.scale;
+      scale.value = Math.max(1, Math.min(event.scale, 3)); // Min 1x, Max 3x zoom
     })
     .onEnd(() => {
       // Snap back if zoom < 1
       if (scale.value < 1) {
-        scale.value = withTiming(1);
-        translateX.value = withTiming(0);
-        translateY.value = withTiming(0);
+        scale.value = withTiming(1, {duration: 300});
+        translateX.value = withTiming(0, {duration: 300});
+        translateY.value = withTiming(0, {duration: 300});
       }
     });
 
@@ -168,6 +175,7 @@ function PinchableImage({item}: PinchableImageProps) {
         source={{uri: portrait}}
         style={[styles.image, animatedStyle]}
         resizeMode="contain"
+        onError={() => console.log(`Failed to load image: ${portrait}`)}
       />
     </GestureDetector>
   );
