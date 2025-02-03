@@ -69,6 +69,10 @@ export default function GalleryScreen({route}: Props) {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
+        onScroll={event => {
+          scrollY.value = event.nativeEvent.contentOffset.x;
+          console.log('TESTING ' + 'scrollY.value: ', scrollY.value);
+        }}
       />
       <PositionIndicator scrollY={scrollY} contentHeight={contentHeight} />
     </GestureHandlerRootView>

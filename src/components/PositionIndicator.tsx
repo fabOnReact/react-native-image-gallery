@@ -21,6 +21,8 @@ const PositionIndicator = ({
     );
   });
 
+  console.log('TESTING ' + 'animatedIndicatorY: ', animatedIndicatorY);
+
   return (
     <View
       style={{
@@ -31,7 +33,7 @@ const PositionIndicator = ({
         justifyContent: 'center',
       }}>
       <Canvas style={{width: 20, height}}>
-        <Circle cx={10} cy={animatedIndicatorY} r={10} color="white" />
+        <Circle cx={10} cy={animatedIndicatorY} r={10} color="red" />
       </Canvas>
     </View>
   );
