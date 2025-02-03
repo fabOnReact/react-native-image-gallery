@@ -31,8 +31,8 @@ export default function GalleryScreen({route}: Props) {
     console.warn('PEXELS_API_KEY environment variable is not defined');
   }
 
-  const scrollY = useSharedValue(0);
-  const contentHeight = height * 3;
+  const scrollX = useSharedValue(0);
+  const contentWidth = width * 3;
 
   const {item} = route.params;
 
@@ -70,11 +70,10 @@ export default function GalleryScreen({route}: Props) {
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
         onScroll={event => {
-          scrollY.value = event.nativeEvent.contentOffset.x;
-          console.log('TESTING ' + 'scrollY.value: ', scrollY.value);
+          scrollX.value = event.nativeEvent.contentOffset.x;
         }}
       />
-      <PositionIndicator scrollY={scrollY} contentHeight={contentHeight} />
+      <PositionIndicator scrollX={scrollX} contentWidth={contentWidth} />
     </GestureHandlerRootView>
   );
 }

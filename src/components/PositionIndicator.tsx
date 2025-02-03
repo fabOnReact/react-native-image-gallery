@@ -3,37 +3,39 @@ import {View, Dimensions} from 'react-native';
 import {Canvas, Circle} from '@shopify/react-native-skia';
 import {useDerivedValue} from 'react-native-reanimated';
 
-const {height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const PositionIndicator = ({
-  scrollY,
-  contentHeight,
+  scrollX,
+  contentWidth,
 }: {
-  scrollY: any;
-  contentHeight: number;
+  scrollX: any;
+  contentWidth: number;
 }) => {
-  const indicatorSize = 40; // Adjust size if needed
+  const indicatorSize = 10; // Adjust size if needed
 
   // Derive the indicator position from scroll position
-  const animatedIndicatorY = useDerivedValue(() => {
+  const animatedIndicatorX = useDerivedValue(() => {
     return (
-      (scrollY.value / (contentHeight - height)) * (height - indicatorSize)
+      (scrollX.value / (contentWidth - width)) * (width - indicatorSize) + 10
     );
   });
 
-  console.log('TESTING ' + 'animatedIndicatorY: ', animatedIndicatorY);
+  console.log('TESTING ' + 'animatedIndicatorY: ', animatedIndicatorX);
 
   return (
     <View
       style={{
         position: 'absolute',
-        right: 20,
-        top: 0,
-        bottom: 0,
-        justifyContent: 'center',
+        left: 0,
+        right: 0,
+        bottom: 50,
+        height: 30,
+        alignItems: 'center',
+        backgroundColor: 'yellow',
       }}>
-      <Canvas style={{width: 20, height}}>
-        <Circle cx={10} cy={animatedIndicatorY} r={10} color="red" />
+      <Canvas style={{width, height: 30}}>
+        <Circle cx={animatedIndicatorX} cy={15} r={indicatorSize} color="red" />
       </Canvas>
     </View>
   );
