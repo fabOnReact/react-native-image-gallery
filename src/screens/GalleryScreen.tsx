@@ -199,7 +199,7 @@ function PinchableImage({item}: PinchableImageProps) {
       <Animated.Image
         source={{uri: portrait}}
         style={[styles.image, animatedStyle]}
-        resizeMode="contain"
+        resizeMode="cover"
         onError={() => console.log(`Failed to load image: ${portrait}`)}
       />
     </GestureDetector>
