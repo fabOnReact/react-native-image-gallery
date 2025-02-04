@@ -8,17 +8,9 @@ import {
   Text,
   ViewToken,
 } from 'react-native';
-import {
-  GestureHandlerRootView,
-  Gesture,
-  GestureDetector,
-} from 'react-native-gesture-handler';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from 'react-native-reanimated';
-import {Media, PinchableImageProps, Props} from '../types/types';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {useSharedValue} from 'react-native-reanimated';
+import {Media, Props} from '../types/types';
 import {useQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 import PositionIndicator from '../components/PositionIndicator';
