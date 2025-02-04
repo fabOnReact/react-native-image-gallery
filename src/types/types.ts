@@ -23,6 +23,11 @@ export interface MediaAPIResponse {
   total_results: number;
 }
 
+export type ImageViewerProps = {
+  media: Media[];
+  numberOfImages: number;
+};
+
 export type Media = {
   id: number;
   src: {

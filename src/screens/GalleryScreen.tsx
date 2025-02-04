@@ -1,36 +1,17 @@
-import {
-  FlatList,
-  View,
-  Dimensions,
-  StyleSheet,
-  ListRenderItem,
-  ActivityIndicator,
-  Text,
-  ViewToken,
-} from 'react-native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {useSharedValue} from 'react-native-reanimated';
+import {View, Dimensions, ActivityIndicator, Text} from 'react-native';
 import {Media, Props} from '../types/types';
 import {useQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
-import PositionIndicator from '../components/PositionIndicator';
-import PinchableImage from '../components/PinchableImage';
+import ImageViewer from '../components/ImageViewer';
 
 // Replace this with the useWindowDimensions() hook
-const {width, height} = Dimensions.get('window');
-
-type ViewableItemsType = {
-  viewableItems: Array<ViewToken<Media>>;
-};
+Dimensions.get('window');
 
 function GalleryScreen({route}: Props) {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');
   }
-
-  const scrollX = useSharedValue(0);
-  const currentIndex = useSharedValue(0);
 
   // Give a default to prevent crashes
   // const { item = { id: '', name: '' } } = route.params || {};
@@ -54,54 +35,10 @@ function GalleryScreen({route}: Props) {
     );
   }
 
-  const renderItem: ListRenderItem<Media> = ({item}) => (
-    <View style={{width, height}}>
-      <PinchableImage item={item} />
-    </View>
-  );
-
   const numberOfImages = data?.total_results ?? 0;
   const media: Media[] = data?.media || [];
 
-  const onViewableItemsChanged = (props: ViewableItemsType) => {
-    const {viewableItems} = props;
-    if (viewableItems.length > 0) {
-      currentIndex.value = viewableItems[0].index ?? 0;
-    }
-  };
-
-  const viewabilityConfig = {
-    viewAreaCoveragePercentThreshold: 50, // 50% of an image should be visible
-  };
-
-  return (
-    <GestureHandlerRootView style={styles.container}>
-      <FlatList
-        data={media}
-        keyExtractor={item => item.id.toString()}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        renderItem={renderItem}
-        onScroll={event => {
-          scrollX.value = event.nativeEvent.contentOffset.x;
-        }}
-      />
-      <PositionIndicator
-        currentIndex={currentIndex}
-        numberOfImages={numberOfImages}
-      />
-    </GestureHandlerRootView>
-  );
+  return <ImageViewer media={media} numberOfImages={numberOfImages} />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-});
 
 export default GalleryScreen;

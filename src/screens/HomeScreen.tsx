@@ -90,6 +90,14 @@ function HomeScreen() {
     return <ErrorMessage onRetry={refetch} />;
   }
 
+  const FavoriteItem: Collection = {
+    title: 'Favorite Pictures',
+    media_count: 0,
+    id: 0,
+  };
+
+  const collectionsWithFavorites = [FavoriteItem, ...collections];
+
   const renderItem: ListRenderItem<Collection> = ({item}) => (
     <CollectionItem item={item} />
   );
@@ -97,8 +105,8 @@ function HomeScreen() {
   return (
     <FlatList
       testID="collection-list"
-      data={collections}
-      keyExtractor={item => item.id.toString()}
+      data={collectionsWithFavorites}
+      keyExtractor={item => (item.id + 1).toString()}
       renderItem={renderItem}
       onEndReached={loadMore}
       onEndReachedThreshold={0.5}
