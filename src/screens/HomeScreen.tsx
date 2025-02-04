@@ -16,7 +16,12 @@ import {useNavigation} from '@react-navigation/native';
 
 const CollectionItem: React.FC<CollectionItemProps> = ({item}) => {
   const navigation = useNavigation<NavigationProp>();
-  const onPress = () => navigation.navigate('Gallery', {item});
+  let onPress: () => void;
+  if (item.id === 0) {
+    onPress = () => navigation.navigate('Favorites');
+  } else {
+    onPress = () => navigation.navigate('Gallery', {item});
+  }
   return (
     <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
       <Text>

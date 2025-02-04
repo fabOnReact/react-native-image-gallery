@@ -3,7 +3,7 @@ import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
 import {useAtom} from 'jotai';
 import {favoritePicturesAtom} from '../store/store';
 
-const FavoriteScreen = () => {
+const FavoritesScreen = () => {
   const [favorites] = useAtom(favoritePicturesAtom);
 
   return (
@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavoriteScreen;
+export default FavoritesScreen;

@@ -10,7 +10,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
 import HomeScreen from './screens/HomeScreen';
 import GalleryScreen from './screens/GalleryScreen';
-import LikesScreen from './screens/LikesScreen';
+import FavoritesScreen from './screens/FavoritesScreen';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {RootStackParamList} from './types/types';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
@@ -33,7 +33,7 @@ function RootStack() {
           // Requires swipe down gesture to navigate back like in Snapchat.
           // options={{headerShown: false}}
         />
-        <Stack.Screen name="Likes" component={LikesScreen} />
+        <Stack.Screen name="Favorites" component={FavoritesScreen} />
       </Stack.Navigator>
     </QueryClientProvider>
   );

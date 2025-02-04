@@ -42,7 +42,7 @@ export type PinchableImageProps = {
 export type RootStackParamList = {
   Home: undefined;
   Gallery: {item: Collection};
-  Likes: undefined;
+  Favorites: undefined;
 };
 
 export type GalleryScreenProps = {

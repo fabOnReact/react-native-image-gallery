@@ -10,7 +10,10 @@ type FavoriteButtonProps = {
 
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({picture}) => {
   const [favorites, toggleFavorite] = useAtom(toggleFavoritePictureAtom);
-  const isFavorited = favorites.some(fav => fav.id === picture.id);
+  // TODO - Verify that jotai makes check on the data type entered in favorites
+  // for now I only check for null, as I want to know if the data is not null
+  const isFavorited =
+    favorites === null ? false : favorites.some(fav => fav.id === picture.id);
 
   return (
     <View style={styles.container}>
@@ -26,7 +29,8 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({picture}) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 0,
+    height: 120,
     left: '50%',
     transform: [{translateX: -25}],
   },

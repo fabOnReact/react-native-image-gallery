@@ -26,7 +26,7 @@ function ImageViewer(props: ImageViewerProps) {
   const media: Media[] = props.media;
 
   const renderItem: ListRenderItem<Media> = ({item}) => (
-    <View style={{width, height}}>
+    <View style={[{width, height}, styles.imageContainer]}>
       <PinchableImage item={item} />
       <FavoriteButton picture={item} />
     </View>
@@ -70,6 +70,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+  },
+  imageContainer: {
+    flex: 1,
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
