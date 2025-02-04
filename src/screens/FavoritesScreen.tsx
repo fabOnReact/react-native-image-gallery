@@ -5,6 +5,8 @@ import {favoritePicturesAtom} from '../store/store';
 
 const FavoritesScreen = () => {
   const [favorites] = useAtom(favoritePicturesAtom);
+  console.log('Favorites in FavoriteScreen:', favorites);
+  console.log('Favorites length:', favorites.length);
 
   return (
     <View style={styles.container}>
@@ -16,10 +18,9 @@ const FavoritesScreen = () => {
         <FlatList
           data={favorites}
           keyExtractor={item => item.id.toString()}
-          numColumns={2} // Show images in 2 columns
           renderItem={({item}) => (
             <View style={styles.imageContainer}>
-              <Image source={{uri: item.url}} style={styles.image} />
+              <Image source={{uri: item.src.portrait}} style={styles.image} />
             </View>
           )}
         />
