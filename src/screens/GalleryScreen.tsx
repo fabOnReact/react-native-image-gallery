@@ -1,26 +1,37 @@
+import {
   FlatList,
   View,
+  Dimensions,
   StyleSheet,
   ListRenderItem,
   ActivityIndicator,
   Text,
   ViewToken,
-  useWindowDimensions,
 } from 'react-native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {useSharedValue} from 'react-native-reanimated';
-import {Media, Props} from '../types/types';
+import {
+  GestureHandlerRootView,
+  Gesture,
+  GestureDetector,
+} from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
+import {Media, PinchableImageProps, Props} from '../types/types';
 import {useQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 import PositionIndicator from '../components/PositionIndicator';
 import PinchableImage from '../components/PinchableImage';
+
+// Replace this with the useWindowDimensions() hook
+const {width, height} = Dimensions.get('window');
 
 type ViewableItemsType = {
   viewableItems: Array<ViewToken<Media>>;
 };
 
 function GalleryScreen({route}: Props) {
-  const {width, height} = useWindowDimensions();
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');
