@@ -11,8 +11,8 @@ import {useSharedValue} from 'react-native-reanimated';
 import {ImageViewerProps, Media} from '../types/types';
 import PositionIndicator from '../components/PositionIndicator';
 import PinchableImage from '../components/PinchableImage';
+import FavoriteButton from '../components/FavoriteButton'; // Import Favorite Button
 
-// Replace this with the useWindowDimensions() hook
 const {width, height} = Dimensions.get('window');
 
 type ViewableItemsType = {
@@ -28,6 +28,7 @@ function ImageViewer(props: ImageViewerProps) {
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={{width, height}}>
       <PinchableImage item={item} />
+      <FavoriteButton picture={item} />
     </View>
   );
 

@@ -7,13 +7,15 @@
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useEffect} from 'react';
 import HomeScreen from './screens/HomeScreen';
 import GalleryScreen from './screens/GalleryScreen';
 import LikesScreen from './screens/LikesScreen';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {RootStackParamList} from './types/types';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {Provider, useSetAtom} from 'jotai';
+import {loadFavoritesAtom} from './store/store';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
@@ -38,14 +40,22 @@ function RootStack() {
 }
 
 function App(): React.JSX.Element {
+  const loadFavorites = useSetAtom(loadFavoritesAtom);
+
+  useEffect(() => {
+    loadFavorites(); // Load stored favorites on app start
+  }, []);
+
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{flex: 1}}>
-        <NavigationContainer>
-          <RootStack />
-        </NavigationContainer>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <Provider>
+      <SafeAreaProvider>
+        <SafeAreaView style={{flex: 1}}>
+          <NavigationContainer>
+            <RootStack />
+          </NavigationContainer>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 
