@@ -1,19 +1,31 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
 import {useAtom} from 'jotai';
-import {favoritePicturesAtom, toggleFavoritePictureAtom} from '../store/store';
 import {Media} from '../types/types';
+import {favoritesAtom} from '../store/store';
 
 type FavoriteButtonProps = {
   picture: Media;
 };
 
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({picture}) => {
-  const [favorites, toggleFavorite] = useAtom(toggleFavoritePictureAtom);
+  const [favorites, setFavorites] = useAtom(favoritesAtom);
   // TODO - Verify that jotai makes check on the data type entered in favorites
   // for now I only check for null, as I want to know if the data is not null
   const isFavorited =
     favorites === null ? false : favorites.some(fav => fav.id === picture.id);
+
+  const toggleFavorite = (picture: Media) => {
+    if (isFavorited) {
+      console.log('remove from favorites');
+      setFavorites(favorites.filter(fav => fav.id !== picture.id));
+      console.log('TESTING ' + 'favorites: ', favorites);
+    } else {
+      console.log('add to favorites');
+      setFavorites([...favorites, picture]);
+      console.log('TESTING ' + 'favorites: ', favorites);
+    }
+  };
 
   return (
     <View style={styles.container}>

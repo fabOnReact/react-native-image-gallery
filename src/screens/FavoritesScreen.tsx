@@ -1,12 +1,11 @@
 import React from 'react';
 import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
 import {useAtom} from 'jotai';
-import {favoritePicturesAtom} from '../store/store';
+import {favoritesAtom} from '../store/store';
 
 const FavoritesScreen = () => {
-  const [favorites] = useAtom(favoritePicturesAtom);
-  console.log('Favorites in FavoriteScreen:', favorites);
-  console.log('Favorites length:', favorites.length);
+  const [favorites] = useAtom(favoritesAtom);
+  console.log('TESTING ' + 'favorites: ', favorites);
 
   return (
     <View style={styles.container}>
