@@ -9,12 +9,6 @@ import {useNavigation} from '@react-navigation/native';
 Dimensions.get('window');
 
 function GalleryScreen({route}: Props) {
-  const navigation = useNavigation<NavigationProp>();
-  navigation.setOptions({
-    headerShown: true,
-    headerTransparent: true,
-    title: '',
-  });
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');

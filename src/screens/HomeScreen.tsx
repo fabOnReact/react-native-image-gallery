@@ -4,6 +4,7 @@ import {
   Button,
   FlatList,
   ListRenderItem,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -108,19 +109,21 @@ function HomeScreen() {
   );
 
   return (
-    <FlatList
-      testID="collection-list"
-      data={collectionsWithFavorites}
-      keyExtractor={item => (item.id + 1).toString()}
-      renderItem={renderItem}
-      onEndReached={loadMore}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={
-        isFetchingNextPage ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : null
-      }
-    />
+    <SafeAreaView>
+      <FlatList
+        testID="collection-list"
+        data={collectionsWithFavorites}
+        keyExtractor={item => (item.id + 1).toString()}
+        renderItem={renderItem}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : null
+        }
+      />
+    </SafeAreaView>
   );
 }
 

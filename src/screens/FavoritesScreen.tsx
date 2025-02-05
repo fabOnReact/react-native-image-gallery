@@ -7,30 +7,22 @@ import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '../types/types';
 
 const FavoritesScreen = () => {
-  const navigation = useNavigation<NavigationProp>();
-  navigation.setOptions({
-    headerShown: true,
-    headerTransparent: true,
-    title: '',
-  });
   const [favorites] = useAtom(favoritesAtom);
 
   return (
-    <View style={styles.container}>
+    <>
       {favorites.length === 0 ? (
         <Text style={styles.emptyText}>No favorites yet.</Text>
       ) : (
         <ImageViewer numberOfImages={favorites.length} media={favorites} />
       )}
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    padding: 16,
   },
   title: {
     fontSize: 24,

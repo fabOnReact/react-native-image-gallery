@@ -25,6 +25,9 @@ function RootStack() {
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
+          headerShown: true,
+          headerTransparent: true,
+          title: '',
           gestureEnabled: true,
         }}>
         <Stack.Screen name="Home" component={HomeScreen} />
