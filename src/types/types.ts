@@ -23,6 +23,11 @@ export interface MediaAPIResponse {
   total_results: number;
 }
 
+export type ImageViewerProps = {
+  media: Media[];
+  numberOfImages: number;
+};
+
 export type Media = {
   id: number;
   src: {
@@ -37,7 +42,7 @@ export type PinchableImageProps = {
 export type RootStackParamList = {
   Home: undefined;
   Gallery: {item: Collection};
-  Likes: undefined;
+  Favorites: undefined;
 };
 
 export type GalleryScreenProps = {
