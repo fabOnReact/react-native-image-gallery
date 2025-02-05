@@ -20,10 +20,10 @@ type ViewableItemsType = {
 };
 
 function ImageViewer(props: ImageViewerProps) {
-  const scrollX = useSharedValue(0);
-  const currentIndex = useSharedValue(0);
   const numberOfImages = props.numberOfImages;
   const media: Media[] = props.media;
+  const scrollX = useSharedValue(0);
+  const currentIndex = useSharedValue(0);
 
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={[{width, height}, styles.imageContainer]}>

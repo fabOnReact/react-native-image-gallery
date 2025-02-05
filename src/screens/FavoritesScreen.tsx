@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
+import ImageViewer from '../components/ImageViewer';
 
 const FavoritesScreen = () => {
   const [favorites] = useAtom(favoritesAtom);
@@ -14,15 +15,7 @@ const FavoritesScreen = () => {
       {favorites.length === 0 ? (
         <Text style={styles.emptyText}>No favorites yet.</Text>
       ) : (
-        <FlatList
-          data={favorites}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => (
-            <View style={styles.imageContainer}>
-              <Image source={{uri: item.src.portrait}} style={styles.image} />
-            </View>
-          )}
-        />
+        <ImageViewer numberOfImages={favorites.length} media={favorites} />
       )}
     </View>
   );
