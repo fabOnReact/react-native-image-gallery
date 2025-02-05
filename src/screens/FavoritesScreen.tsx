@@ -6,7 +6,6 @@ import ImageViewer from '../components/ImageViewer';
 
 const FavoritesScreen = () => {
   const [favorites] = useAtom(favoritesAtom);
-  console.log('TESTING ' + 'favorites: ', favorites);
 
   return (
     <View style={styles.container}>

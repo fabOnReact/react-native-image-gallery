@@ -17,13 +17,9 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({picture}) => {
 
   const toggleFavorite = (picture: Media) => {
     if (isFavorited) {
-      console.log('remove from favorites');
       setFavorites(favorites.filter(fav => fav.id !== picture.id));
-      console.log('TESTING ' + 'favorites: ', favorites);
     } else {
-      console.log('add to favorites');
       setFavorites([...favorites, picture]);
-      console.log('TESTING ' + 'favorites: ', favorites);
     }
   };
 
