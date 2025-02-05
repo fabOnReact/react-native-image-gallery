@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     bottom: 0,
-    height: 120,
+    height: 70,
     left: '50%',
     transform: [{translateX: -25}],
   },

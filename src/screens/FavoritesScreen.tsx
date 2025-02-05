@@ -3,14 +3,20 @@ import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
 import ImageViewer from '../components/ImageViewer';
+import {useNavigation} from '@react-navigation/native';
+import {NavigationProp} from '../types/types';
 
 const FavoritesScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
+  navigation.setOptions({
+    headerShown: true,
+    headerTransparent: true,
+    title: '',
+  });
   const [favorites] = useAtom(favoritesAtom);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Favorite Images</Text>
-
       {favorites.length === 0 ? (
         <Text style={styles.emptyText}>No favorites yet.</Text>
       ) : (

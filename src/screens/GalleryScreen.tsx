@@ -1,13 +1,20 @@
 import {View, Dimensions, ActivityIndicator, Text} from 'react-native';
-import {Media, Props} from '../types/types';
+import {Media, NavigationProp, Props} from '../types/types';
 import {useQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 import ImageViewer from '../components/ImageViewer';
+import {useNavigation} from '@react-navigation/native';
 
 // Replace this with the useWindowDimensions() hook
 Dimensions.get('window');
 
 function GalleryScreen({route}: Props) {
+  const navigation = useNavigation<NavigationProp>();
+  navigation.setOptions({
+    headerShown: true,
+    headerTransparent: true,
+    title: '',
+  });
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');

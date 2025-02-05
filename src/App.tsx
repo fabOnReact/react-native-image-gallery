@@ -24,14 +24,11 @@ function RootStack() {
     <QueryClientProvider client={queryClient}>
       <Stack.Navigator
         initialRouteName="Home"
-        screenOptions={{gestureEnabled: true}}>
+        screenOptions={{
+          gestureEnabled: true,
+        }}>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen
-          name="Gallery"
-          component={GalleryScreen}
-          // Requires swipe down gesture to navigate back like in Snapchat.
-          // options={{headerShown: false}}
-        />
+        <Stack.Screen name="Gallery" component={GalleryScreen} />
         <Stack.Screen name="Favorites" component={FavoritesScreen} />
       </Stack.Navigator>
     </QueryClientProvider>
