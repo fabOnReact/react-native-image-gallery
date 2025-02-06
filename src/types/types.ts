@@ -8,7 +8,7 @@ export interface CollectionItemProps {
 }
 
 export interface Collection {
-  id: number;
+  id: string;
   title: string;
   media_count: number;
 }

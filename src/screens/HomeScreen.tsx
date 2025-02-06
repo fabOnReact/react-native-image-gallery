@@ -15,22 +15,30 @@ import {useCallback} from 'react';
 import {Collection, CollectionItemProps, NavigationProp} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
 
-const CollectionItem: React.FC<CollectionItemProps> = ({item}) => {
+// Later will be styled different from a CollectionItem
+function FavoritesItem(props: CollectionItemProps) {
   const navigation = useNavigation<NavigationProp>();
-  let onPress: () => void;
-  if (item.id === 0) {
-    onPress = () => navigation.navigate('Favorites');
-  } else {
-    onPress = () => navigation.navigate('Gallery', {item});
-  }
+  const onPress = () => navigation.navigate('Favorites');
   return (
     <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
       <Text>
-        {item.title} - {item.media_count}
+        {props.item.title} - {props.item.media_count}
       </Text>
     </TouchableOpacity>
   );
-};
+}
+
+function CollectionItem(props: CollectionItemProps) {
+  const navigation = useNavigation<NavigationProp>();
+  const onPress = () => navigation.navigate('Gallery', {item: props.item});
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
+      <Text>
+        {props.item.title} - {props.item.media_count}
+      </Text>
+    </TouchableOpacity>
+  );
+}
 
 const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
   <View
@@ -99,14 +107,17 @@ function HomeScreen() {
   const FavoriteItem: Collection = {
     title: 'Favorite Pictures',
     media_count: 0,
-    id: 0,
+    id: 'collection-header-item',
   };
 
   const collectionsWithFavorites = [FavoriteItem, ...collections];
 
-  const renderItem: ListRenderItem<Collection> = ({item}) => (
-    <CollectionItem item={item} />
-  );
+  const renderItem: ListRenderItem<Collection> = ({item}) => {
+    if (item.id === 'collection-header-item') {
+      return <FavoritesItem item={item} />;
+    }
+    return <CollectionItem item={item} />;
+  };
 
   return (
     <SafeAreaView>

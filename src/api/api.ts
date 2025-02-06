@@ -1,6 +1,7 @@
 import {CollectionAPIResponse, MediaAPIResponse} from '../types/types';
 const PEXELS_URL = 'https://api.pexels.com/v1';
 
+// Define explicitly the return type for this function
 export const getCollectionsMedia = async (apiKey: string, id: number) => {
   const GET_MEDIA_URL = `${PEXELS_URL}/collections/${id}?type=photos`;
   try {
