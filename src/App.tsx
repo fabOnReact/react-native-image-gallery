@@ -15,6 +15,9 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {RootStackParamList} from './types/types';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Provider} from 'jotai';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreLogs(['Open debugger to view warnings.']);
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
