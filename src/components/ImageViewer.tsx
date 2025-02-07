@@ -97,6 +97,7 @@ function ImageViewer(props: ImageViewerProps) {
           value={isFavorited ? 70 : 10}
           withAnimation={withAnimation}
           style={styles.invisibleButton}
+          animationDuration={3000}
         />
         <PositionIndicator
           currentIndex={currentIndexSharedValue}
