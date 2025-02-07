@@ -111,7 +111,7 @@ function ImageViewer(props: ImageViewerProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'transparent',
   },
   invisibleButton: {
     position: 'absolute',

@@ -7,21 +7,8 @@ function HeartWithLiquidActivityIndicator() {
   const [withAnimation, setWithAnimation] = useState(false);
 
   useEffect(() => {
-    // Set up an interval to increment the value every second
-    const intervalId = setInterval(() => {
-      console.log('TESTING ' + 'interval called');
-      setWithAnimation(true);
-      setValue(prevValue => {
-        if (prevValue < 100) {
-          return prevValue + 20;
-        } else {
-          return prevValue - 20;
-        }
-      });
-    }, 1000);
-
-    // Cleanup function to clear the interval if the component unmounts
-    return () => clearInterval(intervalId);
+    setWithAnimation(true);
+    setValue(100);
   }, []);
   return (
     <HeartWithLiquidButton
@@ -29,7 +16,7 @@ function HeartWithLiquidActivityIndicator() {
       value={value}
       withAnimation={withAnimation}
       style={style.activitiyIndicator}
-      borderColor="white"
+      borderColor="red"
       waveCount={1}
       waveHeightRatio={0.01}
       animationDuration={30000}
@@ -43,7 +30,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
+    backgroundColor: 'transparent',
   },
 });
 
