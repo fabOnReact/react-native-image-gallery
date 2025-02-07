@@ -6,6 +6,7 @@ import {
   ListRenderItem,
   ViewToken,
   TouchableWithoutFeedback,
+  SafeAreaView,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
@@ -70,34 +71,36 @@ function ImageViewer(props: ImageViewerProps) {
   };
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <FlatList
-        data={media}
-        keyExtractor={item => item.id.toString()}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        renderItem={renderItem}
-        onScroll={event => {
-          scrollX.value = event.nativeEvent.contentOffset.x;
-        }}
-      />
-      <TouchableWithoutFeedback onPress={toggleFavorite}>
-        <View style={[styles.invisibleButton, {zIndex: 1}]} />
-      </TouchableWithoutFeedback>
-      <HeartWithLiquidButton
-        size={100}
-        value={isFavorited ? 53 : 30}
-        withAnimation={withAnimation}
-        style={styles.invisibleButton}
-      />
-      <PositionIndicator
-        currentIndex={currentIndexSharedValue}
-        numberOfImages={numberOfImages}
-      />
-    </GestureHandlerRootView>
+    <SafeAreaView style={{flex: 1}}>
+      <GestureHandlerRootView style={styles.container}>
+        <FlatList
+          data={media}
+          keyExtractor={item => item.id.toString()}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
+          renderItem={renderItem}
+          onScroll={event => {
+            scrollX.value = event.nativeEvent.contentOffset.x;
+          }}
+        />
+        <TouchableWithoutFeedback onPress={toggleFavorite}>
+          <View style={[styles.invisibleButton, {zIndex: 1}]} />
+        </TouchableWithoutFeedback>
+        <HeartWithLiquidButton
+          size={100}
+          value={isFavorited ? 53 : 30}
+          withAnimation={withAnimation}
+          style={styles.invisibleButton}
+        />
+        <PositionIndicator
+          currentIndex={currentIndexSharedValue}
+          numberOfImages={numberOfImages}
+        />
+      </GestureHandlerRootView>
+    </SafeAreaView>
   );
 }
 
