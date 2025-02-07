@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, ActivityIndicator, Text, useWindowDimensions} from 'react-native';
+import {View, Text, useWindowDimensions} from 'react-native';
 import {Media, Props} from '../types/types';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 import ImageViewer from '../components/ImageViewer';
+import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
 function GalleryScreen({route}: Props) {
   useWindowDimensions(); // for responsive layouts
@@ -30,8 +31,7 @@ function GalleryScreen({route}: Props) {
   });
 
   if (isLoading) {
-    // implement your own activity indicator
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <HeartWithLiquidActivityIndicator />;
   }
 
   if (error) {

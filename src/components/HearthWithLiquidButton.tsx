@@ -14,10 +14,25 @@ type Props = {
   size: number;
   value: number;
   withAnimation: boolean;
-  style: StyleProp<ViewStyle>;
+  borderColor?: string;
+  animationDuration?: number;
+  waveHeightRatio?: number;
+  waveCount?: number;
+  waterColor?: string;
+  style?: StyleProp<ViewStyle>;
 };
 
-function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
+function HeartWithLiquidButton({
+  size,
+  value,
+  withAnimation,
+  borderColor = 'white',
+  animationDuration = 6000,
+  waveHeightRatio = 0.05,
+  waveCount = 4, // how many full waves will be seen in the circle
+  waterColor = 'red',
+  style,
+}: Props) {
   const radius = size * 0.5; // outer circle
   const circleThickness = radius * 0.05; // 0.05 just coefficient can be anything you like
 
@@ -29,11 +44,10 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
   const maxValue = 100; // max possible value
   const fillPercent = Math.max(minValue, Math.min(maxValue, value)) / maxValue; // percent of how much progress filled
 
-  const waveCount = 4; // how many full waves will be seen in the circle
   const waveClipCount = waveCount + 1; // extra wave for translate x animation
   const waveLength = (fillCircleRadius * 2) / waveCount; // wave length base on wave count
   const waveClipWidth = waveLength * waveClipCount; // extra width for translate x animation
-  const waveHeight = fillCircleRadius * 0.05; // wave height relative to the circle radius, if we change component size it will look same
+  const waveHeight = fillCircleRadius * waveHeightRatio; // wave height relative to the circle radius, if we change component size it will look same
 
   // Data for building the clip wave area.
   // [number, number] represent point
@@ -71,7 +85,7 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
     if (withAnimation) {
       translateYPercent.value = withTiming(fillPercent, {
         // timing animation from 0 to `fillPercent`
-        duration: 6000, // animation duration
+        duration: animationDuration, // animation duration
         easing: Easing.linear, // easing function
       });
     } else {
@@ -116,12 +130,12 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
       <Canvas style={{width: size, height: size}}>
         <Path
           path={outerHeartPath}
-          color="white"
+          color={borderColor}
           style="stroke"
           strokeWidth={5}
         />
         <Group clip={clipPath}>
-          <Path path={innerHeartPath} color="red" />
+          <Path path={innerHeartPath} color={waterColor} />
         </Group>
       </Canvas>
     </View>

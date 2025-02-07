@@ -14,6 +14,7 @@ import {getCollections} from '../api/api';
 import {useCallback} from 'react';
 import {Collection, CollectionItemProps, NavigationProp} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
+import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
 function CollectionItem(props: CollectionItemProps) {
   const navigation = useNavigation<NavigationProp>();
@@ -76,15 +77,7 @@ function HomeScreen() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (isLoading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator
-          size="large"
-          color="#0000ff"
-          testID="loading-indicator"
-        />
-      </View>
-    );
+    return <HeartWithLiquidActivityIndicator />;
   }
 
   if (isError) {
