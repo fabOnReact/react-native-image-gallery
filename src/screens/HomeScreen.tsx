@@ -21,7 +21,7 @@ function CollectionItem(props: CollectionItemProps) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
       <Text>
-        {props.item.title} - {props.item.media_count}
+        {props.item?.title} - {props.item?.media_count}
       </Text>
     </TouchableOpacity>
   );
@@ -94,12 +94,13 @@ function HomeScreen() {
   const renderItem: ListRenderItem<Collection> = ({item}) => {
     return <CollectionItem item={item} />;
   };
+
   return (
     <SafeAreaView>
       <FlatList
         testID="collection-list"
         data={collections}
-        keyExtractor={item => (item.id + 1).toString()}
+        keyExtractor={item => item?.id?.toString()}
         renderItem={renderItem}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
