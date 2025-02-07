@@ -76,7 +76,7 @@ function ImageViewer(props: ImageViewerProps) {
       <GestureHandlerRootView style={styles.container}>
         <FlatList
           data={media}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item?.id.toString()}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}

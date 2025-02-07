@@ -9,7 +9,7 @@ import {PinchableImageProps} from '../types/types';
 
 function PinchableImage({item}: PinchableImageProps) {
   const {width, height} = useWindowDimensions();
-  const {portrait} = item.src;
+  const portrait = item?.src?.portrait || '';
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);

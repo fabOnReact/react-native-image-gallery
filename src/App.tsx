@@ -15,7 +15,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {RootStackParamList} from './types/types';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Provider} from 'jotai';
-import {LogBox} from 'react-native';
+import {Button, LogBox} from 'react-native';
 
 LogBox.ignoreLogs(['Open debugger to view warnings.']);
 
@@ -30,7 +30,19 @@ function RootStack() {
         screenOptions={{
           gestureEnabled: true,
         }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={({navigation}) => ({
+            headerRight: () => (
+              <Button
+                onPress={() => navigation.navigate('Favorites')}
+                title="★"
+                color="#000"
+              />
+            ),
+          })}
+        />
         <Stack.Screen name="Gallery" component={GalleryScreen} />
         <Stack.Screen name="Favorites" component={FavoritesScreen} />
       </Stack.Navigator>
