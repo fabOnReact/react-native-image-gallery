@@ -15,19 +15,6 @@ import {useCallback} from 'react';
 import {Collection, CollectionItemProps, NavigationProp} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
 
-// Later will be styled different from a CollectionItem
-function FavoritesItem(props: CollectionItemProps) {
-  const navigation = useNavigation<NavigationProp>();
-  const onPress = () => navigation.navigate('Favorites');
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
-      <Text>
-        {props.item.title} - {props.item.media_count}
-      </Text>
-    </TouchableOpacity>
-  );
-}
-
 function CollectionItem(props: CollectionItemProps) {
   const navigation = useNavigation<NavigationProp>();
   const onPress = () => navigation.navigate('Gallery', {item: props.item});
@@ -104,26 +91,14 @@ function HomeScreen() {
     return <ErrorMessage onRetry={refetch} />;
   }
 
-  const FavoriteItem: Collection = {
-    title: 'Favorite Pictures',
-    media_count: 0,
-    id: 'collection-header-item',
-  };
-
-  const collectionsWithFavorites = [FavoriteItem, ...collections];
-
   const renderItem: ListRenderItem<Collection> = ({item}) => {
-    if (item.id === 'collection-header-item') {
-      return <FavoritesItem item={item} />;
-    }
     return <CollectionItem item={item} />;
   };
-
   return (
     <SafeAreaView>
       <FlatList
         testID="collection-list"
-        data={collectionsWithFavorites}
+        data={collections}
         keyExtractor={item => (item.id + 1).toString()}
         renderItem={renderItem}
         onEndReached={loadMore}

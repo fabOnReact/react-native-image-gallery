@@ -46,7 +46,8 @@ function GalleryScreen({route}: Props) {
   const media: Media[] = data?.pages.flatMap((page: any) => page.media) ?? [];
   const numberOfImages = data?.pages[0].total_results ?? 0;
 
-  // onEndReached callback: if there is a next page and we are not already fetching, then fetch it.
+  if (media.length === 0) return <Text>No images found</Text>;
+
   const onEndReachedCallback = () => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
