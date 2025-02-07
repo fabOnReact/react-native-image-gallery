@@ -2,19 +2,25 @@ import {area, scaleLinear} from 'd3';
 import {useEffect} from 'react';
 import {
   Easing,
+  runOnJS,
   useDerivedValue,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
 import {Canvas, Group, Path, Skia} from '@shopify/react-native-skia';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 
 type Props = {
   size: number;
   value: number;
 };
 
-function HeartWithLiquidButton({size, value}: Props) {
+function HeartWithLiquidButton({size, value, onPress}: Props) {
   const radius = size * 0.5; // outer circle
   const circleThickness = radius * 0.05; // 0.05 just coefficient can be anything you like
 
@@ -103,13 +109,27 @@ function HeartWithLiquidButton({size, value}: Props) {
   const outerHeartPath = getHeartPath(size);
   const innerHeartPath = getHeartPath(size, 13);
 
+  const tapGesture = Gesture.Tap().onEnd((event, success) => {
+    console.log('Canvas tapped!', event);
+    if (onPress) {
+      runOnJS(onPress)();
+    }
+  });
+
   return (
-    <Canvas style={{width: size, height: size}}>
-      <Path path={outerHeartPath} color="red" style="stroke" strokeWidth={7} />
-      <Group clip={clipPath}>
-        <Path path={innerHeartPath} color="blue" />
-      </Group>
-    </Canvas>
+    <GestureDetector gesture={tapGesture}>
+      <Canvas style={{width: size, height: size}}>
+        <Path
+          path={outerHeartPath}
+          color="red"
+          style="stroke"
+          strokeWidth={7}
+        />
+        <Group clip={clipPath}>
+          <Path path={innerHeartPath} color="blue" />
+        </Group>
+      </Canvas>
+    </GestureDetector>
   );
 }
 
@@ -117,7 +137,7 @@ function getHeartPath(size: number, padding = 0) {
   const HEART_SVG = 'M50,15 C35,0,0,25,50,60,100,25,65,0,50,15 Z';
   const skiaHeartPath = Skia.Path.MakeFromSVGString(HEART_SVG);
 
-  // Get the bounds of the path (returns { x, y, width, height })
+  // Get the bounds of thepath (returns { x, y, width, height })
   const bounds = skiaHeartPath.getBounds();
 
   // Compute the effective drawing area (reserve padding on all sides)

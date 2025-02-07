@@ -27,7 +27,6 @@ function ImageViewer(props: ImageViewerProps) {
   const media: Media[] = props.media;
   const scrollX = useSharedValue(0);
   const currentIndex = useSharedValue(0);
-  const currentImageId = media[currentIndex.value]?.id;
 
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={[{width, height}, styles.imageContainer]}>
@@ -50,15 +49,18 @@ function ImageViewer(props: ImageViewerProps) {
   // TODO - Verify that jotai makes check on the data type entered in favorites
   // for now I only check for null, as I want to know if the data is not null
   const isFavorited =
-    favorites === null || currentImageId === null
+    favorites === null || media[currentIndex.value] === null
       ? false
-      : favorites.some(fav => fav.id === currentImageId);
+      : favorites.some(fav => fav.id === media[currentIndex.value].id);
 
-  const toggleFavorite = (picture: Media) => {
+  const toggleFavorite = () => {
+    console.log('TESTING ' + 'toggleFavorite');
     if (isFavorited) {
-      setFavorites(favorites.filter(fav => fav.id !== picture.id));
+      setFavorites(
+        favorites.filter(fav => fav.id !== media[currentIndex.value].id),
+      );
     } else {
-      setFavorites([...favorites, picture]);
+      setFavorites([...favorites, media[currentIndex.value]]);
     }
   };
 

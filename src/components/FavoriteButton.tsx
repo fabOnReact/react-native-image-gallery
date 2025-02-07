@@ -17,16 +17,27 @@ type FavoriteButtonProps = {
 
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   isFavorited,
-  toggleFavorite,
+  onPress,
 }) => {
+  console.log('TESTING ' + 'FavoriteButton');
   return (
-    <TouchableWithoutFeedback onPress={toggleFavorite}>
-      <HeartWithLiquidButton size={100} value={isFavorited ? 100 : 0} />
-    </TouchableWithoutFeedback>
+    <View style={styles.container}>
+      <HeartWithLiquidButton
+        size={100}
+        value={isFavorited ? 100 : 0}
+        onPress={onPress}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 10,
+    right: '50%',
+    transform: [{translateX: 50}],
+  },
   button: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     paddingVertical: 10,
