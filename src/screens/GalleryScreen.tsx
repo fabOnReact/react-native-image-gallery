@@ -46,7 +46,13 @@ function GalleryScreen({route}: Props) {
   const media: Media[] = data?.pages.flatMap((page: any) => page.media) ?? [];
   const numberOfImages = data?.pages[0].total_results ?? 0;
 
-  if (media.length === 0) return <Text>No images found</Text>;
+  if (media.length === 0) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>No images in this collection.</Text>
+      </View>
+    );
+  }
 
   const onEndReachedCallback = () => {
     if (hasNextPage && !isFetchingNextPage) {
