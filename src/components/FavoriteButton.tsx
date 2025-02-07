@@ -14,7 +14,7 @@ type Props = {
   value: number;
 };
 
-export const FavoriteButton = ({size, value}: Props) => {
+function FavoriteButton({size, value}: Props) {
   const radius = size * 0.5; // outer circle
   const circleThickness = radius * 0.05; // 0.05 just coefficient can be anything you like
 
@@ -111,7 +111,7 @@ export const FavoriteButton = ({size, value}: Props) => {
       </Group>
     </Canvas>
   );
-};
+}
 
 function getHeartPath(size: number, padding = 0) {
   const HEART_SVG = 'M50,15 C35,0,0,25,50,60,100,25,65,0,50,15 Z';
@@ -147,3 +147,5 @@ function getHeartPath(size: number, padding = 0) {
   skiaHeartPath.transform(matrix);
   return skiaHeartPath;
 }
+
+export default FavoriteButton;

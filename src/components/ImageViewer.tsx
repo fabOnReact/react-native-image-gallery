@@ -28,7 +28,15 @@ function ImageViewer(props: ImageViewerProps) {
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={[{width, height}, styles.imageContainer]}>
       <PinchableImage item={item} />
-      <FavoriteButton picture={item} />
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          right: '50%',
+          transform: [{translateY: -100}, {translateX: 50}],
+        }}>
+        <FavoriteButton size={100} value={100} />
+      </View>
     </View>
   );
 
