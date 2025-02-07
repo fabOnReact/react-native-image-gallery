@@ -8,11 +8,13 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {Canvas, Group, Path, Skia} from '@shopify/react-native-skia';
-import {View} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 
 type Props = {
   size: number;
   value: number;
+  withAnimation: boolean;
+  style: StyleProp<ViewStyle>;
 };
 
 function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
@@ -31,7 +33,7 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
   const waveClipCount = waveCount + 1; // extra wave for translate x animation
   const waveLength = (fillCircleRadius * 2) / waveCount; // wave length base on wave count
   const waveClipWidth = waveLength * waveClipCount; // extra width for translate x animation
-  const waveHeight = fillCircleRadius * 0.05; // wave height relative to the circle radius, if we change component size it will look same
+  const waveHeight = fillCircleRadius * 0.1; // wave height relative to the circle radius, if we change component size it will look same
 
   // Data for building the clip wave area.
   // [number, number] represent point
@@ -92,7 +94,8 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
 
   const clipPath = useDerivedValue(() => {
     // animated value for clip wave path
-    const clipP = Skia.Path.MakeFromSVGString(clipSvgPath); // convert svg path string to skia format path
+    const clipP =
+      Skia.Path.MakeFromSVGString(clipSvgPath ?? '') || Skia.Path.Make(); // convert svg path string to skia format path
     const transformMatrix = Skia.Matrix(); // create Skia tranform matrix
     transformMatrix.translate(
       fillCircleMargin - waveLength * translateXAnimated.value, // translate left from start of the first wave to the length of first wave
@@ -113,9 +116,9 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
       <Canvas style={{width: size, height: size}}>
         <Path
           path={outerHeartPath}
-          color="red"
+          color="white"
           style="stroke"
-          strokeWidth={7}
+          strokeWidth={5}
         />
         <Group clip={clipPath}>
           <Path path={innerHeartPath} color="red" />
@@ -127,7 +130,8 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
 
 function getHeartPath(size: number, padding = 0) {
   const HEART_SVG = 'M50,15 C35,0,0,25,50,60,100,25,65,0,50,15 Z';
-  const skiaHeartPath = Skia.Path.MakeFromSVGString(HEART_SVG);
+  const skiaHeartPath =
+    Skia.Path.MakeFromSVGString(HEART_SVG) ?? Skia.Path.Make();
 
   // Get the bounds of thepath (returns { x, y, width, height })
   const bounds = skiaHeartPath.getBounds();

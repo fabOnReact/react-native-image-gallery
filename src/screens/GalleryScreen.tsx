@@ -1,9 +1,8 @@
 import {View, Dimensions, ActivityIndicator, Text} from 'react-native';
-import {Media, NavigationProp, Props} from '../types/types';
+import {Media, Props} from '../types/types';
 import {useQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 import ImageViewer from '../components/ImageViewer';
-import {useNavigation} from '@react-navigation/native';
 
 // Replace this with the useWindowDimensions() hook
 Dimensions.get('window');

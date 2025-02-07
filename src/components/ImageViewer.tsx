@@ -8,14 +8,13 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {useDerivedValue, useSharedValue} from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 import {ImageViewerProps, Media} from '../types/types';
 import PositionIndicator from '../components/PositionIndicator';
 import PinchableImage from '../components/PinchableImage';
-import FavoriteButton from '../components/FavoriteButton'; // Import Favorite Button
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import HeartWithLiquidButton from './HearthWithLiquidButton';
 
 const {width, height} = Dimensions.get('window');
@@ -49,7 +48,7 @@ function ImageViewer(props: ImageViewerProps) {
     if (viewableItems.length > 0) {
       currentIndexSharedValue.value = viewableItems[0].index ?? 0;
       setWithAnimation(false);
-      setCurrentIndex(viewableItems[0].index);
+      setCurrentIndex(viewableItems[0].index ?? 0);
     }
   };
 
@@ -90,7 +89,7 @@ function ImageViewer(props: ImageViewerProps) {
       </TouchableWithoutFeedback>
       <HeartWithLiquidButton
         size={100}
-        value={isFavorited ? 55 : 30}
+        value={isFavorited ? 53 : 30}
         withAnimation={withAnimation}
         style={styles.invisibleButton}
       />
