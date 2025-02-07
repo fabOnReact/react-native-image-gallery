@@ -25,17 +25,14 @@ type ViewableItemsType = {
 };
 
 function ImageViewer(props: ImageViewerProps) {
-  const numberOfImages = props.numberOfImages;
   const media: Media[] = props.media;
-  const scrollX = useSharedValue(0);
-  const currentIndex = useSharedValue(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
-  const favoritesShared = useSharedValue(favorites);
 
-  // Whenever favorites changes, update the shared value:
-  useEffect(() => {
-    favoritesShared.value = favorites;
-  }, [favorites]);
+  const isFavorited =
+    favorites === null || media[currentIndex] == null
+      ? false
+      : favorites.some(fav => fav.id === media[currentIndex].id);
 
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={[{width, height}, styles.imageContainer]}>
@@ -46,7 +43,7 @@ function ImageViewer(props: ImageViewerProps) {
   const onViewableItemsChanged = (props: ViewableItemsType) => {
     const {viewableItems} = props;
     if (viewableItems.length > 0) {
-      currentIndex.value = viewableItems[0].index ?? 0;
+      setCurrentIndex(viewableItems[0].index);
     }
   };
 
@@ -54,22 +51,14 @@ function ImageViewer(props: ImageViewerProps) {
     viewAreaCoveragePercentThreshold: 50, // 50% of an image should be visible
   };
 
-  // TODO - Verify that jotai makes check on the data type entered in favorites
-  // for now I only check for null, as I want to know if the data is not null
-  const isFavorited =
-    favorites === null || media[currentIndex.value] == null
-      ? false
-      : favorites.some(fav => fav.id === media[currentIndex.value].id);
-
   const toggleFavorite = () => {
-    console.log('TESTING ' + 'toggleFavorite');
     if (isFavorited) {
       const newFavorites = favorites.filter(
-        fav => fav.id !== media[currentIndex.value].id,
+        fav => fav.id !== media[currentIndex].id,
       );
       setFavorites(newFavorites);
     } else {
-      const newFavorites = [...favorites, media[currentIndex.value]];
+      const newFavorites = [...favorites, media[currentIndex]];
       setFavorites(newFavorites);
     }
   };
@@ -87,9 +76,6 @@ function ImageViewer(props: ImageViewerProps) {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={renderItem}
-        onScroll={event => {
-          scrollX.value = event.nativeEvent.contentOffset.x;
-        }}
       />
       <View
         style={{
@@ -103,10 +89,12 @@ function ImageViewer(props: ImageViewerProps) {
         </TouchableWithoutFeedback>
         <HeartWithLiquidButton size={100} value={isFavorited ? 100 : 0} />
       </View>
+      {/*
       <PositionIndicator
         currentIndex={currentIndex}
         numberOfImages={numberOfImages}
       />
+      */}
     </GestureHandlerRootView>
   );
 }

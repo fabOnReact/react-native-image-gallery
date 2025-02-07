@@ -21,7 +21,7 @@ type Props = {
   value: number;
 };
 
-function HeartWithLiquidButton({size, value, onPress}: Props) {
+function HeartWithLiquidButton({size, value, initialStatus}: Props) {
   const radius = size * 0.5; // outer circle
   const circleThickness = radius * 0.05; // 0.05 just coefficient can be anything you like
 
@@ -33,7 +33,7 @@ function HeartWithLiquidButton({size, value, onPress}: Props) {
   const maxValue = 100; // max possible value
   const fillPercent = Math.max(minValue, Math.min(maxValue, value)) / maxValue; // percent of how much progress filled
 
-  const waveCount = 3; // how many full waves will be seen in the circle
+  const waveCount = 4; // how many full waves will be seen in the circle
   const waveClipCount = waveCount + 1; // extra wave for translate x animation
   const waveLength = (fillCircleRadius * 2) / waveCount; // wave length base on wave count
   const waveClipWidth = waveLength * waveClipCount; // extra width for translate x animation
@@ -72,11 +72,21 @@ function HeartWithLiquidButton({size, value, onPress}: Props) {
   const translateYPercent = useSharedValue(0); // animated value translate wave vertically
 
   useEffect(() => {
-    translateYPercent.value = withTiming(fillPercent, {
-      // timing animation from 0 to `fillPercent`
-      duration: 5000, // animation duration
-      easing: Easing.linear, // easing function
-    });
+    // later I reintroduce this animation
+    // translateYPercent.value = withTiming(fillPercent, {
+    //   // timing animation from 0 to `fillPercent`
+    //   duration: 3000, // animation duration
+    //   easing: Easing.linear, // easing function
+    // });
+
+    // later I move this to another prop to change the icon color
+    // without creating an animation
+    translateYPercent.value = fillPercent;
+    console.log('TESTING ' + 'fillPercent: ', fillPercent);
+    console.log(
+      'TESTING ' + 'translateYPercent.value: ',
+      translateYPercent.value,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fillPercent]);
 
@@ -85,7 +95,7 @@ function HeartWithLiquidButton({size, value, onPress}: Props) {
       // repeat animation
       withTiming(1, {
         // animate from 0 to 1
-        duration: 9000, // animation duration
+        duration: 3000, // animation duration
         easing: Easing.linear, // easing function
       }),
       -1, // repeat forever
