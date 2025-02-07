@@ -31,7 +31,7 @@ function ImageViewer(props: ImageViewerProps) {
   const currentIndexSharedValue = useSharedValue(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
   const scrollX = useSharedValue(0);
-  const [withAnimation, setWithAnimation] = useState(true);
+  const [withAnimation, setWithAnimation] = useState(false);
 
   const isFavorited =
     favorites === null || media[currentIndex] == null
@@ -91,7 +91,7 @@ function ImageViewer(props: ImageViewerProps) {
         </TouchableWithoutFeedback>
         <HeartWithLiquidButton
           size={100}
-          value={isFavorited ? 53 : 30}
+          value={isFavorited ? 70 : 10}
           withAnimation={withAnimation}
           style={styles.invisibleButton}
         />

@@ -38,7 +38,13 @@ function GalleryScreen({route}: Props) {
   const numberOfImages = data?.total_results ?? 0;
   const media: Media[] = data?.media || [];
 
-  return <ImageViewer media={media} numberOfImages={numberOfImages} />;
+  return (
+    <ImageViewer
+      media={media}
+      numberOfImages={numberOfImages}
+      // onEndReached={onEndReachedCallback}
+    />
+  );
 }
 
 export default GalleryScreen;

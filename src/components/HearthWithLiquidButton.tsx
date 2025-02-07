@@ -29,11 +29,11 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
   const maxValue = 100; // max possible value
   const fillPercent = Math.max(minValue, Math.min(maxValue, value)) / maxValue; // percent of how much progress filled
 
-  const waveCount = 2; // how many full waves will be seen in the circle
+  const waveCount = 4; // how many full waves will be seen in the circle
   const waveClipCount = waveCount + 1; // extra wave for translate x animation
   const waveLength = (fillCircleRadius * 2) / waveCount; // wave length base on wave count
   const waveClipWidth = waveLength * waveClipCount; // extra width for translate x animation
-  const waveHeight = fillCircleRadius * 0.1; // wave height relative to the circle radius, if we change component size it will look same
+  const waveHeight = fillCircleRadius * 0.05; // wave height relative to the circle radius, if we change component size it will look same
 
   // Data for building the clip wave area.
   // [number, number] represent point
@@ -71,7 +71,7 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
     if (withAnimation) {
       translateYPercent.value = withTiming(fillPercent, {
         // timing animation from 0 to `fillPercent`
-        duration: 1500, // animation duration
+        duration: 6000, // animation duration
         easing: Easing.linear, // easing function
       });
     } else {
@@ -85,7 +85,7 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
       // repeat animation
       withTiming(1, {
         // animate from 0 to 1
-        duration: 900, // animation duration
+        duration: Math.floor(Math.random() * (500 - 300 + 1)) + 300, // animation duration
         easing: Easing.linear, // easing function
       }),
       -1, // repeat forever
