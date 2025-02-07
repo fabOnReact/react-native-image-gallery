@@ -2,7 +2,11 @@ import {useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import HeartWithLiquidButton from './HearthWithLiquidButton';
 
-function HeartWithLiquidActivityIndicator({value}) {
+type HeartActivityIndicatorProps = {
+  value?: number;
+};
+
+function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
   const [valueInternal, setValueInternal] = useState(30);
   const [withAnimation, setWithAnimation] = useState(false);
 
@@ -14,14 +18,14 @@ function HeartWithLiquidActivityIndicator({value}) {
   return (
     <HeartWithLiquidButton
       size={400}
-      value={value ?? valueInternal}
+      value={props.value ?? valueInternal}
       withAnimation={withAnimation}
       style={style.activitiyIndicator}
       borderColor="red"
-      waveCount={1}
-      waveHeightRatio={0.01}
+      waveCount={2}
+      waveHeightRatio={0.05}
       animationDuration={5000}
-      waterColor="blue"
+      waterColor="red"
     />
   );
 }
