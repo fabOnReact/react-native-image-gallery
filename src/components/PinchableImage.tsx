@@ -95,18 +95,16 @@ function PinchableImage({item}: PinchableImageProps) {
     };
   });
 
-  const styles = {
-    image: {
-      width,
-      height,
-    },
+  const imageStyles = {
+    width,
+    height,
   };
 
   return (
     <GestureDetector gesture={combinedGesture}>
       <Animated.Image
         source={{uri: portrait}}
-        style={[styles.image, animatedStyle]}
+        style={[imageStyles, animatedStyle]}
         resizeMode="cover"
         onError={() => console.log(`Failed to load image: ${portrait}`)}
       />
