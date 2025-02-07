@@ -1,4 +1,4 @@
-import {ActivityIndicator, Text, useWindowDimensions} from 'react-native';
+import {Text, useWindowDimensions} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -6,8 +6,6 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import {PinchableImageProps} from '../types/types';
-import {useState} from 'react';
-import HeartWithLiquidActivityIndicator from './HearthWithLiquidActivityIndicator';
 import React from 'react';
 
 function PinchableImage({item}: PinchableImageProps) {
@@ -17,7 +15,6 @@ function PinchableImage({item}: PinchableImageProps) {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const lastScale = useSharedValue(1); // To track previous zoom state
-  const [isLoading, setIsLoading] = useState(true);
 
   // **Double-Tap Gesture for Zoom**
   const doubleTapGesture = Gesture.Tap()
@@ -113,7 +110,6 @@ function PinchableImage({item}: PinchableImageProps) {
           source={{uri: portrait}}
           style={[imageStyles, animatedStyle]}
           resizeMode="cover"
-          onLoadEnd={() => setIsLoading(false)}
           onError={() => console.log(`Failed to load image: ${portrait}`)}
         />
       </GestureDetector>
