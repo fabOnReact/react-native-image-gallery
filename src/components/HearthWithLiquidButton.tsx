@@ -2,19 +2,13 @@ import {area, scaleLinear} from 'd3';
 import {useEffect} from 'react';
 import {
   Easing,
-  runOnJS,
   useDerivedValue,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
 import {Canvas, Group, Path, Skia} from '@shopify/react-native-skia';
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 type Props = {
   size: number;
@@ -83,14 +77,6 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fillPercent]);
-
-  // useEffect(() => {
-  //   translateYPercent.value = withTiming(valueWithAnimation, {
-  //     // timing animation from 0 to `valueWithAnimation`
-  //     duration: 3000, // animation duration
-  //     easing: Easing.linear, // easing function
-  //   });
-  // }, [valueWithAnimation]);
 
   useEffect(() => {
     translateXAnimated.value = withRepeat(
@@ -173,26 +159,5 @@ function getHeartPath(size: number, padding = 0) {
   skiaHeartPath.transform(matrix);
   return skiaHeartPath;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    bottom: 10,
-    right: '50%',
-    transform: [{translateX: 50}],
-  },
-  button: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    fontSize: 24,
-    color: 'white',
-  },
-});
 
 export default HeartWithLiquidButton;
