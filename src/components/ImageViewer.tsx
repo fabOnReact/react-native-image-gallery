@@ -28,11 +28,16 @@ function ImageViewer(props: ImageViewerProps) {
   const media: Media[] = props.media;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
+  const [withAnimation, setWithAnimation] = useState(true);
 
   const isFavorited =
     favorites === null || media[currentIndex] == null
       ? false
-      : favorites.some(fav => fav.id === media[currentIndex].id);
+      : favorites.some(fav => fav?.id === media[currentIndex].id);
+
+  const [valueWithAnimation, setValueWithAnimation] = useState(
+    isFavorited ? 100 : 0,
+  );
 
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={[{width, height}, styles.imageContainer]}>
@@ -43,6 +48,7 @@ function ImageViewer(props: ImageViewerProps) {
   const onViewableItemsChanged = (props: ViewableItemsType) => {
     const {viewableItems} = props;
     if (viewableItems.length > 0) {
+      setWithAnimation(false);
       setCurrentIndex(viewableItems[0].index);
     }
   };
@@ -52,9 +58,10 @@ function ImageViewer(props: ImageViewerProps) {
   };
 
   const toggleFavorite = () => {
+    // setWithAnimation(true);
     if (isFavorited) {
       const newFavorites = favorites.filter(
-        fav => fav.id !== media[currentIndex].id,
+        fav => fav?.id !== media[currentIndex].id,
       );
       setFavorites(newFavorites);
     } else {
@@ -62,8 +69,6 @@ function ImageViewer(props: ImageViewerProps) {
       setFavorites(newFavorites);
     }
   };
-
-  console.log('TESTING ' + 'isFavorited: ', isFavorited);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -87,7 +92,11 @@ function ImageViewer(props: ImageViewerProps) {
         <TouchableWithoutFeedback onPress={toggleFavorite}>
           <View style={styles.containerButton} />
         </TouchableWithoutFeedback>
-        <HeartWithLiquidButton size={100} value={isFavorited ? 100 : 0} />
+        <HeartWithLiquidButton
+          size={100}
+          value={isFavorited ? 100 : 0}
+          withAnimation={withAnimation}
+        />
       </View>
       {/*
       <PositionIndicator

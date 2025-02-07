@@ -21,7 +21,7 @@ type Props = {
   value: number;
 };
 
-function HeartWithLiquidButton({size, value, initialStatus}: Props) {
+function HeartWithLiquidButton({size, value, withAnimation}: Props) {
   const radius = size * 0.5; // outer circle
   const circleThickness = radius * 0.05; // 0.05 just coefficient can be anything you like
 
@@ -72,23 +72,25 @@ function HeartWithLiquidButton({size, value, initialStatus}: Props) {
   const translateYPercent = useSharedValue(0); // animated value translate wave vertically
 
   useEffect(() => {
-    // later I reintroduce this animation
-    // translateYPercent.value = withTiming(fillPercent, {
-    //   // timing animation from 0 to `fillPercent`
-    //   duration: 3000, // animation duration
-    //   easing: Easing.linear, // easing function
-    // });
-
-    // later I move this to another prop to change the icon color
-    // without creating an animation
-    translateYPercent.value = fillPercent;
-    console.log('TESTING ' + 'fillPercent: ', fillPercent);
-    console.log(
-      'TESTING ' + 'translateYPercent.value: ',
-      translateYPercent.value,
-    );
+    if (withAnimation) {
+      translateYPercent.value = withTiming(fillPercent, {
+        // timing animation from 0 to `fillPercent`
+        duration: 3000, // animation duration
+        easing: Easing.linear, // easing function
+      });
+    } else {
+      translateYPercent.value = fillPercent;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fillPercent]);
+
+  // useEffect(() => {
+  //   translateYPercent.value = withTiming(valueWithAnimation, {
+  //     // timing animation from 0 to `valueWithAnimation`
+  //     duration: 3000, // animation duration
+  //     easing: Easing.linear, // easing function
+  //   });
+  // }, [valueWithAnimation]);
 
   useEffect(() => {
     translateXAnimated.value = withRepeat(
