@@ -1,4 +1,4 @@
-import {useWindowDimensions} from 'react-native';
+import {Text, useWindowDimensions} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -9,7 +9,7 @@ import {PinchableImageProps} from '../types/types';
 
 function PinchableImage({item}: PinchableImageProps) {
   const {width, height} = useWindowDimensions();
-  const portrait = item?.src?.portrait || '';
+  const portrait = item?.src?.portrait;
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -99,6 +99,8 @@ function PinchableImage({item}: PinchableImageProps) {
     width,
     height,
   };
+
+  if (portrait === null) return <Text>Image not found.</Text>;
 
   return (
     <GestureDetector gesture={combinedGesture}>
