@@ -35,10 +35,6 @@ function ImageViewer(props: ImageViewerProps) {
       ? false
       : favorites.some(fav => fav?.id === media[currentIndex].id);
 
-  const [valueWithAnimation, setValueWithAnimation] = useState(
-    isFavorited ? 100 : 0,
-  );
-
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={[{width, height}, styles.imageContainer]}>
       <PinchableImage item={item} />
@@ -58,7 +54,7 @@ function ImageViewer(props: ImageViewerProps) {
   };
 
   const toggleFavorite = () => {
-    // setWithAnimation(true);
+    setWithAnimation(true);
     if (isFavorited) {
       const newFavorites = favorites.filter(
         fav => fav?.id !== media[currentIndex].id,
@@ -82,22 +78,15 @@ function ImageViewer(props: ImageViewerProps) {
         viewabilityConfig={viewabilityConfig}
         renderItem={renderItem}
       />
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 10,
-          right: '50%',
-          transform: [{translateX: 50}],
-        }}>
-        <TouchableWithoutFeedback onPress={toggleFavorite}>
-          <View style={styles.containerButton} />
-        </TouchableWithoutFeedback>
-        <HeartWithLiquidButton
-          size={100}
-          value={isFavorited ? 100 : 0}
-          withAnimation={withAnimation}
-        />
-      </View>
+      <TouchableWithoutFeedback onPress={toggleFavorite}>
+        <View style={[styles.invisibleButton, {zIndex: 1}]} />
+      </TouchableWithoutFeedback>
+      <HeartWithLiquidButton
+        size={100}
+        value={isFavorited ? 55 : 30}
+        withAnimation={withAnimation}
+        style={styles.invisibleButton}
+      />
       {/*
       <PositionIndicator
         currentIndex={currentIndex}
@@ -113,14 +102,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
   },
-  containerButton: {
+  invisibleButton: {
     position: 'absolute',
     bottom: 10,
     right: '50%',
     transform: [{translateX: 50}],
     height: 100,
     width: 100,
-    zIndex: 10,
   },
   imageContainer: {
     flex: 1,

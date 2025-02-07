@@ -21,7 +21,7 @@ type Props = {
   value: number;
 };
 
-function HeartWithLiquidButton({size, value, withAnimation}: Props) {
+function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
   const radius = size * 0.5; // outer circle
   const circleThickness = radius * 0.05; // 0.05 just coefficient can be anything you like
 
@@ -33,11 +33,11 @@ function HeartWithLiquidButton({size, value, withAnimation}: Props) {
   const maxValue = 100; // max possible value
   const fillPercent = Math.max(minValue, Math.min(maxValue, value)) / maxValue; // percent of how much progress filled
 
-  const waveCount = 4; // how many full waves will be seen in the circle
+  const waveCount = 2; // how many full waves will be seen in the circle
   const waveClipCount = waveCount + 1; // extra wave for translate x animation
   const waveLength = (fillCircleRadius * 2) / waveCount; // wave length base on wave count
   const waveClipWidth = waveLength * waveClipCount; // extra width for translate x animation
-  const waveHeight = fillCircleRadius * 0.1; // wave height relative to the circle radius, if we change component size it will look same
+  const waveHeight = fillCircleRadius * 0.05; // wave height relative to the circle radius, if we change component size it will look same
 
   // Data for building the clip wave area.
   // [number, number] represent point
@@ -75,7 +75,7 @@ function HeartWithLiquidButton({size, value, withAnimation}: Props) {
     if (withAnimation) {
       translateYPercent.value = withTiming(fillPercent, {
         // timing animation from 0 to `fillPercent`
-        duration: 3000, // animation duration
+        duration: 1000, // animation duration
         easing: Easing.linear, // easing function
       });
     } else {
@@ -97,7 +97,7 @@ function HeartWithLiquidButton({size, value, withAnimation}: Props) {
       // repeat animation
       withTiming(1, {
         // animate from 0 to 1
-        duration: 3000, // animation duration
+        duration: 1000, // animation duration
         easing: Easing.linear, // easing function
       }),
       -1, // repeat forever
@@ -123,7 +123,7 @@ function HeartWithLiquidButton({size, value, withAnimation}: Props) {
   const innerHeartPath = getHeartPath(size, 13);
 
   return (
-    <View style={styles.container}>
+    <View style={style}>
       <Canvas style={{width: size, height: size}}>
         <Path
           path={outerHeartPath}
@@ -132,7 +132,7 @@ function HeartWithLiquidButton({size, value, withAnimation}: Props) {
           strokeWidth={7}
         />
         <Group clip={clipPath}>
-          <Path path={innerHeartPath} color="blue" />
+          <Path path={innerHeartPath} color="red" />
         </Group>
       </Canvas>
     </View>
