@@ -1,4 +1,4 @@
-import {Text, useWindowDimensions, View} from 'react-native';
+import {Platform, Text, useWindowDimensions} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -103,6 +103,8 @@ function PinchableImage({item}: PinchableImageProps) {
     height,
   };
 
+  const iPhone = Platform.OS === 'ios';
+
   if (portrait === null) return <Text>Image not found.</Text>;
 
   return (
@@ -116,7 +118,7 @@ function PinchableImage({item}: PinchableImageProps) {
           onError={() => console.log(`Failed to load image: ${portrait}`)}
         />
       </GestureDetector>
-      {!loaded && <HeartWithLiquidActivityIndicator value={65} />}
+      {!loaded && iPhone && <HeartWithLiquidActivityIndicator value={65} />}
     </>
   );
 }

@@ -88,6 +88,7 @@ function ImageViewer(props: ImageViewerProps) {
           }}
           onEndReached={onEndReachedCallback}
           onEndReachedThreshold={0.5}
+          initialNumToRender={5}
         />
         <TouchableWithoutFeedback onPress={toggleFavorite}>
           <View style={[styles.invisibleButton, {zIndex: 1}]} />
