@@ -14,19 +14,7 @@ import {getCollections} from '../api/api';
 import {useCallback} from 'react';
 import {Collection, CollectionItemProps, NavigationProp} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
-
-// Later will be styled different from a CollectionItem
-function FavoritesItem(props: CollectionItemProps) {
-  const navigation = useNavigation<NavigationProp>();
-  const onPress = () => navigation.navigate('Favorites');
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
-      <Text>
-        {props.item.title} - {props.item.media_count}
-      </Text>
-    </TouchableOpacity>
-  );
-}
+import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
 function CollectionItem(props: CollectionItemProps) {
   const navigation = useNavigation<NavigationProp>();
@@ -34,7 +22,7 @@ function CollectionItem(props: CollectionItemProps) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
       <Text>
-        {props.item.title} - {props.item.media_count}
+        {props.item?.title} - {props.item?.media_count}
       </Text>
     </TouchableOpacity>
   );
@@ -89,33 +77,14 @@ function HomeScreen() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (isLoading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator
-          size="large"
-          color="#0000ff"
-          testID="loading-indicator"
-        />
-      </View>
-    );
+    return <HeartWithLiquidActivityIndicator />;
   }
 
   if (isError) {
     return <ErrorMessage onRetry={refetch} />;
   }
 
-  const FavoriteItem: Collection = {
-    title: 'Favorite Pictures',
-    media_count: 0,
-    id: 'collection-header-item',
-  };
-
-  const collectionsWithFavorites = [FavoriteItem, ...collections];
-
   const renderItem: ListRenderItem<Collection> = ({item}) => {
-    if (item.id === 'collection-header-item') {
-      return <FavoritesItem item={item} />;
-    }
     return <CollectionItem item={item} />;
   };
 
@@ -123,8 +92,8 @@ function HomeScreen() {
     <SafeAreaView>
       <FlatList
         testID="collection-list"
-        data={collectionsWithFavorites}
-        keyExtractor={item => (item.id + 1).toString()}
+        data={collections}
+        keyExtractor={item => item?.id?.toString()}
         renderItem={renderItem}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}

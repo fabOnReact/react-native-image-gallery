@@ -6,6 +6,7 @@ import {
   ListRenderItem,
   ViewToken,
   TouchableWithoutFeedback,
+  SafeAreaView,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
@@ -26,11 +27,12 @@ type ViewableItemsType = {
 function ImageViewer(props: ImageViewerProps) {
   const numberOfImages = props.numberOfImages;
   const media: Media[] = props.media;
+  const onEndReachedCallback = props.onEndReachedCallback;
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentIndexSharedValue = useSharedValue(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
   const scrollX = useSharedValue(0);
-  const [withAnimation, setWithAnimation] = useState(true);
+  const [withAnimation, setWithAnimation] = useState(false);
 
   const isFavorited =
     favorites === null || media[currentIndex] == null
@@ -70,41 +72,47 @@ function ImageViewer(props: ImageViewerProps) {
   };
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <FlatList
-        data={media}
-        keyExtractor={item => item.id.toString()}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
-        renderItem={renderItem}
-        onScroll={event => {
-          scrollX.value = event.nativeEvent.contentOffset.x;
-        }}
-      />
-      <TouchableWithoutFeedback onPress={toggleFavorite}>
-        <View style={[styles.invisibleButton, {zIndex: 1}]} />
-      </TouchableWithoutFeedback>
-      <HeartWithLiquidButton
-        size={100}
-        value={isFavorited ? 53 : 30}
-        withAnimation={withAnimation}
-        style={styles.invisibleButton}
-      />
-      <PositionIndicator
-        currentIndex={currentIndexSharedValue}
-        numberOfImages={numberOfImages}
-      />
-    </GestureHandlerRootView>
+    <SafeAreaView style={{flex: 1}}>
+      <GestureHandlerRootView style={styles.container}>
+        <FlatList
+          data={media}
+          keyExtractor={item => item?.id.toString()}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={viewabilityConfig}
+          renderItem={renderItem}
+          onScroll={event => {
+            scrollX.value = event.nativeEvent.contentOffset.x;
+          }}
+          onEndReached={onEndReachedCallback}
+          onEndReachedThreshold={0.5}
+          initialNumToRender={5}
+        />
+        <TouchableWithoutFeedback onPress={toggleFavorite}>
+          <View style={[styles.invisibleButton, {zIndex: 1}]} />
+        </TouchableWithoutFeedback>
+        <HeartWithLiquidButton
+          size={100}
+          value={isFavorited ? 70 : 10}
+          withAnimation={withAnimation}
+          style={styles.invisibleButton}
+          animationDuration={3000}
+        />
+        <PositionIndicator
+          currentIndex={currentIndexSharedValue}
+          numberOfImages={numberOfImages}
+        />
+      </GestureHandlerRootView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'transparent',
   },
   invisibleButton: {
     position: 'absolute',

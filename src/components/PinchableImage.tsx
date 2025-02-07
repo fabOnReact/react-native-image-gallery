@@ -1,4 +1,4 @@
-import {useWindowDimensions} from 'react-native';
+import {Platform, Text, useWindowDimensions} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -6,14 +6,17 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import {PinchableImageProps} from '../types/types';
+import React, {useState} from 'react';
+import HeartWithLiquidActivityIndicator from './HearthWithLiquidActivityIndicator';
 
 function PinchableImage({item}: PinchableImageProps) {
   const {width, height} = useWindowDimensions();
-  const {portrait} = item.src;
+  const portrait = item?.src?.portrait;
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const lastScale = useSharedValue(1); // To track previous zoom state
+  const [loaded, setLoaded] = useState(false);
 
   // **Double-Tap Gesture for Zoom**
   const doubleTapGesture = Gesture.Tap()
@@ -100,15 +103,23 @@ function PinchableImage({item}: PinchableImageProps) {
     height,
   };
 
+  const iPhone = Platform.OS === 'ios';
+
+  if (portrait === null) return <Text>Image not found.</Text>;
+
   return (
-    <GestureDetector gesture={combinedGesture}>
-      <Animated.Image
-        source={{uri: portrait}}
-        style={[imageStyles, animatedStyle]}
-        resizeMode="cover"
-        onError={() => console.log(`Failed to load image: ${portrait}`)}
-      />
-    </GestureDetector>
+    <>
+      <GestureDetector gesture={combinedGesture}>
+        <Animated.Image
+          source={{uri: portrait}}
+          style={[imageStyles, animatedStyle, !loaded && {opacity: 0}]}
+          resizeMode="cover"
+          onLoadEnd={() => setLoaded(true)}
+          onError={() => console.log(`Failed to load image: ${portrait}`)}
+        />
+      </GestureDetector>
+      {!loaded && iPhone && <HeartWithLiquidActivityIndicator value={65} />}
+    </>
   );
 }
 
