@@ -97,7 +97,7 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
       // repeat animation
       withTiming(1, {
         // animate from 0 to 1
-        duration: 1500, // animation duration
+        duration: 900, // animation duration
         easing: Easing.linear, // easing function
       }),
       -1, // repeat forever
