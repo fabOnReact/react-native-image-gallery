@@ -75,7 +75,7 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
     if (withAnimation) {
       translateYPercent.value = withTiming(fillPercent, {
         // timing animation from 0 to `fillPercent`
-        duration: 1000, // animation duration
+        duration: 1500, // animation duration
         easing: Easing.linear, // easing function
       });
     } else {
@@ -97,7 +97,7 @@ function HeartWithLiquidButton({size, value, withAnimation, style}: Props) {
       // repeat animation
       withTiming(1, {
         // animate from 0 to 1
-        duration: 1000, // animation duration
+        duration: 1500, // animation duration
         easing: Easing.linear, // easing function
       }),
       -1, // repeat forever
