@@ -12,6 +12,9 @@ import {ImageViewerProps, Media} from '../types/types';
 import PositionIndicator from '../components/PositionIndicator';
 import PinchableImage from '../components/PinchableImage';
 import FavoriteButton from '../components/FavoriteButton'; // Import Favorite Button
+import {useAtom} from 'jotai';
+import {favoritesAtom} from '../store/store';
+import {useState} from 'react';
 
 const {width, height} = Dimensions.get('window');
 
@@ -24,19 +27,11 @@ function ImageViewer(props: ImageViewerProps) {
   const media: Media[] = props.media;
   const scrollX = useSharedValue(0);
   const currentIndex = useSharedValue(0);
+  const currentImageId = media[currentIndex.value]?.id;
 
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={[{width, height}, styles.imageContainer]}>
       <PinchableImage item={item} />
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 20,
-          right: '50%',
-          transform: [{translateY: -100}, {translateX: 50}],
-        }}>
-        <FavoriteButton size={100} value={100} />
-      </View>
     </View>
   );
 
@@ -49,6 +44,22 @@ function ImageViewer(props: ImageViewerProps) {
 
   const viewabilityConfig = {
     viewAreaCoveragePercentThreshold: 50, // 50% of an image should be visible
+  };
+
+  const [favorites, setFavorites] = useAtom(favoritesAtom);
+  // TODO - Verify that jotai makes check on the data type entered in favorites
+  // for now I only check for null, as I want to know if the data is not null
+  const isFavorited =
+    favorites === null || currentImageId === null
+      ? false
+      : favorites.some(fav => fav.id === currentImageId);
+
+  const toggleFavorite = (picture: Media) => {
+    if (isFavorited) {
+      setFavorites(favorites.filter(fav => fav.id !== picture.id));
+    } else {
+      setFavorites([...favorites, picture]);
+    }
   };
 
   return (
@@ -66,6 +77,15 @@ function ImageViewer(props: ImageViewerProps) {
           scrollX.value = event.nativeEvent.contentOffset.x;
         }}
       />
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 10,
+          right: '50%',
+          transform: [{translateX: 50}],
+        }}>
+        <FavoriteButton isFavorited={isFavorited} onPress={toggleFavorite} />
+      </View>
       <PositionIndicator
         currentIndex={currentIndex}
         numberOfImages={numberOfImages}
