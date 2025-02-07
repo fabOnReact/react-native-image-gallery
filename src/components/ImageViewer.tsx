@@ -5,16 +5,18 @@ import {
   StyleSheet,
   ListRenderItem,
   ViewToken,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {useSharedValue} from 'react-native-reanimated';
+import {useDerivedValue, useSharedValue} from 'react-native-reanimated';
 import {ImageViewerProps, Media} from '../types/types';
 import PositionIndicator from '../components/PositionIndicator';
 import PinchableImage from '../components/PinchableImage';
 import FavoriteButton from '../components/FavoriteButton'; // Import Favorite Button
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import HeartWithLiquidButton from './HearthWithLiquidButton';
 
 const {width, height} = Dimensions.get('window');
 
@@ -27,6 +29,13 @@ function ImageViewer(props: ImageViewerProps) {
   const media: Media[] = props.media;
   const scrollX = useSharedValue(0);
   const currentIndex = useSharedValue(0);
+  const [favorites, setFavorites] = useAtom(favoritesAtom);
+  const favoritesShared = useSharedValue(favorites);
+
+  // Whenever favorites changes, update the shared value:
+  useEffect(() => {
+    favoritesShared.value = favorites;
+  }, [favorites]);
 
   const renderItem: ListRenderItem<Media> = ({item}) => (
     <View style={[{width, height}, styles.imageContainer]}>
@@ -45,24 +54,27 @@ function ImageViewer(props: ImageViewerProps) {
     viewAreaCoveragePercentThreshold: 50, // 50% of an image should be visible
   };
 
-  const [favorites, setFavorites] = useAtom(favoritesAtom);
   // TODO - Verify that jotai makes check on the data type entered in favorites
   // for now I only check for null, as I want to know if the data is not null
   const isFavorited =
-    favorites === null || media[currentIndex.value] === null
+    favorites === null || media[currentIndex.value] == null
       ? false
       : favorites.some(fav => fav.id === media[currentIndex.value].id);
 
   const toggleFavorite = () => {
     console.log('TESTING ' + 'toggleFavorite');
     if (isFavorited) {
-      setFavorites(
-        favorites.filter(fav => fav.id !== media[currentIndex.value].id),
+      const newFavorites = favorites.filter(
+        fav => fav.id !== media[currentIndex.value].id,
       );
+      setFavorites(newFavorites);
     } else {
-      setFavorites([...favorites, media[currentIndex.value]]);
+      const newFavorites = [...favorites, media[currentIndex.value]];
+      setFavorites(newFavorites);
     }
   };
+
+  console.log('TESTING ' + 'isFavorited: ', isFavorited);
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -86,7 +98,10 @@ function ImageViewer(props: ImageViewerProps) {
           right: '50%',
           transform: [{translateX: 50}],
         }}>
-        <FavoriteButton isFavorited={isFavorited} onPress={toggleFavorite} />
+        <TouchableWithoutFeedback onPress={toggleFavorite}>
+          <View style={styles.containerButton} />
+        </TouchableWithoutFeedback>
+        <HeartWithLiquidButton size={100} value={isFavorited ? 100 : 0} />
       </View>
       <PositionIndicator
         currentIndex={currentIndex}
@@ -100,6 +115,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+  },
+  containerButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: '50%',
+    transform: [{translateX: 50}],
+    height: 100,
+    width: 100,
+    zIndex: 10,
   },
   imageContainer: {
     flex: 1,

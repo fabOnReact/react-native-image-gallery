@@ -14,6 +14,7 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import {StyleSheet, View} from 'react-native';
 
 type Props = {
   size: number;
@@ -109,15 +110,8 @@ function HeartWithLiquidButton({size, value, onPress}: Props) {
   const outerHeartPath = getHeartPath(size);
   const innerHeartPath = getHeartPath(size, 13);
 
-  const tapGesture = Gesture.Tap().onEnd((event, success) => {
-    console.log('Canvas tapped!', event);
-    if (onPress) {
-      runOnJS(onPress)();
-    }
-  });
-
   return (
-    <GestureDetector gesture={tapGesture}>
+    <View style={styles.container}>
       <Canvas style={{width: size, height: size}}>
         <Path
           path={outerHeartPath}
@@ -129,7 +123,7 @@ function HeartWithLiquidButton({size, value, onPress}: Props) {
           <Path path={innerHeartPath} color="blue" />
         </Group>
       </Canvas>
-    </GestureDetector>
+    </View>
   );
 }
 
@@ -167,5 +161,26 @@ function getHeartPath(size: number, padding = 0) {
   skiaHeartPath.transform(matrix);
   return skiaHeartPath;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 10,
+    right: '50%',
+    transform: [{translateX: 50}],
+  },
+  button: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    fontSize: 24,
+    color: 'white',
+  },
+});
 
 export default HeartWithLiquidButton;
