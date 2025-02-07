@@ -1,10 +1,8 @@
 import React from 'react';
-import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
+import {Text, StyleSheet} from 'react-native';
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
 import ImageViewer from '../components/ImageViewer';
-import {useNavigation} from '@react-navigation/native';
-import {NavigationProp} from '../types/types';
 
 const FavoritesScreen = () => {
   const [favorites] = useAtom(favoritesAtom);

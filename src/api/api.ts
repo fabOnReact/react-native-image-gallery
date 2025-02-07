@@ -4,10 +4,10 @@ const PEXELS_URL = 'https://api.pexels.com/v1';
 export const getCollectionsMedia = async (
   apiKey: string,
   id: string,
-  pageUrl: string | null = null,
+  pageParam: number = 1,
+  perPage: number = 30,
 ) => {
-  const GET_MEDIA_URL =
-    pageUrl || `${PEXELS_URL}/collections/${id}?type=photos`;
+  const GET_MEDIA_URL = `${PEXELS_URL}/collections/${id}?type=photos&per_page=${perPage}&page=${pageParam}`;
   try {
     const response = await fetch(GET_MEDIA_URL, {
       headers: {
@@ -22,13 +22,19 @@ export const getCollectionsMedia = async (
     }
 
     const data: MediaAPIResponse = await response.json();
-
     if (!data.media || !Array.isArray(data.media)) {
-      console.error('Invalid API response structure:', data);
-      return {media: [], total_results: 0};
+      console.error(
+        'Invalid API response structure from ${PEXELS_URL}/collections/featured with data: ',
+        data,
+      );
+      return {media: [], total_results: 0, nextPage: null};
     }
 
-    return data;
+    return {
+      media: data.media,
+      total_results: data.total_results,
+      nextPage: data.media.length === perPage ? pageParam + 1 : null,
+    };
   } catch (error) {
     console.error(
       `Error fetching media from ${GET_MEDIA_URL} with error: `,

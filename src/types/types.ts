@@ -21,11 +21,13 @@ export interface CollectionAPIResponse {
 export interface MediaAPIResponse {
   media: Media[];
   total_results: number;
+  nextPage: number | null;
 }
 
 export type ImageViewerProps = {
   media: Media[];
   numberOfImages: number;
+  onEndReachedCallback?: () => void;
 };
 
 export type Media = {

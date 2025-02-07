@@ -27,6 +27,7 @@ type ViewableItemsType = {
 function ImageViewer(props: ImageViewerProps) {
   const numberOfImages = props.numberOfImages;
   const media: Media[] = props.media;
+  const onEndReachedCallback = props.onEndReachedCallback;
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentIndexSharedValue = useSharedValue(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
@@ -85,6 +86,8 @@ function ImageViewer(props: ImageViewerProps) {
           onScroll={event => {
             scrollX.value = event.nativeEvent.contentOffset.x;
           }}
+          onEndReached={onEndReachedCallback}
+          onEndReachedThreshold={0.5}
         />
         <TouchableWithoutFeedback onPress={toggleFavorite}>
           <View style={[styles.invisibleButton, {zIndex: 1}]} />
