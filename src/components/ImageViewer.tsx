@@ -25,9 +25,12 @@ type ViewableItemsType = {
 };
 
 function ImageViewer(props: ImageViewerProps) {
+  const numberOfImages = props.numberOfImages;
   const media: Media[] = props.media;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const currentIndexSharedValue = useSharedValue(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
+  const scrollX = useSharedValue(0);
   const [withAnimation, setWithAnimation] = useState(true);
 
   const isFavorited =
@@ -44,6 +47,7 @@ function ImageViewer(props: ImageViewerProps) {
   const onViewableItemsChanged = (props: ViewableItemsType) => {
     const {viewableItems} = props;
     if (viewableItems.length > 0) {
+      currentIndexSharedValue.value = viewableItems[0].index ?? 0;
       setWithAnimation(false);
       setCurrentIndex(viewableItems[0].index);
     }
@@ -77,6 +81,9 @@ function ImageViewer(props: ImageViewerProps) {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={renderItem}
+        onScroll={event => {
+          scrollX.value = event.nativeEvent.contentOffset.x;
+        }}
       />
       <TouchableWithoutFeedback onPress={toggleFavorite}>
         <View style={[styles.invisibleButton, {zIndex: 1}]} />
@@ -87,12 +94,10 @@ function ImageViewer(props: ImageViewerProps) {
         withAnimation={withAnimation}
         style={styles.invisibleButton}
       />
-      {/*
       <PositionIndicator
-        currentIndex={currentIndex}
+        currentIndex={currentIndexSharedValue}
         numberOfImages={numberOfImages}
       />
-      */}
     </GestureHandlerRootView>
   );
 }
