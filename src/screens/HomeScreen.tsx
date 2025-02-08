@@ -37,6 +37,7 @@ const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
 );
 
 function HomeScreen() {
+  const ITEM_HEIGHT = 60;
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');
@@ -73,6 +74,15 @@ function HomeScreen() {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+  const getItemLayout = (
+    _data: ArrayLike<Collection> | null | undefined,
+    index: number,
+  ) => ({
+    length: ITEM_HEIGHT,
+    offset: ITEM_HEIGHT * index,
+    index,
+  });
+
   if (isLoading) {
     return <HeartWithLiquidActivityIndicator />;
   }
@@ -94,6 +104,8 @@ function HomeScreen() {
         renderItem={renderItem}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
+        removeClippedSubviews={true}
+        getItemLayout={getItemLayout}
         ListFooterComponent={
           isFetchingNextPage ? (
             <ActivityIndicator size="large" color="#0000ff" />
