@@ -12,7 +12,12 @@ import {
 } from 'react-native';
 import {getCollections} from '../api/api';
 import {useCallback} from 'react';
-import {Collection, CollectionItemProps, NavigationProp} from '../types/types';
+import {
+  Collection,
+  CollectionItemProps,
+  GetItemLayoutFunction,
+  NavigationProp,
+} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
 import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
@@ -52,13 +57,14 @@ function HomeScreen() {
     refetch,
   } = useInfiniteQuery({
     queryKey: ['collections'],
-    queryFn: ({pageParam = 1}) => getCollections(PEXELS_API_KEY, pageParam),
+    queryFn: async ({pageParam}) =>
+      getCollections(PEXELS_API_KEY, pageParam as number),
     initialPageParam: 1,
     getNextPageParam: lastPage => lastPage?.next_page ?? null,
   });
 
   const collections: Collection[] =
-    data?.pages.flatMap(page => page.collections) ?? [];
+    data?.pages.flatMap(page => page?.collections ?? []) ?? [];
 
   const validCollections = collections.filter(
     collection =>
@@ -68,16 +74,13 @@ function HomeScreen() {
       collection.photos_count > 0,
   );
 
-  const loadMore = useCallback(() => {
+  const loadMore = useCallback((): void => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const getItemLayout = (
-    _data: ArrayLike<Collection> | null | undefined,
-    index: number,
-  ) => ({
+  const getItemLayout: GetItemLayoutFunction = (_, index) => ({
     length: ITEM_HEIGHT,
     offset: ITEM_HEIGHT * index,
     index,

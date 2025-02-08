@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Media, GalleryScreenProps} from '../types/types';
 import {useInfiniteQuery} from '@tanstack/react-query';
@@ -23,11 +23,21 @@ function GalleryScreen(props: GalleryScreenProps) {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['collectionMedia', item.id],
-    queryFn: ({pageParam}) =>
+    queryFn: async ({pageParam}) =>
       getCollectionsMedia(PEXELS_API_KEY, item.id, pageParam as number),
     initialPageParam: 1,
     getNextPageParam: lastPage => lastPage?.next_page ?? undefined,
   });
+
+  const onEndReachedCallback = useCallback((): void => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Combine pages into one flat array
+  const media: Media[] = data?.pages.flatMap(page => page?.media ?? []) ?? [];
+  const numberOfImages = data?.pages?.[0].total_results ?? 0;
 
   if (isLoading) {
     return <HeartWithLiquidActivityIndicator />;
@@ -41,10 +51,6 @@ function GalleryScreen(props: GalleryScreenProps) {
     );
   }
 
-  // Combine pages into one flat array
-  const media: Media[] = data?.pages.flatMap(page => page.media) ?? [];
-  const numberOfImages = data?.pages[0].total_results ?? 0;
-
   if (media.length === 0) {
     return (
       <View style={styles.container}>
@@ -52,12 +58,6 @@ function GalleryScreen(props: GalleryScreenProps) {
       </View>
     );
   }
-
-  const onEndReachedCallback = (): void => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
 
   return (
     <ImageViewer
