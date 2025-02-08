@@ -59,8 +59,12 @@ function HomeScreen() {
   const collections: Collection[] =
     data?.pages.flatMap(page => page.collections) ?? [];
 
-  const collectionsWithPhotos = collections.filter(
-    collection => collection.photos_count > 0,
+  const validCollections = collections.filter(
+    collection =>
+      collection?.id &&
+      collection?.title &&
+      typeof collection?.photos_count === 'number' &&
+      collection.photos_count > 0,
   );
 
   const loadMore = useCallback(() => {
@@ -85,7 +89,7 @@ function HomeScreen() {
     <SafeAreaView>
       <FlatList
         testID="collection-list"
-        data={collectionsWithPhotos}
+        data={validCollections}
         keyExtractor={item => item?.id?.toString()}
         renderItem={renderItem}
         onEndReached={loadMore}
