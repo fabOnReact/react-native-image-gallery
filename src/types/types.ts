@@ -3,8 +3,10 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 
-export interface CollectionItemProps {
-  item: Collection;
+export interface PaginatedResponse {
+  page: number;
+  per_page: number;
+  total_results: number;
 }
 
 export interface Collection {
@@ -13,28 +15,29 @@ export interface Collection {
   photos_count: number;
 }
 
-export interface CollectionAPIResponse {
+export interface CollectionAPIResponse extends PaginatedResponse {
   collections: Collection[];
-  nextPage: number | null;
 }
 
-export interface MediaAPIResponse {
+export interface CollectionItemProps {
+  item: Collection;
+}
+
+export interface Media {
+  id: string;
+  src: {
+    portrait: string;
+  };
+}
+
+export interface MediaAPIResponse extends PaginatedResponse {
   media: Media[];
-  total_results: number;
-  nextPage: number | null;
 }
 
 export type ImageViewerProps = {
   media: Media[];
   numberOfImages: number;
   onEndReachedCallback?: () => void;
-};
-
-export type Media = {
-  id: number;
-  src: {
-    portrait: string;
-  };
 };
 
 export type PinchableImageProps = {
@@ -48,12 +51,14 @@ export type RootStackParamList = {
   Favorites: undefined;
 };
 
-export type GalleryScreenProps = {
-  route: {
-    item: Media;
-  };
-};
+export type GalleryScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Gallery'
+>;
 
-export type Props = NativeStackScreenProps<RootStackParamList, 'Gallery'>;
+export type FavoritesScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Favorites'
+>;
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;

@@ -1,19 +1,18 @@
 import React from 'react';
-import {View, Text, useWindowDimensions, StyleSheet} from 'react-native';
-import {Media, Props} from '../types/types';
+import {View, Text, StyleSheet} from 'react-native';
+import {Media, GalleryScreenProps} from '../types/types';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 import ImageViewer from '../components/ImageViewer';
 import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
-function GalleryScreen({route}: Props) {
-  useWindowDimensions(); // for responsive layouts
+function GalleryScreen(props: GalleryScreenProps) {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY) {
     console.warn('PEXELS_API_KEY environment variable is not defined');
   }
 
-  const {item} = route.params;
+  const {item} = props.route.params;
 
   const {
     data,
