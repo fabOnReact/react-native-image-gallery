@@ -108,3 +108,5 @@ export type ViewableItemsType = {
 };
 
 export type MaybeArray<T> = ArrayLike<T> | null | undefined;
+
+export type FavoritesType = [Awaited<Media[]>, (args: any) => any];

@@ -23,10 +23,10 @@ function GalleryScreen(props: GalleryScreenProps) {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['collectionMedia', item.id],
-    queryFn: ({pageParam = 1}) =>
-      getCollectionsMedia(PEXELS_API_KEY, item.id, pageParam),
+    queryFn: ({pageParam}) =>
+      getCollectionsMedia(PEXELS_API_KEY, item.id, pageParam as number),
     initialPageParam: 1,
-    getNextPageParam: lastPage => lastPage.nextPage || undefined,
+    getNextPageParam: lastPage => lastPage?.next_page ?? undefined,
   });
 
   if (isLoading) {
@@ -42,7 +42,7 @@ function GalleryScreen(props: GalleryScreenProps) {
   }
 
   // Combine pages into one flat array
-  const media: Media[] = data?.pages.flatMap((page: any) => page.media) ?? [];
+  const media: Media[] = data?.pages.flatMap(page => page.media) ?? [];
   const numberOfImages = data?.pages[0].total_results ?? 0;
 
   if (media.length === 0) {
@@ -53,7 +53,7 @@ function GalleryScreen(props: GalleryScreenProps) {
     );
   }
 
-  const onEndReachedCallback = () => {
+  const onEndReachedCallback = (): void => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }

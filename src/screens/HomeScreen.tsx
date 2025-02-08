@@ -54,7 +54,7 @@ function HomeScreen() {
     queryKey: ['collections'],
     queryFn: ({pageParam = 1}) => getCollections(PEXELS_API_KEY, pageParam),
     initialPageParam: 1,
-    getNextPageParam: lastPage => lastPage?.nextPage ?? null,
+    getNextPageParam: lastPage => lastPage?.next_page ?? null,
   });
 
   const collections: Collection[] =

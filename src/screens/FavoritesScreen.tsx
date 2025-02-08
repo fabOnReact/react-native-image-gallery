@@ -3,9 +3,10 @@ import {Text, StyleSheet} from 'react-native';
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
 import ImageViewer from '../components/ImageViewer';
+import {FavoritesType} from '../types/types';
 
 const FavoritesScreen = () => {
-  const [favorites] = useAtom(favoritesAtom);
+  const [favorites]: FavoritesType = useAtom(favoritesAtom);
 
   return (
     <>
