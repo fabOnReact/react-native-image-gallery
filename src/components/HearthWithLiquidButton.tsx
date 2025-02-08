@@ -22,32 +22,43 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-function HeartWithLiquidButton({
-  size,
-  value,
-  withAnimation,
-  borderColor = 'white',
-  animationDuration = 6000,
-  waveHeightRatio = 0.05,
-  waveCount = 4, // how many full waves will be seen in the circle
-  waterColor = 'red',
-  style,
-}: Props) {
-  const radius = size * 0.5; // outer circle
-  const circleThickness = radius * 0.05; // 0.05 just coefficient can be anything you like
+// An adaptation of the react-native-liquid-gauge to render a heart animation
+// https://github.com/dimaportenko/react-native-liquid-gauge-tutorial
+function HeartWithLiquidButton(props: Props) {
+  const {size, value, withAnimation, style} = props;
+  const {
+    borderColor = 'white',
+    animationDuration = 6000,
+    waveHeightRatio = 0.05,
+    // how many full waves will be seen in the circle
+    waveCount = 4,
+    waterColor = 'red',
+  } = props;
 
-  const circleFillGap = 0.05 * radius; // 0.05 just coefficient can be anything you like
+  // outer circle
+  const radius = size * 0.5;
+  // 0.05 just coefficient can be anything you like
+  const circleThickness = radius * 0.05;
+
+  // 0.05 just coefficient can be anything you like
+  const circleFillGap = 0.05 * radius;
   const fillCircleMargin = circleThickness + circleFillGap;
-  const fillCircleRadius = radius - fillCircleMargin; // inner circle radius
-
-  const minValue = 0; // min possible value
-  const maxValue = 100; // max possible value
-  const fillPercent = Math.max(minValue, Math.min(maxValue, value)) / maxValue; // percent of how much progress filled
-
-  const waveClipCount = waveCount + 1; // extra wave for translate x animation
-  const waveLength = (fillCircleRadius * 2) / waveCount; // wave length base on wave count
-  const waveClipWidth = waveLength * waveClipCount; // extra width for translate x animation
-  const waveHeight = fillCircleRadius * waveHeightRatio; // wave height relative to the circle radius, if we change component size it will look same
+  // inner circle radius
+  const fillCircleRadius = radius - fillCircleMargin;
+  // min possible value
+  const minValue = 0;
+  // max possible value
+  const maxValue = 100;
+  // percent of how much progress filled
+  const fillPercent = Math.max(minValue, Math.min(maxValue, value)) / maxValue;
+  // extra wave for translate x animation
+  const waveClipCount = waveCount + 1;
+  // wave length based on wave count
+  const waveLength = (fillCircleRadius * 2) / waveCount;
+  // extra width for translate x animation
+  const waveClipWidth = waveLength * waveClipCount;
+  // wave height relative to the circle radius, if we change component size it will look same
+  const waveHeight = fillCircleRadius * waveHeightRatio;
 
   // Data for building the clip wave area.
   // [number, number] represent point
@@ -58,14 +69,17 @@ function HeartWithLiquidButton({
     data.push([i / (40 * waveClipCount), i / 40]);
   }
 
-  const waveScaleX = scaleLinear().range([0, waveClipWidth]).domain([0, 1]); // interpolate value between 0 and 1 to value between 0 and waveClipWidth
-  const waveScaleY = scaleLinear().range([0, waveHeight]).domain([0, 1]); // interpolate value between 0 and 1 to value between 0 and waveHeight
+  // interpolate value between 0 and 1 to value between 0 and waveClipWidth
+  const waveScaleX = scaleLinear().range([0, waveClipWidth]).domain([0, 1]);
+  // interpolate value between 0 and 1 to value between 0 and waveHeight
+  const waveScaleY = scaleLinear().range([0, waveHeight]).domain([0, 1]);
 
-  // area take our data points
-  // output area with points (x, y0) and (x, y1)
+  // area takes our data points
+  // outputs area with points (x, y0) and (x, y1)
   const clipArea = area()
     .x(function (d) {
-      return waveScaleX(d[0]); // interpolate value between 0 and 1 to value between 0 and waveClipWidth
+      // interpolate value between 0 and 1 to value between 0 and waveClipWidth
+      return waveScaleX(d[0]);
     })
     .y0(function (d) {
       // interpolate value between 0 and 1 to value between 0 and waveHeight
@@ -76,17 +90,22 @@ function HeartWithLiquidButton({
       return fillCircleRadius * 2 + waveHeight;
     });
 
-  const clipSvgPath = clipArea(data); // convert data points as wave area and output as svg path string
+  // convert data points as wave area and output as svg path string
+  const clipSvgPath = clipArea(data);
 
-  const translateXAnimated = useSharedValue(0); // animated value translate wave horizontally
-  const translateYPercent = useSharedValue(0); // animated value translate wave vertically
+  // animated value translate wave horizontally
+  const translateXAnimated = useSharedValue(0);
+  // animated value translate wave vertically
+  const translateYPercent = useSharedValue(0);
 
   useEffect(() => {
     if (withAnimation) {
+      // timing animation from 0 to `fillPercent`
       translateYPercent.value = withTiming(fillPercent, {
-        // timing animation from 0 to `fillPercent`
-        duration: animationDuration, // animation duration
-        easing: Easing.linear, // easing function
+        // animation duration
+        duration: animationDuration,
+        // easing function
+        easing: Easing.linear,
       });
     } else {
       translateYPercent.value = fillPercent;
@@ -95,30 +114,41 @@ function HeartWithLiquidButton({
   }, [fillPercent]);
 
   useEffect(() => {
+    // repeat animation
     translateXAnimated.value = withRepeat(
-      // repeat animation
       withTiming(1, {
         // animate from 0 to 1
-        duration: Math.floor(Math.random() * (500 - 300 + 1)) + 300, // animation duration
-        easing: Easing.linear, // easing function
+        // animation duration
+        duration: Math.floor(Math.random() * (500 - 300 + 1)) + 300,
+        // easing function
+        easing: Easing.linear,
       }),
-      -1, // repeat forever
+      // repeat forever
+      -1,
     );
   }, []);
 
   const clipPath = useDerivedValue(() => {
     // animated value for clip wave path
+
+    // convert svg path string to skia format path
     const clipP =
-      Skia.Path.MakeFromSVGString(clipSvgPath ?? '') || Skia.Path.Make(); // convert svg path string to skia format path
-    const transformMatrix = Skia.Matrix(); // create Skia tranform matrix
-    transformMatrix.translate(
-      fillCircleMargin - waveLength * translateXAnimated.value, // translate left from start of the first wave to the length of first wave
+      Skia.Path.MakeFromSVGString(clipSvgPath ?? '') || Skia.Path.Make();
+    // create Skia transform matrix
+    const transformMatrix = Skia.Matrix();
+    // translate left from start of the first wave to the length of first wave
+    const translateX = fillCircleMargin - waveLength * translateXAnimated.value;
+    // translate y to position where lower point of the wave in the innerCircleHeight * fillPercent
+    // since Y axis 0 is at the top, we do animation from 1 to (1 - fillPercent)
+    const translateY =
       fillCircleMargin +
-        (1 - translateYPercent.value) * fillCircleRadius * 2 -
-        waveHeight, // translate y to position where lower point of the wave in the innerCircleHeight * fillPercent
-      // since Y axis 0 is in the top, we do animation from 1 to (1 - fillPercent)
-    );
-    clipP.transform(transformMatrix); // apply transform matrix to our clip path
+      (1 - translateYPercent.value) * fillCircleRadius * 2 -
+      waveHeight;
+
+    transformMatrix.translate(translateX, translateY);
+    // apply transform matrix to our clip path
+    clipP.transform(transformMatrix);
+
     return clipP;
   }, [translateXAnimated, translateYPercent]);
 
@@ -147,7 +177,7 @@ function getHeartPath(size: number, padding = 0) {
   const skiaHeartPath =
     Skia.Path.MakeFromSVGString(HEART_SVG) ?? Skia.Path.Make();
 
-  // Get the bounds of thepath (returns { x, y, width, height })
+  // Get the bounds of the path (returns { x, y, width, height })
   const bounds = skiaHeartPath.getBounds();
 
   // Compute the effective drawing area (reserve padding on all sides)

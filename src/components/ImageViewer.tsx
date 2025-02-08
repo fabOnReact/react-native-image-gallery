@@ -55,7 +55,7 @@ function ImageViewer(props: ImageViewerProps) {
   };
 
   const viewabilityConfig = {
-    viewAreaCoveragePercentThreshold: 50, // 50% of an image should be visible
+    viewAreaCoveragePercentThreshold: 50,
   };
 
   const toggleFavorite = () => {

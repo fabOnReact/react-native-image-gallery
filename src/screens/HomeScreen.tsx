@@ -29,20 +29,9 @@ function CollectionItem(props: CollectionItemProps) {
 }
 
 const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
-  <View
-    testID="error-message"
-    style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 16,
-    }}>
-    <Text style={{color: 'red', fontSize: 16, fontWeight: 'bold'}}>
-      Oops! Something went wrong.
-    </Text>
-    <Text style={{color: 'gray', fontSize: 14, marginTop: 8}}>
-      Please try again later.
-    </Text>
+  <View testID="error-message" style={styles.container}>
+    <Text style={styles.errorMessageOne}>Oops! Something went wrong.</Text>
+    <Text style={styles.errorMessageTwo}>Please try again later.</Text>
     <Button title="Retry" onPress={onRetry} />
   </View>
 );
@@ -112,10 +101,26 @@ function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
   collectionItem: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+  },
+  errorMessageOne: {
+    color: 'red',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  errorMessageTwo: {
+    color: 'gray',
+    fontSize: 14,
+    marginTop: 8,
   },
 });
 

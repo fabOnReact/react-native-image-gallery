@@ -102,6 +102,7 @@ function PinchableImage(props: PinchableImageProps) {
   const imageStyles = {
     width,
     height,
+    opacity: loaded ? 1 : 0,
   };
 
   const iOS = Platform.OS === 'ios';
@@ -113,7 +114,7 @@ function PinchableImage(props: PinchableImageProps) {
       <GestureDetector gesture={combinedGesture}>
         <Animated.Image
           source={{uri: portrait}}
-          style={[imageStyles, animatedStyle, !loaded && {opacity: 0}]}
+          style={[imageStyles, animatedStyle]}
           resizeMode="cover"
           onLoadEnd={() => setLoaded(true)}
           onError={() => console.log(`Failed to load image: ${portrait}`)}

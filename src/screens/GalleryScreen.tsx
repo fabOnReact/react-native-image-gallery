@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, useWindowDimensions} from 'react-native';
+import {View, Text, useWindowDimensions, StyleSheet} from 'react-native';
 import {Media, Props} from '../types/types';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
@@ -36,8 +36,8 @@ function GalleryScreen({route}: Props) {
 
   if (error) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={{color: 'red'}}>Failed to load images</Text>
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Failed to load images</Text>
       </View>
     );
   }
@@ -48,7 +48,7 @@ function GalleryScreen({route}: Props) {
 
   if (media.length === 0) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={styles.container}>
         <Text>No images in this collection.</Text>
       </View>
     );
@@ -68,5 +68,16 @@ function GalleryScreen({route}: Props) {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+  },
+});
 
 export default GalleryScreen;
