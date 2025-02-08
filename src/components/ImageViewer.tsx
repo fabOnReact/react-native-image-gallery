@@ -39,9 +39,9 @@ function ImageViewer(props: ImageViewerProps) {
       ? false
       : favorites.some(fav => fav?.id === media[currentIndex].id);
 
-  const renderItem: ListRenderItem<Media> = ({item}) => (
+  const renderItem: ListRenderItem<Media> = ({item, index}) => (
     <View style={[{width, height}, styles.imageContainer]}>
-      <PinchableImage item={item} />
+      <PinchableImage item={item} firstItem={index === 0} />
     </View>
   );
 

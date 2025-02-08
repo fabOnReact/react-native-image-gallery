@@ -39,6 +39,7 @@ export type Media = {
 
 export type PinchableImageProps = {
   item: Media;
+  firstItem: boolean;
 };
 
 export type RootStackParamList = {

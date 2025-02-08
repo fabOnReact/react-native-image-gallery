@@ -4,11 +4,13 @@ import HeartWithLiquidButton from './HearthWithLiquidButton';
 
 type HeartActivityIndicatorProps = {
   value?: number;
+  animationDuration?: number;
 };
 
 function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
-  const [valueInternal, setValueInternal] = useState(30);
+  const [valueInternal, setValueInternal] = useState(props.value ?? 15);
   const [withAnimation, setWithAnimation] = useState(false);
+  const animationDurationWithDefault = props.animationDuration ?? 7000;
 
   useEffect(() => {
     setWithAnimation(true);
@@ -18,13 +20,13 @@ function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
   return (
     <HeartWithLiquidButton
       size={400}
-      value={props.value ?? valueInternal}
+      value={valueInternal}
       withAnimation={withAnimation}
       style={style.activitiyIndicator}
       borderColor="red"
       waveCount={2}
       waveHeightRatio={0.05}
-      animationDuration={5000}
+      animationDuration={animationDurationWithDefault}
       waterColor="red"
     />
   );

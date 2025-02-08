@@ -9,7 +9,8 @@ import {PinchableImageProps} from '../types/types';
 import React, {useState} from 'react';
 import HeartWithLiquidActivityIndicator from './HearthWithLiquidActivityIndicator';
 
-function PinchableImage({item}: PinchableImageProps) {
+function PinchableImage(props: PinchableImageProps) {
+  const {item, firstItem} = props;
   const {width, height} = useWindowDimensions();
   const portrait = item?.src?.portrait;
   const scale = useSharedValue(1);
@@ -103,7 +104,7 @@ function PinchableImage({item}: PinchableImageProps) {
     height,
   };
 
-  const iPhone = Platform.OS === 'ios';
+  const iOS = Platform.OS === 'ios';
 
   if (portrait === null) return <Text>Image not found.</Text>;
 
@@ -118,7 +119,9 @@ function PinchableImage({item}: PinchableImageProps) {
           onError={() => console.log(`Failed to load image: ${portrait}`)}
         />
       </GestureDetector>
-      {!loaded && iPhone && <HeartWithLiquidActivityIndicator value={65} />}
+      {!loaded && firstItem && (
+        <HeartWithLiquidActivityIndicator value={55} animationDuration={1000} />
+      )}
     </>
   );
 }
