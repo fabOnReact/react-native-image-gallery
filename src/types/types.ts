@@ -10,7 +10,7 @@ export interface CollectionItemProps {
 export interface Collection {
   id: string;
   title: string;
-  media_count: number;
+  photos_count: number;
 }
 
 export interface CollectionAPIResponse {

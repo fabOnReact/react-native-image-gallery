@@ -22,7 +22,7 @@ function CollectionItem(props: CollectionItemProps) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
       <Text>
-        {props.item?.title} - {props.item?.media_count}
+        {props.item?.title} - {props.item?.photos_count}
       </Text>
     </TouchableOpacity>
   );
@@ -70,6 +70,10 @@ function HomeScreen() {
   const collections: Collection[] =
     data?.pages.flatMap(page => page.collections) ?? [];
 
+  const collectionsWithPhotos = collections.filter(
+    collection => collection.photos_count > 0,
+  );
+
   const loadMore = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -92,7 +96,7 @@ function HomeScreen() {
     <SafeAreaView>
       <FlatList
         testID="collection-list"
-        data={collections}
+        data={collectionsWithPhotos}
         keyExtractor={item => item?.id?.toString()}
         renderItem={renderItem}
         onEndReached={loadMore}
