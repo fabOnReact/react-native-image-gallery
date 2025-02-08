@@ -18,7 +18,7 @@ function PositionIndicator(props: PositionIndicatorProps) {
   const animatedWidth = useDerivedValue(() => {
     return numberOfImages > 1
       ? (currentIndex.value / (numberOfImages - 1)) * width
-      : 0;
+      : width;
   });
 
   return (
