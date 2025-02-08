@@ -7,24 +7,13 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import {Canvas, Group, Path, Skia} from '@shopify/react-native-skia';
-import {StyleProp, View, ViewStyle} from 'react-native';
-
-type Props = {
-  size: number;
-  value: number;
-  withAnimation: boolean;
-  borderColor?: string;
-  animationDuration?: number;
-  waveHeightRatio?: number;
-  waveCount?: number;
-  waterColor?: string;
-  style?: StyleProp<ViewStyle>;
-};
+import {Canvas, Group, Path, PathDef, Skia} from '@shopify/react-native-skia';
+import {View} from 'react-native';
+import {HearthPathFunction, HeartWithLiquidButtonProps} from '../types/types';
 
 // An adaptation of the react-native-liquid-gauge to render a heart animation
 // https://github.com/dimaportenko/react-native-liquid-gauge-tutorial
-function HeartWithLiquidButton(props: Props) {
+function HeartWithLiquidButton(props: HeartWithLiquidButtonProps) {
   const {size, value, withAnimation, style} = props;
   const {
     borderColor = 'white',
@@ -172,7 +161,7 @@ function HeartWithLiquidButton(props: Props) {
   );
 }
 
-function getHeartPath(size: number, padding = 0) {
+const getHeartPath: HearthPathFunction = (size, padding = 0) => {
   const HEART_SVG = 'M50,15 C35,0,0,25,50,60,100,25,65,0,50,15 Z';
   const skiaHeartPath =
     Skia.Path.MakeFromSVGString(HEART_SVG) ?? Skia.Path.Make();
@@ -206,6 +195,6 @@ function getHeartPath(size: number, padding = 0) {
   // Apply the transformation matrix to the path and return it.
   skiaHeartPath.transform(matrix);
   return skiaHeartPath;
-}
+};
 
 export default HeartWithLiquidButton;

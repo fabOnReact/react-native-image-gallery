@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef, useMemo} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
 import HeartWithLiquidButton from './HearthWithLiquidButton';
 

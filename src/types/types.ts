@@ -2,6 +2,8 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import {AnimatedProp, AnimatedProp, PathDef} from '@shopify/react-native-skia';
+import {StyleProp, ViewStyle} from 'react-native';
 
 export interface PaginatedResponse {
   page: number;
@@ -63,3 +65,37 @@ export type FavoritesScreenProps = NativeStackScreenProps<
 >;
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+export type HeartWithLiquidButtonProps = {
+  /** The size (width & height) of the heart animation */
+  size: number;
+
+  /** Value between 0 and 100 that determines how much the heart is filled */
+  value: number;
+
+  /** Enables/disables the vertical animation. It does not disable the waves animation. */
+  withAnimation: boolean;
+
+  /** Change the border color for the heart outline. The default is white. */
+  borderColor?: string;
+
+  /** Duration of the fill animation in milliseconds. The default is 6000 ms. */
+  animationDuration?: number;
+
+  /** Sets the height of the waves. The default is 0.05. */
+  waveHeightRatio?: number;
+
+  /** The number of waves visible inside the heart. The default is 4. */
+  waveCount?: number;
+
+  /** Color of the liquid inside the heart. The default is red. */
+  waterColor?: string;
+
+  /** Custom styles applied to the container */
+  style?: StyleProp<ViewStyle>;
+};
+
+export type HearthPathFunction = (
+  size: number,
+  padding?: number,
+) => AnimatedProp<PathDef>;
