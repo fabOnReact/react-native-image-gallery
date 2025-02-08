@@ -1,24 +1,24 @@
 import React from 'react';
 import {View, Dimensions, StyleSheet} from 'react-native';
 import {Canvas, RoundedRect} from '@shopify/react-native-skia';
-import {useDerivedValue} from 'react-native-reanimated';
+import {SharedValue, useDerivedValue} from 'react-native-reanimated';
 
 const {width} = Dimensions.get('window');
 
 type PositionIndicatorProps = {
-  currentIndex: any;
+  currentIndex: SharedValue<number>;
   numberOfImages: number;
 };
 
-const PositionIndicator = ({
-  currentIndex,
-  numberOfImages,
-}: PositionIndicatorProps) => {
+function PositionIndicator(props: PositionIndicatorProps) {
+  const {currentIndex, numberOfImages} = props;
   // Adjust thickness of progress bar
   const barHeight = 5;
   // Derived value for progress width
   const animatedWidth = useDerivedValue(() => {
-    return (currentIndex.value / (numberOfImages - 1)) * width;
+    return numberOfImages > 1
+      ? (currentIndex.value / (numberOfImages - 1)) * width
+      : 0;
   });
 
   return (
@@ -43,7 +43,7 @@ const PositionIndicator = ({
       </Canvas>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

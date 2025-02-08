@@ -24,10 +24,10 @@ function ImageViewer(props: ImageViewerProps) {
   const numberOfImages = props.numberOfImages;
   const media: Media[] = props.media;
   const onEndReachedCallback = props.onEndReachedCallback;
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const currentIndexSharedValue = useSharedValue(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const currentIndexSharedValue = useSharedValue<number>(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
-  const scrollX = useSharedValue(0);
+  const scrollX = useSharedValue<number>(0);
   const [withAnimation, setWithAnimation] = useState(false);
 
   const isFavorited =
