@@ -2,8 +2,8 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import {AnimatedProp, AnimatedProp, PathDef} from '@shopify/react-native-skia';
-import {StyleProp, ViewStyle} from 'react-native';
+import {AnimatedProp, PathDef} from '@shopify/react-native-skia';
+import {StyleProp, ViewStyle, ViewToken} from 'react-native';
 
 export interface PaginatedResponse {
   page: number;
@@ -102,3 +102,7 @@ export type HearthPathFunction = (
   size: number,
   padding?: number,
 ) => AnimatedProp<PathDef>;
+
+export type ViewableItemsType = {
+  viewableItems: Array<ViewToken<Media>>;
+};

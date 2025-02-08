@@ -90,7 +90,7 @@ function HomeScreen() {
       <FlatList
         testID="collection-list"
         data={validCollections}
-        keyExtractor={item => item?.id?.toString()}
+        keyExtractor={item => String(item?.id)}
         renderItem={renderItem}
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}

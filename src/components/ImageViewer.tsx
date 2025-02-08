@@ -4,13 +4,13 @@ import {
   Dimensions,
   StyleSheet,
   ListRenderItem,
-  ViewToken,
   TouchableWithoutFeedback,
   SafeAreaView,
+  ViewabilityConfig,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
-import {ImageViewerProps, Media} from '../types/types';
+import {ImageViewerProps, Media, ViewableItemsType} from '../types/types';
 import PositionIndicator from '../components/PositionIndicator';
 import PinchableImage from '../components/PinchableImage';
 import {useAtom} from 'jotai';
@@ -19,10 +19,6 @@ import {useState} from 'react';
 import HeartWithLiquidButton from './HearthWithLiquidButton';
 
 const {width, height} = Dimensions.get('window');
-
-type ViewableItemsType = {
-  viewableItems: Array<ViewToken<Media>>;
-};
 
 function ImageViewer(props: ImageViewerProps) {
   const numberOfImages = props.numberOfImages;
@@ -48,17 +44,19 @@ function ImageViewer(props: ImageViewerProps) {
   const onViewableItemsChanged = (props: ViewableItemsType) => {
     const {viewableItems} = props;
     if (viewableItems.length > 0) {
-      currentIndexSharedValue.value = viewableItems[0].index ?? 0;
+      const newIndex = viewableItems[0].index ?? 0;
+      currentIndexSharedValue.value = newIndex;
       setWithAnimation(false);
-      setCurrentIndex(viewableItems[0].index ?? 0);
+      setCurrentIndex(newIndex);
     }
   };
 
-  const viewabilityConfig = {
+  const viewabilityConfig: ViewabilityConfig = {
     viewAreaCoveragePercentThreshold: 50,
   };
 
   const toggleFavorite = () => {
+    if (!media[currentIndex]) return;
     setWithAnimation(true);
     if (isFavorited) {
       const newFavorites = favorites.filter(
@@ -76,7 +74,7 @@ function ImageViewer(props: ImageViewerProps) {
       <GestureHandlerRootView style={styles.container}>
         <FlatList
           data={media}
-          keyExtractor={item => item?.id.toString()}
+          keyExtractor={item => String(item?.id)}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
