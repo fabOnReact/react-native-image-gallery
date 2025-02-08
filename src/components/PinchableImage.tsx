@@ -1,4 +1,11 @@
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  ImageStyle,
+  StyleProp,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -100,7 +107,7 @@ function PinchableImage(props: PinchableImageProps) {
     };
   });
 
-  const imageStyles = {
+  const imageStyles: StyleProp<ImageStyle> = {
     width,
     height,
     opacity: loaded ? 1 : 0,

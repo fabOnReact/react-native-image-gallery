@@ -44,8 +44,13 @@ export type ImageViewerProps = {
 };
 
 export type PinchableImageProps = {
-  item: Media;
-  firstItem: boolean;
+  item: {
+    id: number;
+    src: {
+      portrait?: string;
+    };
+  };
+  firstItem?: boolean;
 };
 
 export type RootStackParamList = {
