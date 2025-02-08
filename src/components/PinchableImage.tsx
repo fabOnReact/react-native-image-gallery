@@ -1,4 +1,4 @@
-import {Platform, Text, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -16,8 +16,9 @@ function PinchableImage(props: PinchableImageProps) {
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-  const lastScale = useSharedValue(1); // To track previous zoom state
+  const lastScale = useSharedValue(1);
   const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   // **Double-Tap Gesture for Zoom**
   const doubleTapGesture = Gesture.Tap()
@@ -105,9 +106,19 @@ function PinchableImage(props: PinchableImageProps) {
     opacity: loaded ? 1 : 0,
   };
 
-  const iOS = Platform.OS === 'ios';
+  if (!portrait || loadError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorMessage}>Image not found.</Text>
+      </View>
+    );
+  }
 
-  if (portrait === null) return <Text>Image not found.</Text>;
+  const onLoadCallback = () => setLoaded(true);
+  const onErrorCallback = () => {
+    console.log(`Failed to load image: ${portrait}`);
+    setLoadError(true);
+  };
 
   return (
     <>
@@ -116,8 +127,8 @@ function PinchableImage(props: PinchableImageProps) {
           source={{uri: portrait}}
           style={[imageStyles, animatedStyle]}
           resizeMode="cover"
-          onLoadEnd={() => setLoaded(true)}
-          onError={() => console.log(`Failed to load image: ${portrait}`)}
+          onLoadEnd={onLoadCallback}
+          onError={onErrorCallback}
         />
       </GestureDetector>
       {!loaded && firstItem && (
@@ -126,5 +137,17 @@ function PinchableImage(props: PinchableImageProps) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 16,
+  },
+});
 
 export default PinchableImage;
