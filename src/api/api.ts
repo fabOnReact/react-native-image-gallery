@@ -24,7 +24,7 @@ export const getCollectionsMedia = async (
     const data: MediaAPIResponse = await response.json();
     if (!data.media || !Array.isArray(data.media)) {
       console.error(
-        'Invalid API response structure from ${PEXELS_URL}/collections/featured with data: ',
+        `Invalid API response structure from ${PEXELS_URL}/collections/featured with data: `,
         data,
       );
       return {media: [], total_results: 0, nextPage: null};
@@ -33,7 +33,7 @@ export const getCollectionsMedia = async (
     return {
       media: data.media,
       total_results: data.total_results,
-      nextPage: data.media.length === perPage ? pageParam + 1 : null,
+      nextPage: data.next_page ? pageParam + 1 : null,
     };
   } catch (error) {
     console.error(
@@ -67,7 +67,7 @@ export const getCollections = async (
 
     if (!data.collections || !Array.isArray(data.collections)) {
       console.error(
-        'Invalid API response structure from ${PEXELS_URL}/collections/featured with data: ',
+        `Invalid API response structure from ${PEXELS_URL}/collections/featured with data: `,
         data,
       );
       return {collections: [], nextPage: null};
@@ -81,7 +81,7 @@ export const getCollections = async (
 
     return {
       collections: data.collections,
-      nextPage: data.collections.length === perPage ? pageParam + 1 : null,
+      nextPage: data.next_page ? pageParam + 1 : null,
     };
   } catch (error) {
     console.error(

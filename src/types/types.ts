@@ -7,6 +7,7 @@ export interface PaginatedResponse {
   page: number;
   per_page: number;
   total_results: number;
+  next_page?: 'string';
 }
 
 export interface Collection {
