@@ -96,6 +96,8 @@ export type HeartWithLiquidButtonProps = {
 
   /** Custom styles applied to the container */
   style?: StyleProp<ViewStyle>;
+
+  testID?: string;
 };
 
 export type HearthPathFunction = (

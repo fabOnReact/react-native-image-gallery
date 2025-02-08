@@ -10,8 +10,15 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 // Mock API call
-jest.mock('../src/api/api.ts', () => ({
-  getCollections: jest.fn(),
+const mockCollections = [];
+
+jest.mock('../src/api/api', () => ({
+  getCollections: jest.fn(() =>
+    Promise.resolve({
+      collections: mockCollections,
+      nextPage: 2,
+    }),
+  ),
 }));
 
 // Mock react-query

@@ -14,7 +14,7 @@ import {HearthPathFunction, HeartWithLiquidButtonProps} from '../types/types';
 // An adaptation of the react-native-liquid-gauge to render a heart animation
 // https://github.com/dimaportenko/react-native-liquid-gauge-tutorial
 function HeartWithLiquidButton(props: HeartWithLiquidButtonProps) {
-  const {size, value, withAnimation, style} = props;
+  const {size, value, withAnimation, style, testID} = props;
   const {
     borderColor = 'white',
     animationDuration = 6000,
@@ -146,7 +146,7 @@ function HeartWithLiquidButton(props: HeartWithLiquidButtonProps) {
   const innerHeartPath = getHeartPath(size, 13);
 
   return (
-    <View style={style}>
+    <View style={style} testID={testID}>
       <Canvas style={{width: size, height: size}}>
         <Path
           path={outerHeartPath}
