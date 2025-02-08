@@ -106,3 +106,5 @@ export type HearthPathFunction = (
 export type ViewableItemsType = {
   viewableItems: Array<ViewToken<Media>>;
 };
+
+export type MaybeArray<T> = ArrayLike<T> | null | undefined;

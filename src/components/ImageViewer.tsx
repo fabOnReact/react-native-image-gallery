@@ -10,7 +10,12 @@ import {
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
-import {ImageViewerProps, Media, ViewableItemsType} from '../types/types';
+import {
+  ImageViewerProps,
+  MaybeArray,
+  Media,
+  ViewableItemsType,
+} from '../types/types';
 import PositionIndicator from '../components/PositionIndicator';
 import PinchableImage from '../components/PinchableImage';
 import {useAtom} from 'jotai';
@@ -55,6 +60,12 @@ function ImageViewer(props: ImageViewerProps) {
     viewAreaCoveragePercentThreshold: 50,
   };
 
+  const getItemLayout = (_data: MaybeArray<Media>, index: number) => ({
+    length: width,
+    offset: width * index,
+    index,
+  });
+
   const toggleFavorite = () => {
     if (!media[currentIndex]) return;
     setWithAnimation(true);
@@ -87,6 +98,7 @@ function ImageViewer(props: ImageViewerProps) {
           onEndReached={onEndReachedCallback}
           onEndReachedThreshold={0.5}
           initialNumToRender={5}
+          getItemLayout={getItemLayout}
         />
         <TouchableWithoutFeedback onPress={toggleFavorite}>
           <View style={[styles.invisibleButton, {zIndex: 1}]} />
