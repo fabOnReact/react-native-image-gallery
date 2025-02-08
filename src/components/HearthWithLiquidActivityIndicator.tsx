@@ -1,46 +1,58 @@
-import {useState, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {useState, useEffect, useMemo} from 'react';
+import {StyleProp, ViewStyle} from 'react-native';
 import HeartWithLiquidButton from './HearthWithLiquidButton';
 
 type HeartActivityIndicatorProps = {
   value?: number;
+  animationDuration?: number;
 };
 
 function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
-  const [valueInternal, setValueInternal] = useState(30);
+  const {value = 30, animationDuration = 7000} = props;
+  const [valueInternal, setValueInternal] = useState<number>(value);
   const [withAnimation, setWithAnimation] = useState(false);
 
   useEffect(() => {
-    setWithAnimation(true);
-    setValueInternal(100);
+    let isMounted = true;
+
+    if (isMounted) {
+      setWithAnimation(true);
+      setValueInternal(100);
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
+
+  const activityIndicatorStyle: StyleProp<ViewStyle> = useMemo(
+    () => ({
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 100,
+      paddingTop: 70,
+      backgroundColor: 'white',
+    }),
+    [],
+  );
 
   return (
     <HeartWithLiquidButton
       size={400}
-      value={props.value ?? valueInternal}
+      value={valueInternal}
       withAnimation={withAnimation}
-      style={style.activitiyIndicator}
+      style={activityIndicatorStyle}
       borderColor="red"
       waveCount={2}
       waveHeightRatio={0.05}
-      animationDuration={5000}
+      animationDuration={animationDuration}
       waterColor="red"
+      waterSpeed={2000}
     />
   );
 }
-
-const style = StyleSheet.create({
-  activitiyIndicator: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 100,
-    paddingTop: 50,
-    backgroundColor: 'white',
-  },
-});
 
 export default HeartWithLiquidActivityIndicator;

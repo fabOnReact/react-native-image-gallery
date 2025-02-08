@@ -3,9 +3,10 @@ import {Text, StyleSheet} from 'react-native';
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
 import ImageViewer from '../components/ImageViewer';
+import {FavoritesType} from '../types/types';
 
 const FavoritesScreen = () => {
-  const [favorites] = useAtom(favoritesAtom);
+  const [favorites]: FavoritesType = useAtom(favoritesAtom);
 
   return (
     <>
@@ -19,33 +20,11 @@ const FavoritesScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
   emptyText: {
     color: '#aaa',
     fontSize: 18,
     textAlign: 'center',
     marginTop: 20,
-  },
-  imageContainer: {
-    flex: 1,
-    margin: 5,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  image: {
-    width: '100%',
-    height: 150,
-    resizeMode: 'cover',
-    borderRadius: 10,
   },
 });
 

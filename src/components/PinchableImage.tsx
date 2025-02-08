@@ -1,4 +1,11 @@
-import {Platform, Text, useWindowDimensions} from 'react-native';
+import {
+  ImageStyle,
+  StyleProp,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -9,14 +16,16 @@ import {PinchableImageProps} from '../types/types';
 import React, {useState} from 'react';
 import HeartWithLiquidActivityIndicator from './HearthWithLiquidActivityIndicator';
 
-function PinchableImage({item}: PinchableImageProps) {
+function PinchableImage(props: PinchableImageProps) {
+  const {item, firstItem} = props;
   const {width, height} = useWindowDimensions();
   const portrait = item?.src?.portrait;
   const scale = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-  const lastScale = useSharedValue(1); // To track previous zoom state
+  const lastScale = useSharedValue(1);
   const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   // **Double-Tap Gesture for Zoom**
   const doubleTapGesture = Gesture.Tap()
@@ -98,29 +107,54 @@ function PinchableImage({item}: PinchableImageProps) {
     };
   });
 
-  const imageStyles = {
+  const imageStyles: StyleProp<ImageStyle> = {
     width,
     height,
+    opacity: loaded ? 1 : 0,
   };
 
-  const iPhone = Platform.OS === 'ios';
+  if (!portrait || loadError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorMessage}>Image not found.</Text>
+      </View>
+    );
+  }
 
-  if (portrait === null) return <Text>Image not found.</Text>;
+  const onLoadCallback = () => setLoaded(true);
+  const onErrorCallback = () => {
+    console.log(`Failed to load image: ${portrait}`);
+    setLoadError(true);
+  };
 
   return (
     <>
       <GestureDetector gesture={combinedGesture}>
         <Animated.Image
           source={{uri: portrait}}
-          style={[imageStyles, animatedStyle, !loaded && {opacity: 0}]}
+          style={[imageStyles, animatedStyle]}
           resizeMode="cover"
-          onLoadEnd={() => setLoaded(true)}
-          onError={() => console.log(`Failed to load image: ${portrait}`)}
+          onLoadEnd={onLoadCallback}
+          onError={onErrorCallback}
         />
       </GestureDetector>
-      {!loaded && iPhone && <HeartWithLiquidActivityIndicator value={65} />}
+      {!loaded && firstItem && (
+        <HeartWithLiquidActivityIndicator value={55} animationDuration={1000} />
+      )}
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 16,
+  },
+});
 
 export default PinchableImage;

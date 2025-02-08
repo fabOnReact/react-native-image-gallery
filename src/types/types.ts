@@ -2,26 +2,39 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import {AnimatedProp, PathDef} from '@shopify/react-native-skia';
+import {StyleProp, ViewStyle, ViewToken} from 'react-native';
 
-export interface CollectionItemProps {
-  item: Collection;
+export interface PaginatedResponse {
+  page: number;
+  per_page: number;
+  total_results: number;
+  next_page?: 'string';
 }
 
 export interface Collection {
   id: string;
   title: string;
-  media_count: number;
+  photos_count: number;
 }
 
-export interface CollectionAPIResponse {
+export interface CollectionAPIResponse extends PaginatedResponse {
   collections: Collection[];
-  nextPage: number | null;
 }
 
-export interface MediaAPIResponse {
+export interface CollectionItemProps {
+  item: Collection;
+}
+
+export interface Media {
+  id: string;
+  src: {
+    portrait: string;
+  };
+}
+
+export interface MediaAPIResponse extends PaginatedResponse {
   media: Media[];
-  total_results: number;
-  nextPage: number | null;
 }
 
 export type ImageViewerProps = {
@@ -30,15 +43,9 @@ export type ImageViewerProps = {
   onEndReachedCallback?: () => void;
 };
 
-export type Media = {
-  id: number;
-  src: {
-    portrait: string;
-  };
-};
-
 export type PinchableImageProps = {
   item: Media;
+  firstItem?: boolean;
 };
 
 export type RootStackParamList = {
@@ -47,12 +54,64 @@ export type RootStackParamList = {
   Favorites: undefined;
 };
 
-export type GalleryScreenProps = {
-  route: {
-    item: Media;
-  };
-};
+export type GalleryScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Gallery'
+>;
 
-export type Props = NativeStackScreenProps<RootStackParamList, 'Gallery'>;
+export type FavoritesScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Favorites'
+>;
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+export type HeartWithLiquidButtonProps = {
+  /** The size (width & height) of the heart animation */
+  size: number;
+
+  /** Value between 0 and 100 that determines how much the heart is filled */
+  value: number;
+
+  /** Enables/disables the vertical animation. It does not disable the waves animation. */
+  withAnimation: boolean;
+
+  /** Change the border color for the heart outline. The default is white. */
+  borderColor?: string;
+
+  /** Duration of the fill animation in milliseconds. The default is 6000 ms. */
+  animationDuration?: number;
+
+  /** Sets the height of the waves. The default is 0.05. */
+  waveHeightRatio?: number;
+
+  /** The number of waves visible inside the heart. The default is 4. */
+  waveCount?: number;
+
+  /** Color of the liquid inside the heart. The default is red. */
+  waterColor?: string;
+
+  /** Speed of the waves animation. The default is 500. */
+  waterSpeed?: number;
+
+  /** Custom styles applied to the container */
+  style?: StyleProp<ViewStyle>;
+};
+
+export type HearthPathFunction = (
+  size: number,
+  padding?: number,
+) => AnimatedProp<PathDef>;
+
+export type ViewableItemsType = {
+  viewableItems: Array<ViewToken<Media>>;
+};
+
+export type MaybeArray<T> = ArrayLike<T> | null | undefined;
+
+export type FavoritesType = [Awaited<Media[]>, (args: any) => any];
+
+export type GetItemLayoutFunction = (
+  data: ArrayLike<Collection> | null | undefined,
+  index: number,
+) => {length: number; offset: number; index: number};

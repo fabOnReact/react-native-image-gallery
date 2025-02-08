@@ -1,19 +1,18 @@
-import React from 'react';
-import {View, Text, useWindowDimensions} from 'react-native';
-import {Media, Props} from '../types/types';
+import React, {useCallback} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import {Media, GalleryScreenProps} from '../types/types';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 import ImageViewer from '../components/ImageViewer';
 import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
-function GalleryScreen({route}: Props) {
-  useWindowDimensions(); // for responsive layouts
+function GalleryScreen(props: GalleryScreenProps) {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY) {
     console.warn('PEXELS_API_KEY environment variable is not defined');
   }
 
-  const {item} = route.params;
+  const {item} = props.route.params;
 
   const {
     data,
@@ -24,11 +23,21 @@ function GalleryScreen({route}: Props) {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['collectionMedia', item.id],
-    queryFn: ({pageParam = 1}) =>
-      getCollectionsMedia(PEXELS_API_KEY, item.id, pageParam),
+    queryFn: async ({pageParam}) =>
+      getCollectionsMedia(PEXELS_API_KEY, item.id, pageParam as number),
     initialPageParam: 1,
-    getNextPageParam: lastPage => lastPage.nextPage || undefined,
+    getNextPageParam: lastPage => lastPage?.next_page ?? undefined,
   });
+
+  const onEndReachedCallback = useCallback((): void => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Combine pages into one flat array
+  const media: Media[] = data?.pages.flatMap(page => page?.media ?? []) ?? [];
+  const numberOfImages = data?.pages?.[0].total_results ?? 0;
 
   if (isLoading) {
     return <HeartWithLiquidActivityIndicator />;
@@ -36,29 +45,19 @@ function GalleryScreen({route}: Props) {
 
   if (error) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={{color: 'red'}}>Failed to load images</Text>
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Failed to load images</Text>
       </View>
     );
   }
 
-  // Combine pages into one flat array
-  const media: Media[] = data?.pages.flatMap((page: any) => page.media) ?? [];
-  const numberOfImages = data?.pages[0].total_results ?? 0;
-
   if (media.length === 0) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={styles.container}>
         <Text>No images in this collection.</Text>
       </View>
     );
   }
-
-  const onEndReachedCallback = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
 
   return (
     <ImageViewer
@@ -68,5 +67,16 @@ function GalleryScreen({route}: Props) {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+  },
+});
 
 export default GalleryScreen;
