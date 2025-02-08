@@ -7,7 +7,7 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import {Canvas, Group, Path, PathDef, Skia} from '@shopify/react-native-skia';
+import {Canvas, Group, Path, Skia} from '@shopify/react-native-skia';
 import {View} from 'react-native';
 import {HearthPathFunction, HeartWithLiquidButtonProps} from '../types/types';
 
@@ -22,6 +22,7 @@ function HeartWithLiquidButton(props: HeartWithLiquidButtonProps) {
     // how many full waves will be seen in the circle
     waveCount = 4,
     waterColor = 'red',
+    waterSpeed = 500,
   } = props;
 
   // outer circle
@@ -108,7 +109,7 @@ function HeartWithLiquidButton(props: HeartWithLiquidButtonProps) {
       withTiming(1, {
         // animate from 0 to 1
         // animation duration
-        duration: Math.floor(Math.random() * (500 - 300 + 1)) + 300,
+        duration: waterSpeed,
         // easing function
         easing: Easing.linear,
       }),

@@ -91,6 +91,9 @@ export type HeartWithLiquidButtonProps = {
   /** Color of the liquid inside the heart. The default is red. */
   waterColor?: string;
 
+  /** Speed of the waves animation. The default is 500. */
+  waterSpeed?: number;
+
   /** Custom styles applied to the container */
   style?: StyleProp<ViewStyle>;
 };

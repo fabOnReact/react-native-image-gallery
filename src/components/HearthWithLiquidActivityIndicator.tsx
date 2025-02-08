@@ -50,6 +50,7 @@ function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
       waveHeightRatio={0.05}
       animationDuration={animationDuration}
       waterColor="red"
+      waterSpeed={2000}
     />
   );
 }
