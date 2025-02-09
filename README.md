@@ -4,7 +4,27 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 ## Screenshots & Demo
 
-Below are demo GIFs showcasing key functionalities on both iOS and Android.
+Below are demo videos showcasing key functionalities on both iOS and Android.
+
+### iPhone
+
+iPhone Gallery and Like Button
+<video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="1000" />
+
+iPhone Zoom and Like Button
+<video src="https://github.com/user-attachments/assets/31c51fd5-20af-41b4-a1f2-9ad3ca97a1f0" width="1000" />
+
+iPhone Favorites Pictures
+<video src="https://github.com/user-attachments/assets/6277c567-2706-4abc-9a84-f0a59085df06" width="1000" />
+
+iPhone Position Indicator
+<video src="https://github.com/user-attachments/assets/d160e1b2-e6ca-4459-b5aa-05544e70c270" width="1000" />
+
+### Android
+
+Android Gallery, Zoom and Like button
+
+https://github.com/user-attachments/assets/702607ba-aeea-496a-886e-12c4986d029c
 
 ## Installation
 
@@ -29,31 +49,36 @@ PEXELS_API_KEY=your_api_key
 ```
 yarn install
 ```
+
 or with npm:
 
 ```
 npm install
 ```
 
-2.	Start Metro
-From the project root, run:
+2. Start Metro
+   From the project root, run:
+
 ```sh
 yarn start
 ```
+
 or with npm:
 
 ```sh
 npm start
 ```
 
-3.	Run the App
+3. Run the App
 
 Open a new terminal and run one of the following commands:
 
 **Android Instructions:**
+
 ```sh
 yarn android
 ```
+
 or with npm:
 
 ```
@@ -61,7 +86,6 @@ npm run android
 ```
 
 **iOS Instructions**
-
 
 The first time you create a new project, run the following commands to install cocoapods dependencies:
 
@@ -80,6 +104,7 @@ Now you can build the project with the command:
 ```
 yarn ios
 ```
+
 or with npm:
 
 ```
@@ -95,6 +120,7 @@ This project uses Jest for testing. To run the tests, execute:
 ```sh
 yarn test
 ```
+
 or with npm:
 
 ```sh

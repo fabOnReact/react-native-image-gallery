@@ -105,15 +105,6 @@ function PinchableImage(props: PinchableImageProps) {
     opacity: loaded ? 1 : 0,
   };
 
-  // Early return if the image URL is missing or loading fails.
-  if (!portrait || loadError) {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorMessage}>Image not found.</Text>
-      </View>
-    );
-  }
-
   // Memoized callbacks for image load events.
   const onLoadCallback = useCallback(() => {
     setLoaded(true);
@@ -123,6 +114,15 @@ function PinchableImage(props: PinchableImageProps) {
     console.error(`Failed to load image: ${portrait}`);
     setLoadError(true);
   }, [portrait]);
+
+  // Early return if the image URL is missing or loading fails.
+  if (!portrait || loadError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorMessage}>Image not found.</Text>
+      </View>
+    );
+  }
 
   return (
     <>
