@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Button,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -115,29 +114,27 @@ function HomeScreen() {
   }
 
   return (
-    <SafeAreaView>
-      <FlatList
-        testID="collection-list"
-        data={validCollections}
-        keyExtractor={item => String(item?.id)}
-        renderItem={renderItem}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
-        removeClippedSubviews={true}
-        initialNumToRender={10}
-        getItemLayout={getItemLayout}
-        ItemSeparatorComponent={renderSeparator}
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <ActivityIndicator
-              size="large"
-              color="#0000ff"
-              testID="loading-indicator"
-            />
-          ) : null
-        }
-      />
-    </SafeAreaView>
+    <FlatList
+      testID="collection-list"
+      data={validCollections}
+      keyExtractor={item => String(item?.id)}
+      renderItem={renderItem}
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.5}
+      removeClippedSubviews={true}
+      initialNumToRender={10}
+      getItemLayout={getItemLayout}
+      ItemSeparatorComponent={renderSeparator}
+      ListFooterComponent={
+        isFetchingNextPage ? (
+          <ActivityIndicator
+            size="large"
+            color="#0000ff"
+            testID="loading-indicator"
+          />
+        ) : null
+      }
+    />
   );
 }
 
