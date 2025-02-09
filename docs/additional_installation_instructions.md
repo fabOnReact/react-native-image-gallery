@@ -38,21 +38,25 @@ Start the Metro server by running:
 
 ```sh
 yarn start
+```
 
 This command should be executed from the project root.
 
 Building and Running the App
 
 With Metro running, you can build and run the app using:
-	•	Android:
 
+	• Android:
+ 
+```
 yarn android
-
+```
 
 	•	iOS:
-
+ 
+```
 yarn ios
-
+```
 
 
 	Note: You can also build and run the app directly from Android Studio or Xcode if preferred.
@@ -60,4 +64,3 @@ yarn ios
 Final Notes
 	•	This project assumes you already have a fully set up React Native environment.
 	•	For further guidance, refer to the official React Native documentation.
-```
