@@ -111,7 +111,11 @@ function HomeScreen() {
         getItemLayout={getItemLayout}
         ListFooterComponent={
           isFetchingNextPage ? (
-            <ActivityIndicator size="large" color="#0000ff" />
+            <ActivityIndicator
+              size="large"
+              color="#0000ff"
+              testID="loading-indicator"
+            />
           ) : null
         }
       />

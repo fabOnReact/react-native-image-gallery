@@ -51,6 +51,7 @@ function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
       animationDuration={animationDuration}
       waterColor="red"
       waterSpeed={2000}
+      testID="loading-indicator"
     />
   );
 }

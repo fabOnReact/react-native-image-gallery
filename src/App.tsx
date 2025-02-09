@@ -17,6 +17,12 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Provider} from 'jotai';
 import {Button} from 'react-native';
 
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {};
+  console.warn = () => {};
+  console.error = () => {};
+}
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
 

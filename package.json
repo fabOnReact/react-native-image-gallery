@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "node --no-warnings --trace-deprecation node_modules/.bin/jest"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.1.1",

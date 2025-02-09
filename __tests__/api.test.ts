@@ -15,7 +15,7 @@ describe('getCollections API function', () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({
         collections: collectionMock,
-        nextPage: 2,
+        next_page: 2,
       }),
     );
 
@@ -23,7 +23,7 @@ describe('getCollections API function', () => {
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(result).toEqual({
       collections: collectionMock,
-      nextPage: 2,
+      next_page: 2,
     });
   });
 
@@ -45,7 +45,7 @@ describe('getCollections API function', () => {
 
     const result = await getCollections('test-api-key', 1);
 
-    expect(result).toEqual({collections: [], nextPage: null});
+    expect(result).toEqual({collections: [], next_page: null});
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 

@@ -10,8 +10,16 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 // Mock API call
-jest.mock('../src/api/api.ts', () => ({
-  getCollections: jest.fn(),
+jest.mock('../src/api/api', () => ({
+  getCollections: jest.fn(() =>
+    Promise.resolve({
+      collections: [
+        {id: '1', title: 'Nature', photos_count: 10},
+        {id: '2', title: 'Architecture', photos_count: 20},
+      ],
+      nextPage: 2,
+    }),
+  ),
 }));
 
 // Mock react-query
@@ -23,11 +31,6 @@ jest.mock('@tanstack/react-query', () => {
   };
 });
 
-const collectionMock = Array.from({length: 30}, (_, i) => ({
-  id: i + 1,
-  title: `title ${i + 1}`,
-}));
-
 describe('HomeScreen', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -38,23 +41,28 @@ describe('HomeScreen', () => {
       data: null,
       isLoading: true,
       isError: false,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
     });
 
     const {getByTestId} = render(<HomeScreen />);
     expect(getByTestId('loading-indicator')).toBeTruthy();
   });
 
-  test('renders error message when there is an error', () => {
+  test('renders error message and retry button when there is an error', async () => {
+    const refetch = jest.fn();
     (useInfiniteQuery as jest.Mock).mockReturnValue({
       data: null,
       isLoading: false,
       isError: true,
+      refetch,
     });
 
     const {getByText} = render(<HomeScreen />);
+
     expect(getByText('Oops! Something went wrong.')).toBeTruthy();
+    expect(getByText('Please try again later.')).toBeTruthy();
+
+    fireEvent.press(getByText('Retry'));
+    expect(refetch).toHaveBeenCalled();
   });
 
   test('displays collections from API data', async () => {
@@ -62,7 +70,10 @@ describe('HomeScreen', () => {
       data: {
         pages: [
           {
-            collections: [{id: '1', title: 'Nature', media_count: 10}],
+            collections: [
+              {id: '1', title: 'Nature', photos_count: 10},
+              {id: '2', title: 'Architecture', photos_count: 20},
+            ],
           },
         ],
       },
@@ -71,7 +82,33 @@ describe('HomeScreen', () => {
     });
 
     const {findByText} = render(<HomeScreen />);
+
     expect(await findByText('Nature - 10')).toBeTruthy();
+    expect(await findByText('Architecture - 20')).toBeTruthy();
+  });
+
+  test('does not render items with missing data', async () => {
+    (useInfiniteQuery as jest.Mock).mockReturnValue({
+      data: {
+        pages: [
+          {
+            collections: [
+              {id: '1', title: 'Nature', photos_count: 10},
+              {id: null, title: 'Missing ID', photos_count: 15},
+              {id: '3', title: '', photos_count: 0}, // Invalid collection
+            ],
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+    });
+
+    const {findByText, queryByText} = render(<HomeScreen />);
+
+    expect(await findByText('Nature - 10')).toBeTruthy();
+    expect(queryByText('Missing ID - 15')).toBeNull(); // Should not be rendered
+    expect(queryByText(' - 0')).toBeNull(); // Should not be rendered
   });
 
   test('calls fetchNextPage when scrolling to bottom', async () => {
@@ -80,7 +117,10 @@ describe('HomeScreen', () => {
       data: {
         pages: [
           {
-            collections: collectionMock,
+            collections: [
+              {id: '1', title: 'Nature', photos_count: 10},
+              {id: '2', title: 'Architecture', photos_count: 20},
+            ],
           },
         ],
       },
@@ -93,6 +133,14 @@ describe('HomeScreen', () => {
 
     const {getByTestId} = render(<HomeScreen />);
 
+    fireEvent.scroll(getByTestId('collection-list'), {
+      nativeEvent: {
+        contentOffset: {y: 1000},
+        layoutMeasurement: {height: 500},
+        contentSize: {height: 2000},
+      },
+    });
+
     const list = getByTestId('collection-list');
     fireEvent(list, 'endReached');
 
@@ -101,16 +149,47 @@ describe('HomeScreen', () => {
     });
   });
 
-  test('navigates to Gallery screen when a collection is tapped', () => {
-    const mockNavigate = jest.fn();
-    (useNavigation as jest.Mock).mockReturnValue({navigate: mockNavigate});
-
-    // Mock API response
+  test('does not call fetchNextPage when hasNextPage is false', async () => {
+    const fetchNextPage = jest.fn();
     (useInfiniteQuery as jest.Mock).mockReturnValue({
       data: {
         pages: [
           {
-            collections: [{id: '1', title: 'Nature', media_count: 10}],
+            collections: [{id: '1', title: 'Nature', photos_count: 10}],
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+      fetchNextPage,
+      hasNextPage: false, // No more pages
+      isFetchingNextPage: false,
+    });
+
+    const {getByTestId} = render(<HomeScreen />);
+
+    fireEvent.scroll(getByTestId('collection-list'), {
+      nativeEvent: {
+        contentOffset: {y: 1000},
+        layoutMeasurement: {height: 500},
+        contentSize: {height: 2000},
+      },
+    });
+
+    await waitFor(() => {
+      expect(fetchNextPage).not.toHaveBeenCalled();
+    });
+  });
+
+  test('navigates to Gallery screen when a collection is tapped', async () => {
+    const mockNavigate = jest.fn();
+    (useNavigation as jest.Mock).mockReturnValue({navigate: mockNavigate});
+
+    (useInfiniteQuery as jest.Mock).mockReturnValue({
+      data: {
+        pages: [
+          {
+            collections: [{id: '1', title: 'Nature', photos_count: 10}],
           },
         ],
       },
@@ -118,25 +197,54 @@ describe('HomeScreen', () => {
       isError: false,
     });
 
-    const {getByText} = render(<HomeScreen />);
+    const {findByText} = render(<HomeScreen />);
+    fireEvent.press(await findByText('Nature - 10'));
 
-    fireEvent.press(getByText('Nature - 10'));
     expect(mockNavigate).toHaveBeenCalledWith('Gallery', {
-      item: {id: '1', title: 'Nature', media_count: 10},
+      item: {id: '1', title: 'Nature', photos_count: 10},
     });
   });
 
-  test('calls onRetry when retry button is pressed', () => {
-    const refetch = jest.fn();
+  test('renders loading indicator when fetching next page', async () => {
     (useInfiniteQuery as jest.Mock).mockReturnValue({
-      data: null,
+      data: {
+        pages: [
+          {
+            collections: [
+              {id: '1', title: 'Nature', photos_count: 10},
+              {id: '2', title: 'Architecture', photos_count: 20},
+            ],
+          },
+        ],
+      },
       isLoading: false,
-      isError: true,
-      refetch,
+      isError: false,
+      hasNextPage: true,
+      isFetchingNextPage: true, // Simulate loading new page
     });
 
-    const {getByText} = render(<HomeScreen />);
-    fireEvent.press(getByText('Retry'));
-    expect(refetch).toHaveBeenCalled();
+    const {getByTestId} = render(<HomeScreen />);
+
+    expect(getByTestId('loading-indicator')).toBeTruthy();
+  });
+
+  test('does not display footer loading indicator when not fetching next page', async () => {
+    (useInfiniteQuery as jest.Mock).mockReturnValue({
+      data: {
+        pages: [
+          {
+            collections: [{id: '1', title: 'Nature', photos_count: 10}],
+          },
+        ],
+      },
+      isLoading: false,
+      isError: false,
+      hasNextPage: true,
+      isFetchingNextPage: false, // Not fetching next page
+    });
+
+    const {queryByTestId} = render(<HomeScreen />);
+
+    expect(queryByTestId('loading-indicator')).toBeNull();
   });
 });
