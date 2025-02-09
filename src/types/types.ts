@@ -4,50 +4,65 @@ import {
 } from '@react-navigation/native-stack';
 import {AnimatedProp, PathDef} from '@shopify/react-native-skia';
 import {StyleProp, ViewStyle, ViewToken} from 'react-native';
+import {SharedValue} from 'react-native-reanimated';
 
+// A common interface for paginated API responses.
 export interface PaginatedResponse {
   page: number;
   per_page: number;
   total_results: number;
-  next_page?: 'string';
+  next_page?: string;
 }
 
+// A Pexels collection.
 export interface Collection {
   id: string;
+  /** Title of the Pexels collection */
   title: string;
+  /** Number of photos in the Pexels collection */
   photos_count: number;
 }
 
+// API response for collections.
 export interface CollectionAPIResponse extends PaginatedResponse {
   collections: Collection[];
 }
 
+// Props for rendering a collection item.
 export interface CollectionItemProps {
   item: Collection;
 }
 
+// A media item (photo).
 export interface Media {
   id: string;
   src: {
+    /** URL to display an image as portrait. */
     portrait: string;
   };
 }
 
+// API response for media.
 export interface MediaAPIResponse extends PaginatedResponse {
   media: Media[];
 }
 
+// Props for an image viewer.
 export type ImageViewerProps = {
   media: Media[];
+  /** Number of photos in the Pexels collection */
   numberOfImages: number;
   onEndReachedCallback?: () => void;
 };
 
+// Props for a pinchable image.
 export type PinchableImageProps = {
   item: Media;
+  /** Indicates if this is the first image (used to display a loading indicator) */
   firstItem?: boolean;
 };
 
+// Navigation parameter list for the app.
 export type RootStackParamList = {
   Home: undefined;
   Gallery: {item: Collection};
@@ -66,54 +81,57 @@ export type FavoritesScreenProps = NativeStackScreenProps<
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
+// Props for the HeartWithLiquidButton component.
 export type HeartWithLiquidButtonProps = {
-  /** The size (width & height) of the heart animation */
+  /** The size (width & height) of the heart animation. */
   size: number;
-
-  /** Value between 0 and 100 that determines how much the heart is filled */
+  /** The starting vertical height of the water level in the heart (0 to 100). */
   value: number;
-
-  /** Enables/disables the vertical animation. It does not disable the waves animation. */
+  /** Enables/disables the water vertical animation. */
   withAnimation: boolean;
-
-  /** Change the border color for the heart outline. The default is white. */
+  /** Border color for the heart outline (default: white). */
   borderColor?: string;
-
-  /** Duration of the fill animation in milliseconds. The default is 6000 ms. */
+  /** Duration of the fill animation in milliseconds (default: 6000). */
   animationDuration?: number;
-
-  /** Sets the height of the waves. The default is 0.05. */
+  /** Height ratio of the waves (default: 0.05). */
   waveHeightRatio?: number;
-
-  /** The number of waves visible inside the heart. The default is 4. */
+  /** Number of waves inside the heart (default: 4). */
   waveCount?: number;
-
-  /** Color of the liquid inside the heart. The default is red. */
+  /** Color of the water inside the heart (default: red). */
   waterColor?: string;
-
-  /** Speed of the waves animation. The default is 500. */
+  /** Speed of the wave animation (default: 500). */
   waterSpeed?: number;
-
-  /** Custom styles applied to the container */
+  /** Custom styles applied to the container. */
   style?: StyleProp<ViewStyle>;
-
   testID?: string;
 };
 
+// Function type for generating a heart path using Skia.
 export type HearthPathFunction = (
+  /** The size used to scale and center the heart SVG. Should match the HeartWithLiquidButton width. */
   size: number,
+  /** Padding for scaling the inner heart SVG. */
   padding?: number,
 ) => AnimatedProp<PathDef>;
 
+// Type for viewable items (used in FlatList callbacks).
 export type ViewableItemsType = {
   viewableItems: Array<ViewToken<Media>>;
 };
 
+// Represents a value that can be an array-like type, null, or undefined.
 export type MaybeArray<T> = ArrayLike<T> | null | undefined;
 
+// Type for favorites (Consider refining the updater function's type).
 export type FavoritesType = [Awaited<Media[]>, (args: any) => any];
 
+// Function type for FlatList's getItemLayout.
 export type GetItemLayoutFunction = (
   data: ArrayLike<Collection> | null | undefined,
   index: number,
 ) => {length: number; offset: number; index: number};
+
+export type PositionIndicatorProps = {
+  scrollX: SharedValue<number>;
+  numberOfImages: number;
+};

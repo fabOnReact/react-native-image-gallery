@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Media, GalleryScreenProps} from '../types/types';
 import {useInfiniteQuery} from '@tanstack/react-query';
@@ -6,7 +6,7 @@ import {getCollectionsMedia} from '../api/api';
 import ImageViewer from '../components/ImageViewer';
 import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
-function GalleryScreen(props: GalleryScreenProps) {
+const GalleryScreen: React.FC<GalleryScreenProps> = props => {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY) {
     console.warn('PEXELS_API_KEY environment variable is not defined');
@@ -35,9 +35,13 @@ function GalleryScreen(props: GalleryScreenProps) {
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // Combine pages into one flat array
-  const media: Media[] = data?.pages.flatMap(page => page?.media ?? []) ?? [];
-  const numberOfImages = data?.pages?.[0].total_results ?? 0;
+  // Flatten pages into a single array and memoize it.
+  const media: Media[] = useMemo(() => {
+    return data?.pages.flatMap(page => page?.media ?? []) ?? [];
+  }, [data]);
+
+  // Get total results from the first page, if available.
+  const numberOfImages = data?.pages?.[0]?.total_results ?? 0;
 
   if (isLoading) {
     return <HeartWithLiquidActivityIndicator />;
@@ -46,7 +50,7 @@ function GalleryScreen(props: GalleryScreenProps) {
   if (error) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Failed to load images</Text>
+        <Text style={styles.errorText}>Failed to load images.</Text>
       </View>
     );
   }
@@ -66,7 +70,7 @@ function GalleryScreen(props: GalleryScreenProps) {
       onEndReachedCallback={onEndReachedCallback}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

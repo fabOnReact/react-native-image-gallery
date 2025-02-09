@@ -24,7 +24,7 @@ export const getCollectionsMedia = async (
     const data: MediaAPIResponse = await response.json();
     if (!data.media || !Array.isArray(data.media)) {
       console.error(
-        `Invalid API response structure from ${PEXELS_URL}/collections/featured with data: `,
+        `Invalid API response structure from ${GET_MEDIA_URL} with data: `,
         data,
       );
       return {media: [], total_results: 0, next_page: null};
@@ -67,7 +67,7 @@ export const getCollections = async (
 
     if (!data.collections || !Array.isArray(data.collections)) {
       console.error(
-        `Invalid API response structure from ${PEXELS_URL}/collections/featured with data: `,
+        `Invalid API response structure from ${GET_COLLECTIONS_URL} with data: `,
         data,
       );
       return {collections: [], next_page: null};

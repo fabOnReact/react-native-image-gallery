@@ -13,16 +13,8 @@ function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
   const [withAnimation, setWithAnimation] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-
-    if (isMounted) {
-      setWithAnimation(true);
-      setValueInternal(100);
-    }
-
-    return () => {
-      isMounted = false;
-    };
+    setWithAnimation(true);
+    setValueInternal(100);
   }, []);
 
   const activityIndicatorStyle: StyleProp<ViewStyle> = useMemo(
@@ -33,7 +25,7 @@ function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
       right: 0,
       bottom: 0,
       zIndex: 100,
-      paddingTop: 70,
+      paddingTop: 150,
       backgroundColor: 'white',
     }),
     [],

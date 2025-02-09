@@ -1,12 +1,12 @@
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   FlatList,
   View,
-  Dimensions,
   StyleSheet,
   ListRenderItem,
   TouchableWithoutFeedback,
-  SafeAreaView,
   ViewabilityConfig,
+  Dimensions,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
@@ -20,113 +20,126 @@ import PositionIndicator from '../components/PositionIndicator';
 import PinchableImage from '../components/PinchableImage';
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
-import {useState} from 'react';
 import HeartWithLiquidButton from './HearthWithLiquidButton';
 
 const {width, height} = Dimensions.get('window');
 
 function ImageViewer(props: ImageViewerProps) {
-  const numberOfImages = props.numberOfImages;
-  const media: Media[] = props.media;
-  const onEndReachedCallback = props.onEndReachedCallback;
+  const {numberOfImages, media, onEndReachedCallback} = props;
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const scrollX = useSharedValue<number>(0);
   const currentIndexSharedValue = useSharedValue<number>(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
-  const scrollX = useSharedValue<number>(0);
   const [withAnimation, setWithAnimation] = useState(false);
 
-  const isFavorited =
-    favorites === null || media[currentIndex] == null
-      ? false
-      : favorites.some(fav => fav?.id === media[currentIndex].id);
+  // Determine if the current image is favorited.
+  const isFavorited = useMemo(() => {
+    if (!favorites || !media[currentIndex]) return false;
+    return favorites.some(fav => fav?.id === media[currentIndex].id);
+  }, [favorites, media, currentIndex]);
 
-  const renderItem: ListRenderItem<Media> = ({item, index}) => (
-    <View style={[{width, height}, styles.imageContainer]}>
-      <PinchableImage item={item} firstItem={index === 0} />
-    </View>
+  // Render each image item.
+  const renderItem: ListRenderItem<Media> = useCallback(
+    ({item, index}) => (
+      <View style={[{width, height}, styles.imageContainer]}>
+        <PinchableImage item={item} firstItem={index === 0} />
+      </View>
+    ),
+    [],
   );
 
-  const onViewableItemsChanged = (props: ViewableItemsType) => {
-    const {viewableItems} = props;
-    if (viewableItems.length > 0) {
-      const newIndex = viewableItems[0].index ?? 0;
-      currentIndexSharedValue.value = newIndex;
-      setWithAnimation(false);
-      setCurrentIndex(newIndex);
-    }
-  };
+  // Update current index when viewable items change.
+  const onViewableItemsChanged = useCallback(
+    (props: ViewableItemsType) => {
+      const {viewableItems} = props;
+      if (viewableItems.length > 0) {
+        const newIndex = viewableItems[0].index ?? 0;
+        currentIndexSharedValue.value = newIndex;
+        setWithAnimation(false);
+        setCurrentIndex(newIndex);
+      }
+    },
+    [currentIndexSharedValue],
+  );
 
-  const viewabilityConfig: ViewabilityConfig = {
-    viewAreaCoveragePercentThreshold: 50,
-  };
+  // Use a memoized viewability config.
+  const viewabilityConfig: ViewabilityConfig = useMemo(
+    () => ({
+      viewAreaCoveragePercentThreshold: 50,
+    }),
+    [],
+  );
 
-  const getItemLayout = (_data: MaybeArray<Media>, index: number) => ({
-    length: width,
-    offset: width * index,
-    index,
-  });
+  // Calculate item layout, including item width.
+  const getItemLayout = useCallback(
+    (_data: MaybeArray<Media>, index: number) => ({
+      length: width,
+      offset: width * index,
+      index,
+    }),
+    [],
+  );
 
-  const toggleFavorite = () => {
+  // Memoize the scroll handler.
+  const onScroll = useCallback(
+    (event: any) => {
+      scrollX.value = event.nativeEvent.contentOffset.x;
+    },
+    [scrollX],
+  );
+
+  // Toggle favorite status for the current image.
+  const toggleFavorite = useCallback(() => {
     if (!media[currentIndex]) return;
     setWithAnimation(true);
     if (isFavorited) {
-      const newFavorites = favorites.filter(
-        fav => fav?.id !== media[currentIndex].id,
-      );
-      setFavorites(newFavorites);
+      setFavorites(favorites.filter(fav => fav?.id !== media[currentIndex].id));
     } else {
-      const newFavorites = [...favorites, media[currentIndex]];
-      setFavorites(newFavorites);
+      setFavorites([...favorites, media[currentIndex]]);
     }
-  };
+  }, [favorites, media, currentIndex, isFavorited, setFavorites]);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <GestureHandlerRootView style={styles.container}>
-        <FlatList
-          data={media}
-          keyExtractor={item => String(item?.id)}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={viewabilityConfig}
-          renderItem={renderItem}
-          onScroll={event => {
-            scrollX.value = event.nativeEvent.contentOffset.x;
-          }}
-          onEndReached={onEndReachedCallback}
-          onEndReachedThreshold={0.5}
-          initialNumToRender={5}
-          getItemLayout={getItemLayout}
-        />
-        <TouchableWithoutFeedback onPress={toggleFavorite}>
-          <View style={[styles.invisibleButton, {zIndex: 1}]} />
-        </TouchableWithoutFeedback>
-        <HeartWithLiquidButton
-          size={100}
-          value={isFavorited ? 70 : 10}
-          withAnimation={withAnimation}
-          style={styles.invisibleButton}
-          animationDuration={3000}
-        />
-        <PositionIndicator
-          currentIndex={currentIndexSharedValue}
-          numberOfImages={numberOfImages}
-        />
-      </GestureHandlerRootView>
-    </SafeAreaView>
+    <GestureHandlerRootView style={styles.container}>
+      <FlatList
+        data={media}
+        keyExtractor={item => String(item?.id)}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        renderItem={renderItem}
+        onScroll={onScroll}
+        onEndReached={onEndReachedCallback}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={5}
+        getItemLayout={getItemLayout}
+      />
+      <TouchableWithoutFeedback onPress={toggleFavorite}>
+        <View style={[styles.invisibleButton, {zIndex: 1}]} />
+      </TouchableWithoutFeedback>
+      <HeartWithLiquidButton
+        size={100}
+        value={isFavorited ? 70 : 10}
+        withAnimation={withAnimation}
+        style={styles.invisibleButton}
+        animationDuration={3000}
+      />
+      <PositionIndicator scrollX={scrollX} numberOfImages={numberOfImages} />
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {flex: 1},
   container: {
     flex: 1,
     backgroundColor: 'transparent',
   },
   invisibleButton: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 20,
     right: '50%',
     transform: [{translateX: 50}],
     height: 100,

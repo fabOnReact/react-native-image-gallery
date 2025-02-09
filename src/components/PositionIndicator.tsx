@@ -1,37 +1,37 @@
 import React from 'react';
-import {View, Dimensions, StyleSheet} from 'react-native';
+import {View, StyleSheet, useWindowDimensions} from 'react-native';
 import {Canvas, RoundedRect} from '@shopify/react-native-skia';
-import {SharedValue, useDerivedValue} from 'react-native-reanimated';
+import {useDerivedValue} from 'react-native-reanimated';
+import {PositionIndicatorProps} from '../types/types';
 
-const {width} = Dimensions.get('window');
-
-type PositionIndicatorProps = {
-  currentIndex: SharedValue<number>;
-  numberOfImages: number;
-};
-
-function PositionIndicator(props: PositionIndicatorProps) {
-  const {currentIndex, numberOfImages} = props;
-  // Adjust thickness of progress bar
+function PositionIndicator({scrollX, numberOfImages}: PositionIndicatorProps) {
+  const {width} = useWindowDimensions();
+  const newWidth = width - 100; // available width for the progress indicator
   const barHeight = 5;
-  // Derived value for progress width
+
+  // Total scrollable width: each page is the device width, so:
+  const totalScrollableWidth = (numberOfImages - 1) * width;
+
+  // Compute the animated width by mapping scrollX (0 to totalScrollableWidth) to (0 to newWidth)
   const animatedWidth = useDerivedValue(() => {
     return numberOfImages > 1
-      ? (currentIndex.value / (numberOfImages - 1)) * width
-      : width;
-  });
+      ? (scrollX.value / totalScrollableWidth) * newWidth
+      : newWidth;
+  }, [scrollX, numberOfImages, newWidth, totalScrollableWidth]);
 
   return (
     <View style={[styles.container, {height: barHeight}]}>
-      <Canvas style={{width, height: barHeight}}>
+      <Canvas style={{width: newWidth, height: barHeight}}>
+        {/* Background bar */}
         <RoundedRect
           x={0}
           y={0}
-          width={width}
+          width={newWidth}
           height={barHeight}
           color="#333"
           r={barHeight / 2}
         />
+        {/* Foreground (red) progress bar */}
         <RoundedRect
           x={0}
           y={0}
@@ -48,10 +48,10 @@ function PositionIndicator(props: PositionIndicatorProps) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: 0,
-    right: 0,
+    left: 50,
+    right: 50,
     bottom: 0,
   },
 });
 
-export default PositionIndicator;
+export default React.memo(PositionIndicator);
