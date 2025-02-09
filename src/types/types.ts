@@ -132,6 +132,6 @@ export type GetItemLayoutFunction = (
 ) => {length: number; offset: number; index: number};
 
 export type PositionIndicatorProps = {
-  currentIndex: SharedValue<number>;
+  scrollX: SharedValue<number>;
   numberOfImages: number;
 };

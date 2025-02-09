@@ -27,6 +27,7 @@ const {width, height} = Dimensions.get('window');
 function ImageViewer(props: ImageViewerProps) {
   const {numberOfImages, media, onEndReachedCallback} = props;
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const scrollX = useSharedValue<number>(0);
   const currentIndexSharedValue = useSharedValue<number>(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
   const [withAnimation, setWithAnimation] = useState(false);
@@ -95,6 +96,7 @@ function ImageViewer(props: ImageViewerProps) {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={renderItem}
+        onScroll={event => (scrollX.value = event.nativeEvent.contentOffset.x)}
         onEndReached={onEndReachedCallback}
         onEndReachedThreshold={0.5}
         initialNumToRender={5}
@@ -110,10 +112,7 @@ function ImageViewer(props: ImageViewerProps) {
         style={styles.invisibleButton}
         animationDuration={3000}
       />
-      <PositionIndicator
-        currentIndex={currentIndexSharedValue}
-        numberOfImages={numberOfImages}
-      />
+      <PositionIndicator scrollX={scrollX} numberOfImages={numberOfImages} />
     </GestureHandlerRootView>
   );
 }
@@ -126,7 +125,7 @@ const styles = StyleSheet.create({
   },
   invisibleButton: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 20,
     right: '50%',
     transform: [{translateX: 50}],
     height: 100,

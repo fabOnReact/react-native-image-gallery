@@ -4,27 +4,25 @@ import {Canvas, RoundedRect} from '@shopify/react-native-skia';
 import {useDerivedValue} from 'react-native-reanimated';
 import {PositionIndicatorProps} from '../types/types';
 
-function PositionIndicator(props: PositionIndicatorProps) {
-  const {currentIndex, numberOfImages} = props;
+function PositionIndicator({scrollX, numberOfImages}: PositionIndicatorProps) {
   const {width} = useWindowDimensions();
-  const newWidth = width - 100;
-
-  // Set the thickness (height) of the progress bar.
+  const newWidth = width - 100; // available width for the progress indicator
   const barHeight = 5;
 
-  // Calculate the progress newWidth as a derived value.
-  // If there's more than one image, progress is computed relative to (numberOfImages - 1);
-  // otherwise, the indicator spans the full newWidth.
+  // Total scrollable width: each page is the device width, so:
+  const totalScrollableWidth = (numberOfImages - 1) * width;
+
+  // Compute the animated width by mapping scrollX (0 to totalScrollableWidth) to (0 to newWidth)
   const animatedWidth = useDerivedValue(() => {
     return numberOfImages > 1
-      ? (currentIndex.value / (numberOfImages - 1)) * newWidth
+      ? (scrollX.value / totalScrollableWidth) * newWidth
       : newWidth;
-  }, [currentIndex, numberOfImages, newWidth]);
+  }, [scrollX, numberOfImages, newWidth, totalScrollableWidth]);
 
   return (
     <View style={[styles.container, {height: barHeight}]}>
       <Canvas style={{width: newWidth, height: barHeight}}>
-        {/* Background progress bar */}
+        {/* Background bar */}
         <RoundedRect
           x={0}
           y={0}
@@ -33,7 +31,7 @@ function PositionIndicator(props: PositionIndicatorProps) {
           color="#333"
           r={barHeight / 2}
         />
-        {/* Foreground progress bar with animated width */}
+        {/* Foreground (red) progress bar */}
         <RoundedRect
           x={0}
           y={0}
@@ -56,5 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// Wrap the component in React.memo to prevent unnecessary re-renders when props don't change.
 export default React.memo(PositionIndicator);
