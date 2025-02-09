@@ -12,9 +12,9 @@ Below are demo GIFs showcasing key functionalities on both iOS and Android.
 
 | iPhone Position Indicator    | iPhone Zoom |
 | ----------- | ----------- |
-| <video src="https://github.com/user-attachments/assets/d160e1b2-e6ca-4459-b5aa-05544e70c270" width="350" />      | <video src="" width="350" />       |
+| <video src="https://github.com/user-attachments/assets/d160e1b2-e6ca-4459-b5aa-05544e70c270" width="350" />      | <video src="https://github.com/user-attachments/assets/31c51fd5-20af-41b4-a1f2-9ad3ca97a1f0" width="350" />       |
 
-| Android Gallery    | Android Zoom |
+| Android Zoom    | Android Zoom |
 | ----------- | ----------- |
 | <img src="https://github.com/user-attachments/assets/702607ba-aeea-496a-886e-12c4986d029c" width="350" />      | <img src="https://github.com/user-attachments/assets/4397b1ee-f081-4ad5-bdd9-3abb29ae3234" width="350" />       |
 
