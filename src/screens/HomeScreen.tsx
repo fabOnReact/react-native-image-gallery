@@ -1,4 +1,4 @@
-import {useInfiniteQuery} from '@tanstack/react-query';
+import React, {useCallback, useMemo} from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useInfiniteQuery} from '@tanstack/react-query';
 import {getCollections} from '../api/api';
-import {useCallback} from 'react';
 import {
   Collection,
   CollectionItemProps,
@@ -22,28 +22,36 @@ import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActi
 const ITEM_HEIGHT = 60;
 const SEPARATOR_HEIGHT = 12;
 
-/*
- *  The Android implementation of RecyclerRecyclerView supports onCreateViewHolder, onBindViewHolder
- *  and has better performances than FlatList. More info here:
- *  https://github.com/andrew-levy/jetpack-compose-react-native/issues/9#issuecomment-2490336411
- *  https://developer.android.com/develop/ui/views/layout/recyclerview#implement-adapter
+/**
+ * A memoized collection item component.
  */
-function CollectionItem(props: CollectionItemProps) {
-  const {title, photos_count} = props.item;
-  const navigation = useNavigation<NavigationProp>();
-  const onPress = () => navigation.navigate('Gallery', {item: props.item});
+const CollectionItem = React.memo(
+  ({item}: CollectionItemProps) => {
+    const navigation = useNavigation<NavigationProp>();
 
-  return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.card}>
-        <View style={styles.row}>
-          <Text style={styles.titleText}>{title}</Text>
-          <Text style={styles.countText}>{photos_count}</Text>
+    const onPress = useCallback(() => {
+      navigation.navigate('Gallery', {item});
+    }, [navigation, item]);
+
+    return (
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.card}>
+          <View style={styles.row}>
+            <Text style={styles.titleText}>{item.title}</Text>
+            <Text style={styles.countText}>{item.photos_count}</Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
-}
+      </TouchableOpacity>
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      prevProps.item.id === nextProps.item.id &&
+      prevProps.item.title === nextProps.item.title &&
+      prevProps.item.photos_count === nextProps.item.photos_count
+    );
+  },
+);
 
 const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
   <View testID="error-message" style={styles.container}>
@@ -53,11 +61,12 @@ const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
   </View>
 );
 
-function HomeScreen() {
+const HomeScreen: React.FC = () => {
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
-  if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
+  if (!PEXELS_API_KEY) {
     console.warn('PEXELS_API_KEY environment variable is not defined');
   }
+
   const {
     data,
     fetchNextPage,
@@ -74,36 +83,44 @@ function HomeScreen() {
     getNextPageParam: lastPage => lastPage?.next_page ?? null,
   });
 
-  const collections: Collection[] =
-    data?.pages.flatMap(page => page?.collections ?? []) ?? [];
+  // Flatten the pages into one array and filter out invalid collections.
+  const validCollections = useMemo(() => {
+    const collections: Collection[] =
+      data?.pages.flatMap(page => page?.collections ?? []) ?? [];
+    return collections.filter(
+      collection =>
+        collection?.id &&
+        collection?.title &&
+        typeof collection?.photos_count === 'number' &&
+        collection.photos_count > 0,
+    );
+  }, [data]);
 
-  const validCollections = collections.filter(
-    collection =>
-      collection?.id &&
-      collection?.title &&
-      typeof collection?.photos_count === 'number' &&
-      collection.photos_count > 0,
-  );
-
+  // Callback to load more data when FlatList reaches the end.
   const loadMore = useCallback((): void => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const getItemLayout: GetItemLayoutFunction = (_, index) => ({
-    length: ITEM_HEIGHT + SEPARATOR_HEIGHT,
-    offset: (ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
-    index,
-  });
+  // Calculate item layout including the separator.
+  const getItemLayout: GetItemLayoutFunction = useCallback(
+    (_, index: number) => ({
+      length: ITEM_HEIGHT + SEPARATOR_HEIGHT,
+      offset: (ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
+      index,
+    }),
+    [],
+  );
 
   const renderItem = useCallback((props: CollectionItemProps) => {
     return <CollectionItem item={props.item} />;
   }, []);
 
-  const renderSeparator = useCallback(() => {
-    return <View style={styles.separator} />;
-  }, []);
+  const renderSeparator = useCallback(
+    () => <View style={styles.separator} />,
+    [],
+  );
 
   if (isLoading) {
     return <HeartWithLiquidActivityIndicator />;
@@ -111,6 +128,14 @@ function HomeScreen() {
 
   if (isError) {
     return <ErrorMessage onRetry={refetch} />;
+  }
+
+  if (validCollections.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text>No collections available.</Text>
+      </View>
+    );
   }
 
   return (
@@ -136,14 +161,14 @@ function HomeScreen() {
       }
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
   },
   card: {
     height: ITEM_HEIGHT,
@@ -151,9 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 20,
     marginHorizontal: 16,
-    // Android shadow
     elevation: 3,
-    // iOS shadow
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
