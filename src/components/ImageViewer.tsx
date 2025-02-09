@@ -30,7 +30,6 @@ function ImageViewer(props: ImageViewerProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const currentIndexSharedValue = useSharedValue<number>(0);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
-  const scrollX = useSharedValue<number>(0);
   const [withAnimation, setWithAnimation] = useState(false);
 
   const isFavorited = useMemo(() => {
@@ -76,14 +75,6 @@ function ImageViewer(props: ImageViewerProps) {
     [],
   );
 
-  // DELETE THIS
-  const handleScroll = useCallback(
-    (event: any) => {
-      scrollX.value = event.nativeEvent.contentOffset.x;
-    },
-    [scrollX],
-  );
-
   const toggleFavorite = useCallback(() => {
     if (!media[currentIndex]) return;
     setWithAnimation(true);
@@ -106,7 +97,6 @@ function ImageViewer(props: ImageViewerProps) {
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           renderItem={renderItem}
-          onScroll={handleScroll}
           onEndReached={onEndReachedCallback}
           onEndReachedThreshold={0.5}
           initialNumToRender={5}
