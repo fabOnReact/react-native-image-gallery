@@ -14,13 +14,15 @@ iPhone Position Indicator
 iPhone Zoom and Like Button
 <video src="https://github.com/user-attachments/assets/31c51fd5-20af-41b4-a1f2-9ad3ca97a1f0" width="1000" />
 
-iPhone Gallery
+iPhone Gallery and Like Button
 <video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="1000" />
 
 iPhone Favorites Pictures
 <video src="https://github.com/user-attachments/assets/6277c567-2706-4abc-9a84-f0a59085df06" width="1000" />
 
 ### Android
+
+Android Gallery, Zoom and Like button
 
 https://github.com/user-attachments/assets/702607ba-aeea-496a-886e-12c4986d029c
 
