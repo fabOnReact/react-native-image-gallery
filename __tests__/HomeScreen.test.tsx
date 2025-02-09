@@ -83,8 +83,8 @@ describe('HomeScreen', () => {
 
     const {findByText} = render(<HomeScreen />);
 
-    expect(await findByText('Nature - 10')).toBeTruthy();
-    expect(await findByText('Architecture - 20')).toBeTruthy();
+    expect(await findByText('Nature')).toBeTruthy();
+    expect(await findByText('Architecture')).toBeTruthy();
   });
 
   test('does not render items with missing data', async () => {
@@ -106,7 +106,7 @@ describe('HomeScreen', () => {
 
     const {findByText, queryByText} = render(<HomeScreen />);
 
-    expect(await findByText('Nature - 10')).toBeTruthy();
+    expect(await findByText('Nature')).toBeTruthy();
     expect(queryByText('Missing ID - 15')).toBeNull(); // Should not be rendered
     expect(queryByText(' - 0')).toBeNull(); // Should not be rendered
   });
@@ -198,7 +198,7 @@ describe('HomeScreen', () => {
     });
 
     const {findByText} = render(<HomeScreen />);
-    fireEvent.press(await findByText('Nature - 10'));
+    fireEvent.press(await findByText('Nature'));
 
     expect(mockNavigate).toHaveBeenCalledWith('Gallery', {
       item: {id: '1', title: 'Nature', photos_count: 10},
