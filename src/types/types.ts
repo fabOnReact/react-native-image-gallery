@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/native-stack';
 import {AnimatedProp, PathDef} from '@shopify/react-native-skia';
 import {StyleProp, ViewStyle, ViewToken} from 'react-native';
+import {SharedValue} from 'react-native-reanimated';
 
 // A common interface for paginated API responses.
 export interface PaginatedResponse {
@@ -129,3 +130,8 @@ export type GetItemLayoutFunction = (
   data: ArrayLike<Collection> | null | undefined,
   index: number,
 ) => {length: number; offset: number; index: number};
+
+export type PositionIndicatorProps = {
+  currentIndex: SharedValue<number>;
+  numberOfImages: number;
+};

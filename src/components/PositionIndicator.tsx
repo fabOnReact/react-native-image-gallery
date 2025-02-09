@@ -1,29 +1,29 @@
 import React from 'react';
-import {View, Dimensions, StyleSheet} from 'react-native';
+import {View, StyleSheet, useWindowDimensions} from 'react-native';
 import {Canvas, RoundedRect} from '@shopify/react-native-skia';
-import {SharedValue, useDerivedValue} from 'react-native-reanimated';
-
-const {width} = Dimensions.get('window');
-
-type PositionIndicatorProps = {
-  currentIndex: SharedValue<number>;
-  numberOfImages: number;
-};
+import {useDerivedValue} from 'react-native-reanimated';
+import {PositionIndicatorProps} from '../types/types';
 
 function PositionIndicator(props: PositionIndicatorProps) {
   const {currentIndex, numberOfImages} = props;
-  // Adjust thickness of progress bar
+  const {width} = useWindowDimensions();
+
+  // Set the thickness (height) of the progress bar.
   const barHeight = 5;
-  // Derived value for progress width
+
+  // Calculate the progress width as a derived value.
+  // If there's more than one image, progress is computed relative to (numberOfImages - 1);
+  // otherwise, the indicator spans the full width.
   const animatedWidth = useDerivedValue(() => {
     return numberOfImages > 1
       ? (currentIndex.value / (numberOfImages - 1)) * width
       : width;
-  });
+  }, [currentIndex, numberOfImages, width]);
 
   return (
     <View style={[styles.container, {height: barHeight}]}>
       <Canvas style={{width, height: barHeight}}>
+        {/* Background progress bar */}
         <RoundedRect
           x={0}
           y={0}
@@ -32,6 +32,7 @@ function PositionIndicator(props: PositionIndicatorProps) {
           color="#333"
           r={barHeight / 2}
         />
+        {/* Foreground progress bar with animated width */}
         <RoundedRect
           x={0}
           y={0}
@@ -54,4 +55,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PositionIndicator;
+// Wrap the component in React.memo to prevent unnecessary re-renders when props don't change.
+export default React.memo(PositionIndicator);
