@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {getCollections} from '../api/api';
@@ -20,6 +20,9 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
+const ITEM_HEIGHT = 60;
+const SEPARATOR_HEIGHT = 12;
+
 /*
  *  The Android implementation of RecyclerRecyclerView supports onCreateViewHolder, onBindViewHolder
  *  and has better performances than FlatList. More info here:
@@ -32,14 +35,14 @@ function CollectionItem(props: CollectionItemProps) {
   const onPress = () => navigation.navigate('Gallery', {item: props.item});
 
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.card}>
         <View style={styles.row}>
           <Text style={styles.titleText}>{title}</Text>
           <Text style={styles.countText}>{photos_count}</Text>
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
 
@@ -52,7 +55,6 @@ const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
 );
 
 function HomeScreen() {
-  const ITEM_HEIGHT = 60;
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');
@@ -91,13 +93,17 @@ function HomeScreen() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const getItemLayout: GetItemLayoutFunction = (_, index) => ({
-    length: ITEM_HEIGHT,
-    offset: ITEM_HEIGHT * index,
+    length: ITEM_HEIGHT + SEPARATOR_HEIGHT,
+    offset: (ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
     index,
   });
 
   const renderItem = useCallback((props: CollectionItemProps) => {
     return <CollectionItem item={props.item} />;
+  }, []);
+
+  const renderSeparator = useCallback(() => {
+    return <View style={styles.separator} />;
   }, []);
 
   if (isLoading) {
@@ -120,6 +126,7 @@ function HomeScreen() {
         removeClippedSubviews={true}
         initialNumToRender={10}
         getItemLayout={getItemLayout}
+        ItemSeparatorComponent={renderSeparator}
         ListFooterComponent={
           isFetchingNextPage ? (
             <ActivityIndicator
@@ -142,10 +149,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   card: {
+    height: ITEM_HEIGHT,
     backgroundColor: '#fff',
     borderRadius: 8,
-    padding: 16,
-    marginVertical: 8,
+    padding: 20,
     marginHorizontal: 16,
     // Android shadow
     elevation: 3,
@@ -159,6 +166,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  separator: {
+    height: SEPARATOR_HEIGHT,
   },
   titleText: {
     fontSize: 16,
