@@ -82,7 +82,7 @@ function HeartWithLiquidButton(props: HeartWithLiquidButtonProps) {
       translateYPercent.value = fillPercent;
     }
     // Note: If animationDuration may change, add it to dependency array.
-  }, [fillPercent, withAnimation, animationDuration]);
+  }, [fillPercent, animationDuration]);
 
   // Animate horizontal wave movement.
   useEffect(() => {
