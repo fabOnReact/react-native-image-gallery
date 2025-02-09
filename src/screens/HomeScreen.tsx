@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Button,
   FlatList,
-  ListRenderItem,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -21,14 +20,28 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
 
+const ITEM_HEIGHT = 60;
+const SEPARATOR_HEIGHT = 12;
+
+/*
+ *  The Android implementation of RecyclerRecyclerView supports onCreateViewHolder, onBindViewHolder
+ *  and has better performances than FlatList. More info here:
+ *  https://github.com/andrew-levy/jetpack-compose-react-native/issues/9#issuecomment-2490336411
+ *  https://developer.android.com/develop/ui/views/layout/recyclerview#implement-adapter
+ */
 function CollectionItem(props: CollectionItemProps) {
+  const {title, photos_count} = props.item;
   const navigation = useNavigation<NavigationProp>();
   const onPress = () => navigation.navigate('Gallery', {item: props.item});
+
   return (
-    <TouchableOpacity onPress={onPress} style={styles.collectionItem}>
-      <Text>
-        {props.item?.title} - {props.item?.photos_count}
-      </Text>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.card}>
+        <View style={styles.row}>
+          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.countText}>{photos_count}</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -42,7 +55,6 @@ const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
 );
 
 function HomeScreen() {
-  const ITEM_HEIGHT = 60;
   const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
   if (!PEXELS_API_KEY || PEXELS_API_KEY === '') {
     console.warn('PEXELS_API_KEY environment variable is not defined');
@@ -81,10 +93,18 @@ function HomeScreen() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const getItemLayout: GetItemLayoutFunction = (_, index) => ({
-    length: ITEM_HEIGHT,
-    offset: ITEM_HEIGHT * index,
+    length: ITEM_HEIGHT + SEPARATOR_HEIGHT,
+    offset: (ITEM_HEIGHT + SEPARATOR_HEIGHT) * index,
     index,
   });
+
+  const renderItem = useCallback((props: CollectionItemProps) => {
+    return <CollectionItem item={props.item} />;
+  }, []);
+
+  const renderSeparator = useCallback(() => {
+    return <View style={styles.separator} />;
+  }, []);
 
   if (isLoading) {
     return <HeartWithLiquidActivityIndicator />;
@@ -93,10 +113,6 @@ function HomeScreen() {
   if (isError) {
     return <ErrorMessage onRetry={refetch} />;
   }
-
-  const renderItem: ListRenderItem<Collection> = ({item}) => {
-    return <CollectionItem item={item} />;
-  };
 
   return (
     <SafeAreaView>
@@ -108,7 +124,9 @@ function HomeScreen() {
         onEndReached={loadMore}
         onEndReachedThreshold={0.5}
         removeClippedSubviews={true}
+        initialNumToRender={10}
         getItemLayout={getItemLayout}
+        ItemSeparatorComponent={renderSeparator}
         ListFooterComponent={
           isFetchingNextPage ? (
             <ActivityIndicator
@@ -130,10 +148,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
-  collectionItem: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+  card: {
+    height: ITEM_HEIGHT,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 20,
+    marginHorizontal: 16,
+    // Android shadow
+    elevation: 3,
+    // iOS shadow
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  separator: {
+    height: SEPARATOR_HEIGHT,
+  },
+  titleText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
+  },
+  countText: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#888',
   },
   errorMessageOne: {
     color: 'red',
