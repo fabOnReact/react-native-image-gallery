@@ -6,6 +6,10 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 Below are demo GIFs showcasing key functionalities on both iOS and Android.
 
+https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278
+
+https://github.com/user-attachments/assets/6277c567-2706-4abc-9a84-f0a59085df06
+
 ## Installation
 
 ### Prerequisites
@@ -29,31 +33,36 @@ PEXELS_API_KEY=your_api_key
 ```
 yarn install
 ```
+
 or with npm:
 
 ```
 npm install
 ```
 
-2.	Start Metro
-From the project root, run:
+2. Start Metro
+   From the project root, run:
+
 ```sh
 yarn start
 ```
+
 or with npm:
 
 ```sh
 npm start
 ```
 
-3.	Run the App
+3. Run the App
 
 Open a new terminal and run one of the following commands:
 
 **Android Instructions:**
+
 ```sh
 yarn android
 ```
+
 or with npm:
 
 ```
@@ -61,7 +70,6 @@ npm run android
 ```
 
 **iOS Instructions**
-
 
 The first time you create a new project, run the following commands to install cocoapods dependencies:
 
@@ -80,6 +88,7 @@ Now you can build the project with the command:
 ```
 yarn ios
 ```
+
 or with npm:
 
 ```
@@ -95,6 +104,7 @@ This project uses Jest for testing. To run the tests, execute:
 ```sh
 yarn test
 ```
+
 or with npm:
 
 ```sh
