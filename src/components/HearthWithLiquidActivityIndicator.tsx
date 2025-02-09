@@ -25,7 +25,7 @@ function HeartWithLiquidActivityIndicator(props: HeartActivityIndicatorProps) {
       right: 0,
       bottom: 0,
       zIndex: 100,
-      paddingTop: 70,
+      paddingTop: 150,
       backgroundColor: 'white',
     }),
     [],
