@@ -52,11 +52,11 @@ or with npm:
 npm start
 ```
 
-
 3.	Run the App
 
 Open a new terminal and run one of the following commands:
-• Android:
+
+***Android Instructions:**
 ```sh
 yarn android
 ```
@@ -66,12 +66,10 @@ or with npm:
 npm run android
 ```
 
+**iOS Instructions**
 
-•	iOS:
 
-- **Install CocoaPods Dependencies**
-
-The first time you create a new project, run:
+The first time you create a new project, run the following commands to install cocoapods dependencies:
 
 ```
 bundle install
@@ -93,7 +91,6 @@ or with npm:
 ```
 npm run ios
 ```
-
 
 For additional installation details (such as CocoaPods setup for iOS), please refer to [additional instructions](docs/additional_installation_instructions.md).
 
