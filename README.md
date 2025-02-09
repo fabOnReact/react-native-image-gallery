@@ -10,13 +10,13 @@ Below are demo GIFs showcasing key functionalities on both iOS and Android.
 | ----------- | ----------- |
 | <video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="350" />      | <video src="https://github.com/user-attachments/assets/6277c567-2706-4abc-9a84-f0a59085df06" width="350" />       |
 
-| iPhone Zoom    | Android zoom |
+| iPhone Position Indicator    | iPhone Zoom |
 | ----------- | ----------- |
-| <video src="https://github.com/user-attachments/assets/d160e1b2-e6ca-4459-b5aa-05544e70c270" width="350" />      | <video src="https://github.com/user-attachments/assets/4397b1ee-f081-4ad5-bdd9-3abb29ae3234" width="350" />       |
+| <video src="https://github.com/user-attachments/assets/d160e1b2-e6ca-4459-b5aa-05544e70c270" width="350" />      | <video src="" width="350" />       |
 
-| Android zoom    | After |
+| Android Gallery    | Android Zoom |
 | ----------- | ----------- |
-| <img src="https://github.com/user-attachments/assets/702607ba-aeea-496a-886e-12c4986d029c" width="350" />      | <img src="" width="350" />       |
+| <img src="https://github.com/user-attachments/assets/702607ba-aeea-496a-886e-12c4986d029c" width="350" />      | <img src="https://github.com/user-attachments/assets/4397b1ee-f081-4ad5-bdd9-3abb29ae3234" width="350" />       |
 
 
 
