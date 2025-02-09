@@ -6,12 +6,6 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 Below are demo GIFs showcasing key functionalities on both iOS and Android.
 
-<!-- Replace these placeholders with your demo GIFs -->
-
-- ![iOS Demo](https://link-to-your-ios-demo.gif)
-- ![Android Demo](https://link-to-your-android-demo.gif)
-- ![Feature Demo](https://link-to-your-feature-demo.gif)
-
 ## Installation
 
 ### Prerequisites
@@ -56,7 +50,7 @@ npm start
 
 Open a new terminal and run one of the following commands:
 
-***Android Instructions:**
+**Android Instructions:**
 ```sh
 yarn android
 ```
