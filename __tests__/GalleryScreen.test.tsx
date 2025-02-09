@@ -44,9 +44,7 @@ describe('GalleryScreen', () => {
       isFetchingNextPage: false,
     });
 
-    const {getByTestId} = render(
-      <GalleryScreen route={route} navigation={navigation} />,
-    );
+    render(<GalleryScreen route={route} navigation={navigation} />);
 
     // Expect that the HeartWithLiquidActivityIndicator is rendered.
     // Assuming that your HeartWithLiquidActivityIndicator component renders an element with testID "loading-indicator"

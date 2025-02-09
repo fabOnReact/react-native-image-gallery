@@ -115,8 +115,11 @@ function ImageViewer(props: ImageViewerProps) {
         onEndReachedThreshold={0.5}
         initialNumToRender={5}
         getItemLayout={getItemLayout}
+        testID="collection-list"
       />
-      <TouchableWithoutFeedback onPress={toggleFavorite}>
+      <TouchableWithoutFeedback
+        onPress={toggleFavorite}
+        testID={'toggle-favorite-button-touchable'}>
         <View style={[styles.invisibleButton, {zIndex: 1}]} />
       </TouchableWithoutFeedback>
       <HeartWithLiquidButton
@@ -125,6 +128,7 @@ function ImageViewer(props: ImageViewerProps) {
         withAnimation={withAnimation}
         style={styles.invisibleButton}
         animationDuration={3000}
+        testID={'toggle-favorite-button'}
       />
       <PositionIndicator scrollX={scrollX} numberOfImages={numberOfImages} />
     </GestureHandlerRootView>
