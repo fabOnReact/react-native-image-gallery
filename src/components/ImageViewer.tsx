@@ -2,11 +2,11 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {
   FlatList,
   View,
-  Dimensions,
   StyleSheet,
   ListRenderItem,
   TouchableWithoutFeedback,
   ViewabilityConfig,
+  Dimensions,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
@@ -32,11 +32,13 @@ function ImageViewer(props: ImageViewerProps) {
   const [favorites, setFavorites] = useAtom(favoritesAtom);
   const [withAnimation, setWithAnimation] = useState(false);
 
+  // Determine if the current image is favorited.
   const isFavorited = useMemo(() => {
     if (!favorites || !media[currentIndex]) return false;
     return favorites.some(fav => fav?.id === media[currentIndex].id);
   }, [favorites, media, currentIndex]);
 
+  // Render each image item.
   const renderItem: ListRenderItem<Media> = useCallback(
     ({item, index}) => (
       <View style={[{width, height}, styles.imageContainer]}>
@@ -46,6 +48,7 @@ function ImageViewer(props: ImageViewerProps) {
     [],
   );
 
+  // Update current index when viewable items change.
   const onViewableItemsChanged = useCallback(
     (props: ViewableItemsType) => {
       const {viewableItems} = props;
@@ -59,6 +62,7 @@ function ImageViewer(props: ImageViewerProps) {
     [currentIndexSharedValue],
   );
 
+  // Use a memoized viewability config.
   const viewabilityConfig: ViewabilityConfig = useMemo(
     () => ({
       viewAreaCoveragePercentThreshold: 50,
@@ -66,6 +70,7 @@ function ImageViewer(props: ImageViewerProps) {
     [],
   );
 
+  // Calculate item layout, including item width.
   const getItemLayout = useCallback(
     (_data: MaybeArray<Media>, index: number) => ({
       length: width,
@@ -75,6 +80,15 @@ function ImageViewer(props: ImageViewerProps) {
     [],
   );
 
+  // Memoize the scroll handler.
+  const onScroll = useCallback(
+    (event: any) => {
+      scrollX.value = event.nativeEvent.contentOffset.x;
+    },
+    [scrollX],
+  );
+
+  // Toggle favorite status for the current image.
   const toggleFavorite = useCallback(() => {
     if (!media[currentIndex]) return;
     setWithAnimation(true);
@@ -96,7 +110,7 @@ function ImageViewer(props: ImageViewerProps) {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={renderItem}
-        onScroll={event => (scrollX.value = event.nativeEvent.contentOffset.x)}
+        onScroll={onScroll}
         onEndReached={onEndReachedCallback}
         onEndReachedThreshold={0.5}
         initialNumToRender={5}
