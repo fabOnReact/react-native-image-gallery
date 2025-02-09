@@ -6,9 +6,14 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 Below are demo GIFs showcasing key functionalities on both iOS and Android.
 
-| iPhone 16 Pro    | iPhone 16 Pro |
+| iPhone Gallery    | iPhone Favorites |
 | ----------- | ----------- |
 | <video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="350" />      | <video src="https://github.com/user-attachments/assets/6277c567-2706-4abc-9a84-f0a59085df06" width="350" />       |
+
+| Android zoom    | After |
+| ----------- | ----------- |
+| <img src="https://github.com/user-attachments/assets/702607ba-aeea-496a-886e-12c4986d029c" width="350" />      | <img src="" width="350" />       |
+
 
 
 ## Installation
