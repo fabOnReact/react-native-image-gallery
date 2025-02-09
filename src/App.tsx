@@ -21,6 +21,15 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
 
 function RootStack() {
+  const TRANSPARENT_HEADER = {
+    headerTransparent: true,
+    headerTitle: '',
+    headerStyle: {
+      backgroundColor: 'transparent',
+    },
+    headerTintColor: '#fff', // Color for back button etc.
+  };
+
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -40,8 +49,16 @@ function RootStack() {
           ),
         })}
       />
-      <Stack.Screen name="Gallery" component={GalleryScreen} />
-      <Stack.Screen name="Favorites" component={FavoritesScreen} />
+      <Stack.Screen
+        name="Gallery"
+        component={GalleryScreen}
+        options={TRANSPARENT_HEADER}
+      />
+      <Stack.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={TRANSPARENT_HEADER}
+      />
     </Stack.Navigator>
   );
 }
