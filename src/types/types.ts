@@ -14,7 +14,9 @@ export interface PaginatedResponse {
 
 export interface Collection {
   id: string;
+  /* title of the pexels collection */
   title: string;
+  /* number of photos in the pexels collection */
   photos_count: number;
 }
 
@@ -29,6 +31,7 @@ export interface CollectionItemProps {
 export interface Media {
   id: string;
   src: {
+    /* url to display an image as portrait. */
     portrait: string;
   };
 }
@@ -39,12 +42,14 @@ export interface MediaAPIResponse extends PaginatedResponse {
 
 export type ImageViewerProps = {
   media: Media[];
+  /* number of photos in the pexels collection */
   numberOfImages: number;
   onEndReachedCallback?: () => void;
 };
 
 export type PinchableImageProps = {
   item: Media;
+  /* boolean value used to display a loading indicator on the first image */
   firstItem?: boolean;
 };
 
@@ -67,13 +72,13 @@ export type FavoritesScreenProps = NativeStackScreenProps<
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export type HeartWithLiquidButtonProps = {
-  /** The size (width & height) of the heart animation */
+  /** The size (width & height) of the heart animation. */
   size: number;
 
-  /** Value between 0 and 100 that determines how much the heart is filled */
+  /** The starting vertical height of the water level in the heart. A value between 0 and 100. */
   value: number;
 
-  /** Enables/disables the vertical animation. It does not disable the waves animation. */
+  /** Enables/disables the water vertical animation. It does not disable the horizontal water animation (waves). */
   withAnimation: boolean;
 
   /** Change the border color for the heart outline. The default is white. */
@@ -85,10 +90,10 @@ export type HeartWithLiquidButtonProps = {
   /** Sets the height of the waves. The default is 0.05. */
   waveHeightRatio?: number;
 
-  /** The number of waves visible inside the heart. The default is 4. */
+  /** The number of waves in the water inside the heart. The default is 4. */
   waveCount?: number;
 
-  /** Color of the liquid inside the heart. The default is red. */
+  /** Color of the water inside the heart. The default is red. */
   waterColor?: string;
 
   /** Speed of the waves animation. The default is 500. */
@@ -101,7 +106,9 @@ export type HeartWithLiquidButtonProps = {
 };
 
 export type HearthPathFunction = (
+  /* The size is used to scale and translate the heart svg and center it in the parent container, to be correctly centered should have the same size of the HeartWithLiquidButton width. */
   size: number,
+  /* The padding is used to scale correctly the inner heart svg. This heart path is nested inside the outer heart path. */
   padding?: number,
 ) => AnimatedProp<PathDef>;
 
