@@ -110,8 +110,8 @@ describe('ImageViewer', () => {
     expect(setFavorites).toHaveBeenCalled();
   });
 
-  it('updates scrollX shared value when scrolling', async () => {
-    function GalleryScreenTestWrapper(props) {
+  it('adds more items in the flatlist when scrolling horizontally', async () => {
+    function GalleryScreenTestWrapper() {
       const [data, setData] = useState(dummyMedia);
       const newData = [
         {id: '3', src: {portrait: 'https://example.com/image3.jpg'}},

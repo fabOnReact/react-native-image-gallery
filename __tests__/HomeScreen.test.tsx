@@ -111,7 +111,7 @@ describe('HomeScreen', () => {
     expect(queryByText(' - 0')).toBeNull(); // Should not be rendered
   });
 
-  test('calls fetchNextPage when scrolling to bottom', async () => {
+  test('adds more items to the flatlist when scrolling down', async () => {
     const fetchNextPage = jest.fn();
     (useInfiniteQuery as jest.Mock).mockReturnValue({
       data: {
