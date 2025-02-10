@@ -18,7 +18,7 @@ HearthWithLiquidActivityIndicator is an ActivityIndicator that animates the hear
 
 https://youtu.be/2GFf_Z981Zo
 
-The includes support for pinch to zoom, pan, and double-tap to zoom in and out of images. The video below showcases the zoom functionality on both iOS and Android. The app is written in typescript with static typing and includes also jest tests written with react-native-testing-library.
+The app includes support for pinch to zoom, pan, and double-tap to zoom in and out of images. The video below showcases the zoom functionality on both iOS and Android. The app is written in typescript with static typing and includes also jest tests written with react-native-testing-library.
 
 https://youtu.be/eU95lYyO7qM?si=4lmYIYbeNyJ1x1Ab
 
