@@ -12,7 +12,7 @@ const FavoritesScreen: React.FC = () => {
 
   /*
    * This is a workaround for a react-native FlatList issue on Android.
-   * Last item delete in horizontal flatlist does not adjust scroll position. #27504
+   * Last item deleted in horizontal flatlist does not adjust scroll position. #27504
    * https://github.com/facebook/react-native/issues/27504
    */
   const onEndReachedCallback = useCallback(() => {
