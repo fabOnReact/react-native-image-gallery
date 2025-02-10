@@ -6,13 +6,26 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 Below are demo videos showcasing key functionalities on both iOS and Android.
 
+| iPhone Gallery and Like Button    | iPhone Zoom and Like Button |
+| ----------- | ----------- |
+| <video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="350" />      | <video src="https://github.com/user-attachments/assets/31c51fd5-20af-41b4-a1f2-9ad3ca97a1f0" width="350" />       |
+
+HeartWithLiquidButton is a custom component that animates the heart icon with liquid effect when the user likes an image. The component is used in the Gallery screen to like an image. More info in the YouTube video below:
+
+https://youtu.be/JlXARcxCoDY
+
+HearthWithLiquidActivityIndicator is an ActivityIndicator that animates the heart icon with liquid effect. The component is used in the Gallery screen to indicate that the images are being loaded. More info in the YouTube video below:
+
+https://youtu.be/2GFf_Z981Zo
+
+The app includes support for pinch to zoom, pan, and double-tap to zoom in and out of images. The video below showcases the zoom functionality on both iOS and Android. The app is written in typescript with static typing and includes also jest tests written with react-native-testing-library.
+
+https://youtu.be/eU95lYyO7qM?si=4lmYIYbeNyJ1x1Ab
+
+<details><summary>CLICK TO DISPLAY MORE VIDEOS</summary>
+<p>
+
 ### iPhone
-
-iPhone Gallery and Like Button
-<video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="1000" />
-
-iPhone Zoom and Like Button
-<video src="https://github.com/user-attachments/assets/31c51fd5-20af-41b4-a1f2-9ad3ca97a1f0" width="1000" />
 
 iPhone Favorites Pictures
 <video src="https://github.com/user-attachments/assets/6277c567-2706-4abc-9a84-f0a59085df06" width="1000" />
@@ -25,6 +38,9 @@ iPhone Position Indicator
 Android Gallery, Zoom and Like button
 
 https://github.com/user-attachments/assets/702607ba-aeea-496a-886e-12c4986d029c
+
+</p>
+</details>
 
 ## Installation
 
