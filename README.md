@@ -6,11 +6,9 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 Below are demo videos showcasing key functionalities on both iOS and Android.
 
-iPhone Gallery and Like Button
-<video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="1000" />
-
-iPhone Gallery and Like Button
-<video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="1000" />
+| iPhone Gallery and Like Button    | iPhone Gallery and Like Button |
+| ----------- | ----------- |
+| <video src="https://github.com/user-attachments/assets/2dda8cb2-8747-44fd-8a6b-7b53c4915278" width="350" />      | <video src="" width="350" />       |
 
 HeartWithLiquidButton is a custom component that animates the heart icon with liquid effect when the user likes an image. The component is used in the Gallery screen to like an image. More info in the YouTube video below:
 
