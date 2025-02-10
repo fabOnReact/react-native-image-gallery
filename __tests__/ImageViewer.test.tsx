@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {act, render, fireEvent, userEvent} from '@testing-library/react-native';
 import ImageViewer from '../src/components/ImageViewer'; // Adjust the import path as needed
 import {useAtom} from 'jotai';
@@ -110,30 +110,28 @@ describe('ImageViewer', () => {
     expect(setFavorites).toHaveBeenCalled();
   });
 
-  it.skip('updates scrollX shared value when scrolling', async () => {
-    const {getByTestId} = render(
-      <ImageViewer
-        numberOfImages={dummyMedia.length}
-        media={dummyMedia}
-        onEndReachedCallback={dummyOnEndReachedCallback}
-      />,
-    );
+  it('adds more items in the flatlist when scrolling horizontally', async () => {
+    function GalleryScreenTestWrapper() {
+      const [data, setData] = useState(dummyMedia);
+      const newData = [
+        {id: '3', src: {portrait: 'https://example.com/image3.jpg'}},
+        {id: '4', src: {portrait: 'https://example.com/image4.jpg'}},
+      ];
+      const onEndReachedCallback = () => setData([...dummyMedia, ...newData]);
+      return (
+        <ImageViewer
+          numberOfImages={dummyMedia.length}
+          media={data}
+          onEndReachedCallback={onEndReachedCallback}
+        />
+      );
+    }
+    const {getByTestId} = render(<GalleryScreenTestWrapper />);
 
-    // Query the FlatList and simulate an onScroll event.
+    // Query the FlatList and simulate a scroll event.
     const flatList = getByTestId('collection-list');
-    const scrollEvent = {
-      nativeEvent: {contentOffset: {x: 100}},
-    };
+    fireEvent(flatList, 'endReached');
 
-    await act(async () => {
-      userEvent.scrollTo(flatList, {
-        x: 480,
-        contentSize: {height: 480, width: 240},
-        layoutMeasurement: {height: 480, width: 240},
-      });
-    });
-
-    // We cannot directly read the shared value from scrollX,
-    // but if no error is thrown, we assume onScroll updates scrollX as expected.
+    expect(getByTestId('flatlist-item-3')).toBeTruthy();
   });
 });

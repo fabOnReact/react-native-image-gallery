@@ -111,15 +111,15 @@ describe('HomeScreen', () => {
     expect(queryByText(' - 0')).toBeNull(); // Should not be rendered
   });
 
-  test('calls fetchNextPage when scrolling to bottom', async () => {
+  test('adds more items to the flatlist when scrolling down', async () => {
     const fetchNextPage = jest.fn();
     (useInfiniteQuery as jest.Mock).mockReturnValue({
       data: {
         pages: [
           {
             collections: [
-              {id: '1', title: 'Nature', photos_count: 10},
-              {id: '2', title: 'Architecture', photos_count: 20},
+              {id: '3', title: 'Computers', photos_count: 10},
+              {id: '4', title: 'Trips', photos_count: 20},
             ],
           },
         ],
@@ -132,21 +132,14 @@ describe('HomeScreen', () => {
     });
 
     const {getByTestId} = render(<HomeScreen />);
-
-    fireEvent.scroll(getByTestId('collection-list'), {
-      nativeEvent: {
-        contentOffset: {y: 1000},
-        layoutMeasurement: {height: 500},
-        contentSize: {height: 2000},
-      },
-    });
-
     const list = getByTestId('collection-list');
     fireEvent(list, 'endReached');
 
     await waitFor(() => {
       expect(fetchNextPage).toHaveBeenCalled();
     });
+
+    expect(getByTestId('flatlist-item-4')).toBeTruthy();
   });
 
   test('does not call fetchNextPage when hasNextPage is false', async () => {

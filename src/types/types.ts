@@ -52,7 +52,8 @@ export type ImageViewerProps = {
   media: Media[];
   /** Number of photos in the Pexels collection */
   numberOfImages: number;
-  onEndReachedCallback?: () => void;
+  /** Not providing onEndReached callback causes an issue on Android, see react-native issue #27504 **/
+  onEndReachedCallback: () => void;
 };
 
 // Props for a pinchable image.
