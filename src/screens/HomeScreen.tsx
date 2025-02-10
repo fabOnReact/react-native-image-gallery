@@ -36,7 +36,7 @@ const CollectionItem = React.memo(
     return (
       <TouchableOpacity onPress={onPress}>
         <View style={styles.card}>
-          <View style={styles.row}>
+          <View style={styles.row} testID={`flatlist-item-${item.id}`}>
             <Text style={styles.titleText}>{item.title}</Text>
             <Text style={styles.countText}>{item.photos_count}</Text>
           </View>

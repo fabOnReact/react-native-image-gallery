@@ -41,7 +41,9 @@ function ImageViewer(props: ImageViewerProps) {
   // Render each image item.
   const renderItem: ListRenderItem<Media> = useCallback(
     ({item, index}) => (
-      <View style={[{width, height}, styles.imageContainer]}>
+      <View
+        testID={`flatlist-item-${index}`}
+        style={[{width, height}, styles.imageContainer]}>
         <PinchableImage item={item} firstItem={index === 0} />
       </View>
     ),
