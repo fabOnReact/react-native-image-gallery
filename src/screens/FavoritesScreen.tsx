@@ -1,5 +1,5 @@
-import React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import React, {useCallback, useRef} from 'react';
+import {Text, StyleSheet, View, Platform, FlatList} from 'react-native';
 import {useAtom} from 'jotai';
 import {favoritesAtom} from '../store/store';
 import ImageViewer from '../components/ImageViewer';
@@ -7,6 +7,19 @@ import {FavoritesType} from '../types/types';
 
 const FavoritesScreen: React.FC = () => {
   const [favorites]: FavoritesType = useAtom(favoritesAtom);
+  const imageViewerRef = useRef<FlatList>(null);
+  const isPlatformAndroid = Platform.OS === 'android';
+
+  /*
+   * This is a workaround for a react-native FlatList issue on Android.
+   * Last item delete in horizontal flatlist does not adjust scroll position. #27504
+   * https://github.com/facebook/react-native/issues/27504
+   */
+  const onEndReachedCallback = useCallback(() => {
+    if (imageViewerRef?.current && isPlatformAndroid) {
+      imageViewerRef.current.scrollToEnd();
+    }
+  }, [isPlatformAndroid]);
 
   return (
     <>
@@ -15,7 +28,12 @@ const FavoritesScreen: React.FC = () => {
           <Text style={styles.emptyText}>No favorites yet.</Text>
         </View>
       ) : (
-        <ImageViewer numberOfImages={favorites.length} media={favorites} />
+        <ImageViewer
+          ref={imageViewerRef}
+          numberOfImages={favorites.length}
+          media={favorites}
+          onEndReachedCallback={onEndReachedCallback}
+        />
       )}
     </>
   );

@@ -1,4 +1,10 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {
+  ForwardedRef,
+  forwardRef,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
   FlatList,
   View,
@@ -24,7 +30,7 @@ import HeartWithLiquidButton from './HearthWithLiquidButton';
 
 const {width, height} = Dimensions.get('window');
 
-function ImageViewer(props: ImageViewerProps) {
+function ImageViewer(props: ImageViewerProps, ref: ForwardedRef<FlatList>) {
   const {numberOfImages, media, onEndReachedCallback} = props;
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const scrollX = useSharedValue<number>(0);
@@ -94,6 +100,7 @@ function ImageViewer(props: ImageViewerProps) {
   const toggleFavorite = useCallback(() => {
     if (!media[currentIndex]) return;
     setWithAnimation(true);
+
     if (isFavorited) {
       setFavorites(favorites.filter(fav => fav?.id !== media[currentIndex].id));
     } else {
@@ -104,6 +111,7 @@ function ImageViewer(props: ImageViewerProps) {
   return (
     <GestureHandlerRootView style={styles.container}>
       <FlatList
+        ref={ref}
         data={media}
         keyExtractor={item => String(item?.id)}
         horizontal
@@ -129,7 +137,7 @@ function ImageViewer(props: ImageViewerProps) {
         value={isFavorited ? 70 : 10}
         withAnimation={withAnimation}
         style={styles.invisibleButton}
-        animationDuration={3000}
+        animationDuration={1500}
         testID={'toggle-favorite-button'}
       />
       <PositionIndicator scrollX={scrollX} numberOfImages={numberOfImages} />
@@ -138,7 +146,6 @@ function ImageViewer(props: ImageViewerProps) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {flex: 1},
   container: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -159,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ImageViewer;
+export default forwardRef(ImageViewer);
