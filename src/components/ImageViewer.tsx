@@ -13,6 +13,8 @@ import {
   TouchableWithoutFeedback,
   ViewabilityConfig,
   Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
@@ -90,7 +92,7 @@ function ImageViewer(props: ImageViewerProps, ref: ForwardedRef<FlatList>) {
 
   // Memoize the scroll handler.
   const onScroll = useCallback(
-    (event: any) => {
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       scrollX.value = event.nativeEvent.contentOffset.x;
     },
     [scrollX],
