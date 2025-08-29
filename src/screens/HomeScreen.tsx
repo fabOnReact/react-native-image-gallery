@@ -18,6 +18,7 @@ import {
 } from '../types/types';
 import {useNavigation} from '@react-navigation/native';
 import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
+import {PEXELS_API_KEY} from '../config/env';
 
 const ITEM_HEIGHT = 60;
 const SEPARATOR_HEIGHT = 12;
@@ -62,11 +63,6 @@ const ErrorMessage: React.FC<{onRetry: () => void}> = ({onRetry}) => (
 );
 
 const HomeScreen: React.FC = () => {
-  const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
-  if (!PEXELS_API_KEY) {
-    console.warn('PEXELS_API_KEY environment variable is not defined');
-  }
-
   const {
     data,
     fetchNextPage,
