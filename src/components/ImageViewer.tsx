@@ -102,11 +102,11 @@ function ImageViewer(props: ImageViewerProps, ref: ForwardedRef<FlatList>) {
     setWithAnimation(true);
 
     if (isFavorited) {
-      setFavorites(favorites.filter(fav => fav?.id !== media[currentIndex].id));
+      setFavorites(prev => prev.filter(fav => fav?.id !== media[currentIndex].id));
     } else {
-      setFavorites([...favorites, media[currentIndex]]);
+      setFavorites(prev => [...prev, media[currentIndex]]);
     }
-  }, [favorites, media, currentIndex, isFavorited, setFavorites]);
+  }, [media, currentIndex, isFavorited, setFavorites]);
 
   return (
     <GestureHandlerRootView style={styles.container}>
