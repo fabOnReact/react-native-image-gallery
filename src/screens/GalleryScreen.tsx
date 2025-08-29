@@ -5,13 +5,9 @@ import {useInfiniteQuery} from '@tanstack/react-query';
 import {getCollectionsMedia} from '../api/api';
 import ImageViewer from '../components/ImageViewer';
 import HeartWithLiquidActivityIndicator from '../components/HearthWithLiquidActivityIndicator';
+import {PEXELS_API_KEY} from '../config/env';
 
 const GalleryScreen: React.FC<GalleryScreenProps> = props => {
-  const PEXELS_API_KEY = process.env.PEXELS_API_KEY ?? '';
-  if (!PEXELS_API_KEY) {
-    console.warn('PEXELS_API_KEY environment variable is not defined');
-  }
-
   const {item} = props.route.params;
 
   const {
