@@ -5,6 +5,7 @@ import {
 import {AnimatedProp, PathDef} from '@shopify/react-native-skia';
 import {StyleProp, ViewStyle, ViewToken} from 'react-native';
 import {SharedValue} from 'react-native-reanimated';
+import {Dispatch, SetStateAction} from 'react';
 
 // A common interface for paginated API responses.
 export interface PaginatedResponse {
@@ -124,7 +125,7 @@ export type ViewableItemsType = {
 export type MaybeArray<T> = ArrayLike<T> | null | undefined;
 
 // Type for favorites (Consider refining the updater function's type).
-export type FavoritesType = [Awaited<Media[]>, (args: any) => any];
+export type FavoritesType = [Media[], Dispatch<SetStateAction<Media[]>>];
 
 // Function type for FlatList's getItemLayout.
 export type GetItemLayoutFunction = (
